@@ -19,6 +19,7 @@
 #include "entities/Bomb.hpp"
 #include "entities/Guy.hpp"
 
+#include "lib/ParticleSystem.hpp"
 
 const int NUM_GUYS = 1000;
 
@@ -39,6 +40,7 @@ int main()
     std::string graphics_path = resource_path + "graphics/";
     std::string audio_path = resource_path + "audio/";
 
+
     // Load Audio
     AudioManager::load_sound("splat1", audio_path + "splat 1.ogg");
     AudioManager::load_sound("splat2", audio_path + "splat 2.ogg");
@@ -51,14 +53,13 @@ int main()
     sf::Texture tex;
     tex.loadFromFile(graphics_path + "guy sheet.png");
 
-    sf::Texture bomb_tex;
-    bomb_tex.loadFromFile(graphics_path + "bomb.png");
 
     // Set up delta time clock
     sf::Clock delta_clock;
     float delta_time;
 
     // LOAD
+    sf::Time elapsed;
     Mallet mallet(graphics_path + "mallet.png", 32, 32);
     Bombs bombs(graphics_path + "bombs.png", 16, 16);
     const int NUM_TOOLS = 2;
@@ -96,7 +97,9 @@ int main()
         }
 
         // UPDATE
-        delta_time = delta_clock.restart().asSeconds();
+        elapsed = delta_clock.restart();
+        delta_time = elapsed.asSeconds();
+
 
         AudioManager::update(delta_time);
 
@@ -109,8 +112,8 @@ int main()
         current_tool->update(delta_time, &window);
 
         // DRAW
-        window.clear( sf::Color(229, 229, 229) );
 
+        window.clear( sf::Color(229, 229, 229) );
         for (auto &ent : gamestate.entities) {
             ent->draw(&window);
         }

@@ -49,7 +49,7 @@ public:
 
 	float z_vel = 0;
 
-	float gravity_strength = 5;
+	float gravity_strength = 20;
 
 	Guy(sf::Texture *tex, float x, float y);
 	void update(float dt) override;
@@ -76,15 +76,6 @@ Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
 
 void Guy::update(float dt) {
 
-	pos += ground_vel_dir * ground_velocity * dt;
-	//pos.z += z_vel * dt;
-
-	sound_timer -= dt;
-	if (sound_timer <= 0) {
-		int mumble_num = Helper::random(1, 3);
-		AudioManager::play_sound("mumble" + std::to_string(mumble_num));
-		sound_timer = Helper::random(20, 30);
-	}
 	// Update Animation
 	timers.animation -= dt;
 	if (timers.animation <= 0) {
@@ -95,7 +86,27 @@ void Guy::update(float dt) {
 	
 	// Shake em around
 	if (cur_anim == &guy_anims.g1 || cur_anim == &guy_anims.g2) {
-		sprite.setPosition(pos.x + (rand() % 2 - 1 ) - cur_anim->origin_x, pos.y + rand() % 2 - 1 - cur_anim->origin_y - pos.z);
+		sprite.setPosition(pos.x + (rand() % 2 - 1 ) - cur_anim->origin_x, pos.y - pos.z + rand() % 2 - 1 - cur_anim->origin_y );
+	}
+
+	// Physics
+	pos += ground_vel_dir * ground_velocity * dt;
+	pos.z += z_vel * dt;
+
+	z_vel -= gravity_strength * dt;
+
+	if (pos.z <= 0) {
+		z_vel = 0;
+		pos.z = 0;
+		ground_velocity = 0;
+	}
+
+	// Sound
+	sound_timer -= dt;
+	if (sound_timer <= 0) {
+		int mumble_num = Helper::random(1, 3);
+		//AudioManager::play_sound("mumble" + std::to_string(mumble_num));
+		sound_timer = Helper::random(20, 30);
 	}
 
 
@@ -120,14 +131,17 @@ void Guy::handle_collision(Collision collision) {
 	}
 
 	if (collision.type == Collisions::EXPLOSION) {
-		z_vel = collision.data.explosion.distance;
 		sf::Vector2<float> bomb_pos(collision.data.explosion.bomb_pos_x, collision.data.explosion.bomb_pos_y);
 		sf::Vector2 < float> pos_2d(pos.x, pos.y);
 		sf::Vector2<float> to_bomb = pos_2d - bomb_pos;
+
 		ground_vel_dir.x = to_bomb.x;
 		ground_vel_dir.y = to_bomb.y;
 		Helper::normalize_vec3(&ground_vel_dir);
-		ground_velocity = 100;
+		//ground_velocity = 100;
+
+		z_vel = collision.data.explosion.distance;
+
 	}
 
 }
