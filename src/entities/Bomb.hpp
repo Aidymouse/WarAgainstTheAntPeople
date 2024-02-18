@@ -66,8 +66,7 @@ void Bomb::update(float dt) {
 	if (timer <= 0 && !exploded) {
 		exploded = true;
 
-		Gamestate& gamestate = Gamestate::getInstance();
-		std::vector<grid_cell*> exploded_cells = gamestate.main_grid.get_cells_within(EXPLOSION_RADIUS, pos.x, pos.y);
+		std::vector<grid_cell*> exploded_cells = Gamestate::main_grid.get_cells_within(EXPLOSION_RADIUS, pos.x, pos.y);
 
 		for (auto &cell : exploded_cells) {
 			for (auto& entity : *cell) {

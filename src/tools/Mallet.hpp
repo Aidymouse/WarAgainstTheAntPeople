@@ -47,8 +47,7 @@ void Mallet::handle_event(sf::Event* event) {
 			sprite.setTextureRect(mallet_rects.smash);
 
 			// Collisions
-			Gamestate& gamestate = Gamestate::getInstance();
-			std::vector<grid_cell*> mallet_cells = gamestate.main_grid.get_cells_within(MALLET_RANGE, evt.mouseButton.x, evt.mouseButton.y);
+			std::vector<grid_cell*> mallet_cells = Gamestate::main_grid.get_cells_within(MALLET_RANGE, evt.mouseButton.x, evt.mouseButton.y);
 
 			for (auto &cell : mallet_cells) {
 				for (auto &ent : *cell) {

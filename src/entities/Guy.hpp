@@ -124,8 +124,7 @@ void Guy::handle_collision(Collision collision) {
 
 	if (collision.type == Collisions::MALLET) {
 
-		Gamestate& gamestate = Gamestate::getInstance();
-		gamestate.insert_entity(std::shared_ptr<Bloodstain>(new Bloodstain(pos.x, pos.y)));
+		Gamestate::insert_entity(std::shared_ptr<Bloodstain>(new Bloodstain(pos.x, pos.y)));
 		marked_for_deletion = true;
 
 	}

@@ -19,8 +19,7 @@ Bombs::Bombs(std::string filename, float origin_x, float origin_y) : Tool::Tool(
 void Bombs::handle_event(sf::Event* event) {
 	if (event->type == sf::Event::MouseButtonPressed) {
 		if (event->mouseButton.button == sf::Mouse::Left) {
-			Gamestate& gamestate = Gamestate::getInstance();
-			gamestate.insert_entity(std::shared_ptr<Bomb>(new Bomb(&bomb_tex, event->mouseButton.x, event->mouseButton.y)));
+			Gamestate::insert_entity(std::shared_ptr<Bomb>(new Bomb(&bomb_tex, event->mouseButton.x, event->mouseButton.y)));
 		}
 	}
 }

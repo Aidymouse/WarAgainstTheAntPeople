@@ -67,12 +67,11 @@ int main()
     int current_tool_index = 0;
     Tool* current_tool = tools[current_tool_index];
 
-    Gamestate& gamestate = Gamestate::getInstance();
     
     for (int i = 0; i < NUM_GUYS; i++) {
 
         std::shared_ptr<Guy> g = std::shared_ptr<Guy>(new Guy(&tex, rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT));
-        gamestate.insert_entity(g);
+        Gamestate::insert_entity(g);
         
     }
 
@@ -103,18 +102,18 @@ int main()
 
         AudioManager::update(delta_time);
 
-        for (auto &ent : gamestate.entities) {
+        for (auto &ent : Gamestate::entities) {
             ent->update(delta_time);
         }
 
-        gamestate.remove_marked_entities();
+        Gamestate::remove_marked_entities();
 
         current_tool->update(delta_time, &window);
 
         // DRAW
 
         window.clear( sf::Color(229, 229, 229) );
-        for (auto &ent : gamestate.entities) {
+        for (auto &ent : Gamestate::entities) {
             ent->draw(&window);
         }
 
