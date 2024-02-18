@@ -14,7 +14,7 @@ const int EXPLOSION_RADIUS = 50;
 const float MAX_FUSE_TIMER = 3;
 const float MAX_LIFETIME = 4;
 
-std::vector<sf::IntRect> bomb_graphics_rects = AnimationGenerator::generate_texture_rects(64, 64, 16, 16);
+const std::vector<sf::IntRect> bomb_graphics_rects = AnimationGenerator::generate_texture_rects(64, 64, 16, 16);
 
 struct {
 	animation bomb1 = { bomb_graphics_rects[1], MAX_FUSE_TIMER / 8, & bomb2, 8, 8};
