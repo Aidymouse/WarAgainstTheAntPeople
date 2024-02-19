@@ -1,16 +1,8 @@
-#include "Tool.hpp"
+#include "Tools/Tool.h"
+#include "Tools/Bombs.h"
+#include "Entities/Bomb.h"
 
-#include "../Gamestate.hpp"
-
-#include "../entities/Bomb.hpp"
-
-class Bombs : public Tool {
-public:
-	Bombs::Bombs(std::string filename, float origin_x, float origin_y);
-	void handle_event(sf::Event* event) override;
-	sf::Texture bomb_tex;
-};
-
+#include "Lib/Gamestate.h"
 
 Bombs::Bombs(std::string filename, float origin_x, float origin_y) : Tool::Tool(filename, origin_x, origin_y) {
 	bomb_tex.loadFromFile((std::string)RESOURCE_PATH + "graphics/bomb sheet.png");

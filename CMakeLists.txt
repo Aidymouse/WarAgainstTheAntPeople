@@ -16,18 +16,24 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(EvilPikmin
     src/main.cpp 
-    "src/entities/Guy.hpp"  
-    "src/entities/Entity.hpp"
-    "include/Animation.h"
-    "src/CollisionGrid.hpp"
-    "src/tools/Mallet.hpp"
-    "src/Gamestate.hpp"
-    "src/entities/decorations/Bloodstain.hpp"
-    "include/Helper.h"
-    "src/entities/Bomb.hpp"
-    "src/tools/Tool.hpp"
-    "src/tools/Bombs.hpp" 
-)
+    "include/Entities/Guy.h"  
+    "src/entities/Guy.cpp"  
+    "include/Entities/Entity.h"
+    "src/entities/Entity.cpp"
+	"include/Entities/Bomb.h"
+	"src/tools/Bombs.cpp" 
+
+    "src/CollisionGrid.cpp"
+    "src/tools/Mallet.cpp"
+    "src/Gamestate.cpp"
+    "src/entities/decorations/Bloodstain.cpp"
+    "include/Lib/Helper.hpp"
+    "src/entities/Bomb.cpp"
+    "src/tools/Tool.cpp"
+
+    "include/Types/Animation.h"
+	"include/Types/Collisions.h"
+ "include/Tools/Mallet.h" "include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "include/Lib/Gamestate.h")
 
 
 option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)

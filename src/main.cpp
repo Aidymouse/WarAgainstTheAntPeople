@@ -9,15 +9,15 @@
 #include <functional>
 #include <vector>
 
-#include "CollisionGrid.hpp"
-#include "Gamestate.hpp"
-#include "AudioManager.hpp"
+#include "Lib/CollisionGrid.h"
+#include "Lib/Gamestate.h"
+#include "Lib/AudioManager.h"
 
-#include "tools/Bombs.hpp"
-#include "tools/Mallet.hpp"
+#include "Tools/Bombs.h"
+#include "Tools/Mallet.h"
 
-#include "entities/Bomb.hpp"
-#include "entities/Guy.hpp"
+#include "Entities/Bomb.h"
+#include "Entities/Guy.h"
 
 #include "lib/ParticleSystem.hpp"
 

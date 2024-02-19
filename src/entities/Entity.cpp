@@ -1,55 +1,12 @@
+#include "Entities/Entity.h"
+
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include <iostream>
-#include "Animation.h"
 
-struct explosion_collision {
-	float distance;
-	float bomb_pos_x;
-	float bomb_pos_y;
-	float blast_strength_high;
-	float blast_strength_far;
-};
-
-union collision_data {
-	explosion_collision explosion;
-};
-
-enum Collisions {
-	MALLET,
-	EXPLOSION
-};
-
+#include "Types/Animation.h"
 
 class Entity;
-
-struct Collision {
-	Collisions type;
-	Entity* collided_with;
-	collision_data data;
-};
-
-#pragma once
-class Entity
-{
-public:
-	Entity() = default;
-	Entity(float x, float y);
-	sf::Vector3<float> pos;
-	bool decoration = false;
-	bool marked_for_deletion = false;
-	virtual void update(float dt) {};
-	virtual void draw(sf::RenderWindow* window) {};
-	virtual void say_type();
-	virtual void handle_collision(Collision collision) {};
-
-	sf::Sprite sprite;
-	animation* cur_anim = NULL;
-	float animation_timer = 0;
-	virtual void update_animation(float dt);
-	virtual void init_animation(animation* anim);
-};
-
 
 Entity::Entity(float x, float y) {
 	pos.x = x;
@@ -85,4 +42,13 @@ void Entity::update_animation(float dt) {
 	}
 
 
+}
+
+void Entity::maintain_grid_pre_update() {
+	pos_at_frame_start.x = pos.x;
+	pos_at_frame_start.y = pos.y;
+	pos_at_frame_start.z = pos.z;
+}
+
+void Entity::maintain_grid_post_update() {
 }

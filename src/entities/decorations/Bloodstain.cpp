@@ -1,12 +1,4 @@
-#include "../Entity.hpp"
-
-#pragma once
-class Bloodstain : public Entity {
-public:
-	Bloodstain(float x, float y);
-	sf::CircleShape ellipse;
-	void draw(sf::RenderWindow* window) override;
-};
+#include "Entities/Decorations/Bloodstain.h"
 
 Bloodstain::Bloodstain(float x, float y) : Entity::Entity(x, y) {
 	decoration = true;

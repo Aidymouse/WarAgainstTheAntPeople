@@ -1,26 +1,11 @@
 
-#include "entities/Entity.hpp"
-
+#include "Lib/CollisionGrid.h"
+#include "Entities/Entity.h"
 
 #include <string>
 #include <iostream>
 
-#pragma once
 
-typedef std::vector<std::shared_ptr<Entity>> grid_cell;
-
-class CollisionGrid {
-
-public:
-	CollisionGrid(int cell_size);
-	int cell_size;
-	std::map<std::string, grid_cell> cells;
-	void insert_entity( std::shared_ptr<Entity> ent);
-	std::vector<grid_cell*> get_cells_within(float distance, float x, float y);
-	void remove_entity(std::shared_ptr<Entity> ent);
-	void draw();
-
-};
 
 CollisionGrid::CollisionGrid(int cell_size) {
 	this->cell_size = cell_size;
@@ -37,7 +22,6 @@ void CollisionGrid::insert_entity( std::shared_ptr<Entity> ent) {
 
 	cells[cell_id].push_back(ent);
 
-	
 }
 
 std::vector<grid_cell*> CollisionGrid::get_cells_within(float distance, float x, float y) {

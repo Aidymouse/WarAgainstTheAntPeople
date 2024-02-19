@@ -1,3 +1,5 @@
+#include "Entities/Guy.h"
+#include "Entities/Entity.h"
 #include <SFML/Graphics.hpp>
 
 #include <vector>
@@ -5,13 +7,14 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "Animation.h"
-#include "Helper.h"
-#include "../Gamestate.hpp"
-#include "../AudioManager.hpp"
+#include "Types/Animation.h"
 
-#include "Entity.hpp"
-#include "decorations/Bloodstain.hpp"
+#include "Lib/Helper.hpp"
+#include "Lib/AudioManager.h"
+
+#include "Entities/Decorations/Bloodstain.h"
+
+#include "Lib/Gamestate.h"
 
 static float speed = 100.0;
 
@@ -25,38 +28,6 @@ struct {
 	animation g2 = { guy_graphic_rects.g2, 0.15, &g1, 8, 8 };
 } guy_anims;
 
-#pragma once
-struct timers {
-	float animation = 0;
-};
-
-class Guy : public Entity
-{
-public:
-	sf::Sprite sprite;
-	sf::Texture *tex;
-
-	timers timers;
-
-	animation* cur_anim;
-
-	float sound_timer = Helper::random(1, 30);
-
-	float spazz_mult;
-
-	sf::Vector3<float> ground_vel_dir;
-	float ground_velocity = 0;
-
-	float z_vel = 0;
-
-	float gravity_strength = 20;
-
-	Guy(sf::Texture *tex, float x, float y);
-	void update(float dt) override;
-	void draw(sf::RenderWindow *window) override;
-	void say_type() override;
-	void handle_collision(Collision collision) override;
-};
 
 Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
 	tex = t;
@@ -70,7 +41,6 @@ Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
 	timers.animation = cur_anim->duration;
 
 	sprite.setTextureRect( (*cur_anim).texture_rectangle );
-
 
 }
 

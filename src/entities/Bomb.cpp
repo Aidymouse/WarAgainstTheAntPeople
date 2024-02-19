@@ -1,18 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-#include "Animation.h"
-#include "Helper.h"
-#include "../Gamestate.hpp"
+#include "Types/Animation.h"
+#include "Lib/Helper.hpp"
+#include "Lib/Gamestate.h"
+#include "Lib/AnimationGenerator.hpp"
 
-#include "Entity.hpp"
+#include "Entities/Entity.h"
+#include "Entities/Bomb.h"
 
-#include "../lib/AnimationGenerator.hpp"
-
-const int BOMB_RADIUS = 10;
-const int EXPLOSION_RADIUS = 50;
-const float MAX_FUSE_TIMER = 3;
-const float MAX_LIFETIME = 4;
 
 const std::vector<sf::IntRect> bomb_graphics_rects = AnimationGenerator::generate_texture_rects(64, 64, 16, 16);
 
@@ -32,19 +28,6 @@ struct {
 	animation explode4 = { bomb_graphics_rects[12], -1, NULL, 8, 8 };
 } bomb_anims;
 
-#pragma once
-class Bomb : public Entity {
-public:
-	sf::CircleShape ellipse;
-	sf::Texture *tex;
-	float timer = MAX_FUSE_TIMER;
-	float lifetime = MAX_LIFETIME;
-	Bomb(sf::Texture* tex, float x, float y);
-	void update(float dt) override;
-	void draw(sf::RenderWindow* window) override;
-	void say_type() override;
-	bool exploded = false;
-};
 
 Bomb::Bomb(sf::Texture* tex, float x, float y) : Entity::Entity(x,y) {
 	this->tex = tex;

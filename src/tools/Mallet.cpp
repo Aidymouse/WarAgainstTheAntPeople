@@ -1,16 +1,14 @@
+#include "Tools/Mallet.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Audio.hpp>
 
-
-#include "Helper.h"
-#include "../Gamestate.hpp"
-#include "../AudioManager.hpp"
+#include "Lib/Helper.hpp"
+#include "Lib/Gamestate.h"
+#include "Lib/AudioManager.h"
 
 #include <iostream>
-
-#include "helper.h"
-#include "Tool.hpp"
 
 struct {
 	const sf::IntRect up = sf::IntRect(0, 0, 32, 32);
@@ -19,14 +17,6 @@ struct {
 
 const float MALLET_RANGE = 20.0;
 
-#pragma once
-class Mallet : public Tool {
-public:
-	Mallet(std::string tex_filename, float origin_x, float origin_y);
-	sf::Sound sound;
-	void draw(sf::RenderWindow* window) override;
-	void handle_event(sf::Event* event) override;
-};
 
 Mallet::Mallet(std::string tex_filename, float origin_x, float origin_y) : Tool::Tool(tex_filename, origin_x, origin_y) {
 	sprite.setTextureRect(mallet_rects.up);
