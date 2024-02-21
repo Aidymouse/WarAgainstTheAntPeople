@@ -8,4 +8,5 @@ public:
 	Bloodstain(float x, float y);
 	sf::CircleShape ellipse;
 	void draw(sf::RenderWindow* window) override;
+	void update(float dt) override;
 };

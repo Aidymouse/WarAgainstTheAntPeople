@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.16)
 
 project(EvilPikmin LANGUAGES CXX)
 
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_C_COMPILER "C:/Program Files/LLVM/bin/clang.exe")
+set(CMAKE_CXX_COMPILER "C:/Program Files/LLVM/bin/clang++.exe")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -13,6 +15,8 @@ FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
+
+message("${CMAKE_CXX_COMPILER_ID}")
 
 add_executable(EvilPikmin
     src/main.cpp 
@@ -33,7 +37,8 @@ add_executable(EvilPikmin
 
     "include/Types/Animation.h"
 	"include/Types/Collisions.h"
- "include/Tools/Mallet.h" "include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "include/Lib/Gamestate.h")
+    "include/Lib/AnimationGenerator.h"
+    "include/Tools/Mallet.h" "include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "include/Lib/Gamestate.h" "src/lib/AnimationGenerator.cpp")
 
 
 option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)

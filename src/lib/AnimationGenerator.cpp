@@ -1,11 +1,6 @@
+#include "Lib/AnimationGenerator.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
-
-class AnimationGenerator {
-public:
-	static std::vector<sf::IntRect> generate_texture_rects(int sheet_width, int sheet_height, int frame_width, int frame_height);
-};
-
 
  std::vector<sf::IntRect> AnimationGenerator::generate_texture_rects(int sheet_width, int sheet_height, int frame_width, int frame_height) {
 	int sprites_high = sheet_height / frame_height;

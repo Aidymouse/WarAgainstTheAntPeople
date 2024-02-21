@@ -18,6 +18,7 @@ public:
 	virtual void say_type();
 	virtual void handle_collision(Collision collision) {};
 
+	sf::Texture tex;
 	sf::Sprite sprite;
 	animation* cur_anim = NULL;
 	float animation_timer = 0;

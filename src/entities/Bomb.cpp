@@ -4,7 +4,7 @@
 #include "Types/Animation.h"
 #include "Lib/Helper.hpp"
 #include "Lib/Gamestate.h"
-#include "Lib/AnimationGenerator.hpp"
+#include "Lib/AnimationGenerator.h"
 
 #include "Entities/Entity.h"
 #include "Entities/Bomb.h"
