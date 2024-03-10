@@ -1,0 +1,3 @@
+C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out/_deps/sfml-subbuild/CMakeFiles/sfml-populate.dir
+C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out/_deps/sfml-subbuild/CMakeFiles/edit_cache.dir
+C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out/_deps/sfml-subbuild/CMakeFiles/rebuild_cache.dir

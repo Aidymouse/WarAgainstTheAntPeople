@@ -1,11 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-
 project(EvilPikmin LANGUAGES CXX)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_C_COMPILER "C:/Program Files/LLVM/bin/clang.exe")
-set(CMAKE_CXX_COMPILER "C:/Program Files/LLVM/bin/clang++.exe")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -17,6 +12,8 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 message("${CMAKE_CXX_COMPILER_ID}")
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(EvilPikmin
     src/main.cpp 
@@ -38,7 +35,9 @@ add_executable(EvilPikmin
     "include/Types/Animation.h"
 	"include/Types/Collisions.h"
     "include/Lib/AnimationGenerator.h"
-    "include/Tools/Mallet.h" "include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "include/Lib/Gamestate.h" "src/lib/AnimationGenerator.cpp")
+    "include/Tools/Mallet.h" "include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "include/Lib/Gamestate.h" "src/lib/AnimationGenerator.cpp"
+    "include/Tools/Fire.h" "src/tools/Fire.cpp"
+)
 
 
 option(USE_INSTALL_RESOURCE_PATH "Set resource path to install location" OFF)
@@ -50,9 +49,6 @@ else()
     target_compile_definitions(EvilPikmin PUBLIC RESOURCE_PATH="${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}/resources/")
     #set(RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}/resources/")
 endif()
-
-
-# 
 
 target_include_directories(EvilPikmin PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 

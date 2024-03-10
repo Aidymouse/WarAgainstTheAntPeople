@@ -20,6 +20,7 @@ void Entity::say_type() {
 void Entity::init_animation(animation* anim) {
 	cur_anim = anim;
 	sprite.setTextureRect(anim->texture_rectangle);
+	sprite.setPosition(pos.x - cur_anim->origin_x, pos.y - cur_anim->origin_y);
 	animation_timer = anim->duration;
 }
 
@@ -37,6 +38,7 @@ void Entity::update_animation(float dt) {
 			cur_anim = cur_anim->next_anim;
 			animation_timer = cur_anim->duration;
 			sprite.setTextureRect(cur_anim->texture_rectangle);
+			sprite.setPosition(pos.x - cur_anim->origin_x, pos.y - cur_anim->origin_y);
 			if (cur_anim->next_anim == NULL) return;
 		}	
 	}
