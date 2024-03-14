@@ -1,0 +1,52 @@
+#include "../include/Entities/Entity.h"
+#include "../include/Types/Animation.h"
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <stdio.h>
+
+class Entity;
+
+Entity::Entity(float x, float y) {
+  pos.x = x;
+  pos.y = y;
+}
+
+void Entity::say_type() { std::cout << "Entity" << std::endl; }
+
+void Entity::init_animation(animation *anim) {
+  cur_anim = anim;
+  sprite.setTextureRect(anim->texture_rectangle);
+  sprite.setPosition(pos.x - cur_anim->origin_x, pos.y - cur_anim->origin_y);
+  animation_timer = anim->duration;
+}
+
+void Entity::update_animation(float dt) {
+  if (cur_anim->next_anim == NULL) {
+    return;
+  }
+  // To account for frame times longer than animation, or times where an
+  // animation changes in the middle of the frame, we use this little loop to
+  // make sure everything lines up
+  float delta = dt;
+  while (delta > 0) {
+    animation_timer -= delta;
+    delta = -animation_timer;
+    if (animation_timer <= 0) {
+      cur_anim = cur_anim->next_anim;
+      animation_timer = cur_anim->duration;
+      sprite.setTextureRect(cur_anim->texture_rectangle);
+      sprite.setPosition(pos.x - cur_anim->origin_x,
+                         pos.y - cur_anim->origin_y);
+      if (cur_anim->next_anim == NULL)
+        return;
+    }
+  }
+}
+
+void Entity::maintain_grid_pre_update() {
+  pos_at_frame_start.x = pos.x;
+  pos_at_frame_start.y = pos.y;
+  pos_at_frame_start.z = pos.z;
+}
+
+void Entity::maintain_grid_post_update() {}
