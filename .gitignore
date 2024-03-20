@@ -1,3 +1,4 @@
 .vs
 /out
 /ninja_out/**/*
+.cache

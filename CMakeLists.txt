@@ -17,12 +17,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(EvilPikmin
     src/main.cpp 
-    "src/include/Entities/Guy.h"  
-    "src/entities/Guy.cpp"  
-    "src/include/Entities/Entity.h"
-    "src/entities/Entity.cpp"
-	"src/include/Entities/Bomb.h"
-	"src/tools/Bombs.cpp" 
+    "src/include/Entities/Guy.h" "src/entities/Guy.cpp"  
+    "src/include/Entities/Entity.h" "src/entities/Entity.cpp"
+	"src/include/Entities/Bomb.h" "src/tools/Bombs.cpp" 
 
     "src/CollisionGrid.cpp"
     "src/tools/Mallet.cpp"
@@ -37,6 +34,8 @@ add_executable(EvilPikmin
     "src/include/Lib/AnimationGenerator.h"
     "src/include/Tools/Mallet.h" "src/include/Tools/Bombs.h" "src/lib/AudioManager.cpp" "src/include/Lib/Gamestate.h" "src/lib/AnimationGenerator.cpp"
     "src/include/Tools/Fire.h" "src/tools/Fire.cpp"
+    "src/include/Entities/FloorPanel.h" "src/entities/FloorPanel.cpp"
+    "src/include/Lib/GraphicsManager.h" "src/lib/GraphicsManager.cpp"
 )
 
 

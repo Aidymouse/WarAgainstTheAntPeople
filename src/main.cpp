@@ -1,6 +1,8 @@
+#include "include/Entities/FloorPanel.h"
 #include "include/Entities/Guy.h"
 #include "include/Lib/AudioManager.h"
 #include "include/Lib/Gamestate.h"
+#include "include/Lib/GraphicsManager.h"
 #include "include/Tools/Bombs.h"
 #include "include/Tools/Mallet.h"
 #include "include/lib/ParticleSystem.hpp"
@@ -42,6 +44,8 @@ int main() {
   sf::Texture tex;
   tex.loadFromFile(graphics_path + "guy sheet.png");
 
+  GraphicsManager::load_texture("floorpanel", graphics_path + "floorpanel.png");
+
   // Set up delta time clock
   sf::Clock delta_clock;
   float delta_time;
@@ -55,11 +59,24 @@ int main() {
   int current_tool_index = 0;
   Tool *current_tool = tools[current_tool_index];
 
+  // Make Guys
   for (int i = 0; i < NUM_GUYS; i++) {
     Gamestate::insert_entity(std::make_shared<Guy>(&tex, rand() % WINDOW_WIDTH,
                                                    rand() % WINDOW_HEIGHT));
   }
 
+  // Make Floor Panels
+  int floor_panel_rows = WINDOW_HEIGHT / 64 + 1;
+  int floor_panel_columns = WINDOW_WIDTH / 64 + 1;
+
+  for (int row = 0; row < floor_panel_rows; row++) {
+    for (int col = 0; col < floor_panel_columns; col++) {
+      Gamestate::insert_entity(
+          std::make_shared<FloorPanel>(col * 64, row * 64));
+    }
+  }
+
+  // Game Loop
   while (window.isOpen()) {
     // EVENTS
     for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -95,6 +112,8 @@ int main() {
     current_tool->update(delta_time, &window);
 
     // DRAW
+
+    // TODO: sort by Z level
     window.clear(sf::Color(229, 229, 229));
     for (auto &ent : Gamestate::entities) {
       ent->draw(&window);
