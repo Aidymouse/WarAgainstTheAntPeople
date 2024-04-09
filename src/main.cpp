@@ -1,3 +1,4 @@
+#include "include/Entities/Entity.h"
 #include "include/Entities/FloorPanel.h"
 #include "include/Entities/Guy.h"
 #include "include/Lib/AudioManager.h"
@@ -6,9 +7,11 @@
 #include "include/Tools/Bombs.h"
 #include "include/Tools/Mallet.h"
 #include "include/lib/ParticleSystem.hpp"
+#include "lib/util/sort.cpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <algorithm>
 #include <memory>
 #include <stdlib.h>
 #include <string>
@@ -18,6 +21,17 @@ const int NUM_GUYS = 1000;
 
 const int WINDOW_WIDTH = 800u;
 const int WINDOW_HEIGHT = 600u;
+
+// I have no idea why this doesn't work
+
+bool compare_entities(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2) {
+  if (e1->pos.z != e2->pos.z) {
+    return e1->pos.z < e2->pos.z; // Compare z positions first
+  } else {
+    return e1->pos.y <
+           e2->pos.y; // If z positions are equal, compare y positions
+  }
+}
 
 int main() {
   auto window = sf::RenderWindow{{WINDOW_WIDTH, WINDOW_HEIGHT}, "Evil Pikmin"};
@@ -114,6 +128,9 @@ int main() {
     // DRAW
 
     // TODO: sort by Z level
+    std::sort(Gamestate::entities.begin(), Gamestate::entities.end(),
+              compare_entities);
+
     window.clear(sf::Color(229, 229, 229));
     for (auto &ent : Gamestate::entities) {
       ent->draw(&window);
