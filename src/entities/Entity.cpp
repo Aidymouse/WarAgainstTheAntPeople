@@ -43,10 +43,6 @@ void Entity::update_animation(float dt) {
   }
 }
 
-void Entity::maintain_grid_pre_update() {
-  pos_at_frame_start.x = pos.x;
-  pos_at_frame_start.y = pos.y;
-  pos_at_frame_start.z = pos.z;
+void Entity::update_collision_cells(std::vector<std::string>) {
+  // TODO
 }
-
-void Entity::maintain_grid_post_update() {}

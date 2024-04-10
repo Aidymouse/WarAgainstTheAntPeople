@@ -27,7 +27,8 @@ void Mallet::handle_event(sf::Event *event) {
     if (evt.mouseButton.button == sf::Mouse::Left) {
 
       int splat_number = Helper::random(1, 3);
-      AudioManager::play_sound("splat" + std::to_string(splat_number));
+      // AudioManager::play_sound("splat" + std::to_string(splat_number));
+      // AudioManager::play_sound("vine boom");
 
       // Graphic
       sprite.setTextureRect(mallet_rects.smash);

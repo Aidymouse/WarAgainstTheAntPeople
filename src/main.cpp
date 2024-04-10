@@ -7,7 +7,6 @@
 #include "include/Tools/Bombs.h"
 #include "include/Tools/Mallet.h"
 #include "include/lib/ParticleSystem.hpp"
-#include "lib/util/sort.cpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -53,6 +52,7 @@ int main() {
   AudioManager::load_sound("mumble1", audio_path + "mumble 1.ogg");
   AudioManager::load_sound("mumble2", audio_path + "mumble 2.ogg");
   AudioManager::load_sound("mumble3", audio_path + "mumble 3.ogg");
+  AudioManager::load_sound("vine boom", audio_path + "vine boom.ogg");
 
   // Load Textures
   sf::Texture tex;
@@ -127,7 +127,6 @@ int main() {
 
     // DRAW
 
-    // TODO: sort by Z level
     std::sort(Gamestate::entities.begin(), Gamestate::entities.end(),
               compare_entities);
 

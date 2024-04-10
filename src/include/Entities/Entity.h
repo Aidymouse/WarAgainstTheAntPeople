@@ -17,12 +17,13 @@ public:
   virtual void say_type();
   virtual void handle_collision(Collision collision){};
 
+  std::vector<std::string> inhabited_cell_ids;
+  virtual void update_collision_cells(std::vector<std::string> ids);
+
   sf::Texture tex;
   sf::Sprite sprite;
   animation *cur_anim = NULL;
   float animation_timer = 0;
   virtual void update_animation(float dt);
   virtual void init_animation(animation *anim);
-  virtual void maintain_grid_pre_update();
-  virtual void maintain_grid_post_update();
 };

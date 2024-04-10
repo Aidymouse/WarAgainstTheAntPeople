@@ -8,17 +8,24 @@ void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent) {
 
   // std::cout << ent->pos.x << std::endl;
 
+  std::vector<std::string> inhabited_ids;
+  // There probably needs to be some sort of provision for entities that span
+  // multiple cells... or ones that overlap cell boundaries... Fuck
   int cell_col = ent->pos.x / cell_size;
   int cell_row = ent->pos.y / cell_size;
 
   std::string cell_id =
       std::to_string(cell_row) + ":" + std::to_string(cell_col);
 
+  inhabited_ids.push_back(cell_id);
+
   cells[cell_id].push_back(ent);
+  ent->update_collision_cells(inhabited_ids);
 }
 
 std::vector<grid_cell *> CollisionGrid::get_cells_within(float distance,
-                                                         float x, float y) {
+                                                         float x, float y,
+                                                         int extension) {
 
   int dist_to_top = (int)y % cell_size;
   int cells_up = (distance - dist_to_top) / cell_size + 1;
@@ -42,9 +49,10 @@ std::vector<grid_cell *> CollisionGrid::get_cells_within(float distance,
 
   std::vector<grid_cell *> retrieved_cells;
 
-  for (int row = cell_row - cells_up; row <= (cell_row + cells_down); row++) {
-    for (int col = cell_col - cells_left; col <= (cell_col + cells_right);
-         col++) {
+  for (int row = cell_row - cells_up - extension;
+       row <= (cell_row + cells_down + extension); row++) {
+    for (int col = cell_col - cells_left - extension;
+         col <= (cell_col + cells_right + extension); col++) {
 
       std::string cell_id = std::to_string(row) + ":" + std::to_string(col);
 
@@ -78,5 +86,7 @@ void CollisionGrid::remove_entity(std::shared_ptr<Entity> ent) {
     }
   }
 }
+
+void CollisionGrid::update_entity(std::shared_ptr<Entity> ent) {}
 
 void CollisionGrid::draw() {}
