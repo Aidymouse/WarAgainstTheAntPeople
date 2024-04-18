@@ -43,6 +43,11 @@ void Entity::update_animation(float dt) {
   }
 }
 
-void Entity::update_collision_cells(std::vector<std::string>) {
+void Entity::update_collider() {
+  collider.x = pos.x;
+  collider.y = pos.y;
+}
+
+void Entity::update_collision_cells(std::vector<std::string> inhabited_ids) {
   // TODO
 }

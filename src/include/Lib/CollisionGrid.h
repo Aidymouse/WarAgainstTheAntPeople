@@ -14,6 +14,7 @@ public:
   void insert_entity(std::shared_ptr<Entity> ent);
   std::vector<grid_cell *> get_cells_within(float distance, float x, float y,
                                             int extension = 0);
+  bool does_collide(Collider c1, Collider c2);
   void remove_entity(std::shared_ptr<Entity> ent);
   void update_entity(std::shared_ptr<Entity> ent);
   void draw();

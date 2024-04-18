@@ -8,13 +8,19 @@ struct CollisionSquare {
   float height;
 };
 
-struct CollisionPoint {
-  float x;
-  float y;
-};
-
 union CollisionShape {
   CollisionCircle circle;
   CollisionSquare square;
-  CollisionPoint point;
+};
+
+enum CollisionShapeType {
+  CIRCLE,
+  RECT,
+};
+
+struct Collider {
+  CollisionShapeType type;
+  float x;
+  float y;
+  CollisionShape collisionShape;
 };

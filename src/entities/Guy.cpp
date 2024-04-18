@@ -25,6 +25,9 @@ Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
   sprite.setTexture(*tex);
   sprite.setPosition(pos.x, pos.y);
 
+  collider.type = CollisionShapeType::CIRCLE;
+  collider.collisionShape.circle.radius = 2;
+
   spazz_mult = (5 + rand() % 6) / 10.0;
 
   cur_anim = &(guy_anims.g1);
@@ -62,6 +65,7 @@ void Guy::update(float dt) {
     ground_velocity = 0;
   }
 
+  update_collider();
   // Sound
   sound_timer -= dt;
   if (sound_timer <= 0) {

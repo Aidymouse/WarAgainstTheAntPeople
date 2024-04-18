@@ -1,3 +1,4 @@
+#include "../Types/CollisionShapes.h"
 #include "Tool.h"
 
 #include <SFML/Audio.hpp>
@@ -9,4 +10,5 @@ public:
   sf::Sound sound;
   void draw(sf::RenderWindow *window) override;
   void handle_event(sf::Event *event) override;
+  Collider collider;
 };

@@ -1,5 +1,6 @@
 #include "../include/Tools/Mallet.h"
 #include "../include/Lib/AudioManager.h"
+#include "../include/Lib/CollisionManager.h"
 #include "../include/Lib/Gamestate.h"
 #include "../include/Lib/Helper.hpp"
 #include <SFML/Audio.hpp>
@@ -16,6 +17,8 @@ const float MALLET_RANGE = 20.0;
 Mallet::Mallet(std::string tex_filename, float origin_x, float origin_y)
     : Tool::Tool(tex_filename, origin_x, origin_y) {
   sprite.setTextureRect(mallet_rects.up);
+  collider.collisionShape.circle.radius = 20;
+  collider.type = CollisionShapeType::CIRCLE;
 }
 
 void Mallet::handle_event(sf::Event *event) {
@@ -41,10 +44,13 @@ void Mallet::handle_event(sf::Event *event) {
       for (auto &cell : mallet_cells) {
         for (auto &ent : *cell) {
 
-          float dist = Helper::dist_tween_points(
-              evt.mouseButton.x, evt.mouseButton.y, ent->pos.x, ent->pos.y);
+          // float dist = Helper::dist_tween_points(
+          // evt.mouseButton.x, evt.mouseButton.y, ent->pos.x, ent->pos.y);
 
-          if (dist <= MALLET_RANGE) {
+          collider.x = evt.mouseButton.x;
+          collider.y = evt.mouseButton.y;
+
+          if (CollisionManager::does_collide(&collider, &(ent->collider))) {
             Collision col;
             col.type = Collisions::MALLET;
 

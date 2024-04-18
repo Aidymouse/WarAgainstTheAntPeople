@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Types/Animation.h"
+#include "../Types/CollisionShapes.h"
 #include "../Types/Collisions.h"
 
 #pragma once
@@ -9,9 +10,13 @@ public:
   Entity() = default;
   Entity(float x, float y);
   sf::Vector3<float> pos;
-  sf::Vector3<float> pos_at_frame_start;
+
+  Collider collider;
+
   bool decoration = false;
   bool marked_for_deletion = false;
+  bool should_update_collision = false;
+
   virtual void update(float dt){};
   virtual void draw(sf::RenderWindow *window){};
   virtual void say_type();
@@ -26,4 +31,5 @@ public:
   float animation_timer = 0;
   virtual void update_animation(float dt);
   virtual void init_animation(animation *anim);
+  virtual void update_collider();
 };
