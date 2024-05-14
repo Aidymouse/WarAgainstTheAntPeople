@@ -135,6 +135,8 @@ int main() {
       ent->draw(&window);
     }
 
+    Gamestate::main_grid.draw(&window);
+
     current_tool->draw(&window);
 
     window.display();

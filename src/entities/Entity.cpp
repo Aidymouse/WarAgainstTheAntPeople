@@ -50,4 +50,5 @@ void Entity::update_collider() {
 
 void Entity::update_collision_cells(std::vector<std::string> inhabited_ids) {
   // TODO
+  inhabited_cell_ids = inhabited_ids;
 }

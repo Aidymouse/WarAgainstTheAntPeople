@@ -1,66 +1,60 @@
 #include "include/Lib/CollisionGrid.h"
 #include "include/Entities/Entity.h"
+#include "include/Lib/CollisionManager.h"
 #include "include/Types/CollisionShapes.h"
+#include <iostream>
 #include <string>
 
 CollisionGrid::CollisionGrid(int cell_size) { this->cell_size = cell_size; }
 
-bool CollisionGrid::does_collide(Collider s1, Collider s2) {
-  // Circle Circle
-  if (s1.type == CollisionShapeType::CIRCLE &&
-      s2.type == CollisionShapeType::CIRCLE) {
-    return sqrt((s1.x - s2.x) * (s1.x - s2.x) +
-                (s1.y - s2.y) * (s1.y - s2.y)) <=
-           s1.collisionShape.circle.radius + s2.collisionShape.circle.radius;
-
-    // Rect - Circle (primitavely treats circle as rectangle)
-  } else if (s1.type == CollisionShapeType::CIRCLE &&
-                 s2.type == CollisionShapeType::RECT ||
-             s1.type == CollisionShapeType::RECT &&
-                 s2.type == CollisionShapeType::CIRCLE) {
-
-    Collider *circle = s1.type == CollisionShapeType::CIRCLE ? &s1 : &s2;
-    Collider *rect = s1.type == CollisionShapeType::RECT ? &s1 : &s2;
-
-    float rect_width = rect->collisionShape.square.width;
-    float rect_height = rect->collisionShape.square.height;
-    float circ_radius = circle->collisionShape.circle.radius;
-    float circ_x = circle->x - circ_radius / 2;
-    float circ_y = circle->y - circ_radius / 2;
-
-    return (
-        circ_x <= rect->x + rect_width && circ_x + circ_radius * 2 >= rect->x &&
-        circ_y <= rect->y + rect_height && circ_y + circ_radius * 2 >= rect->y);
-
-    // Rect - Rect
-  } else if (s1.type == CollisionShapeType::RECT &&
-             s2.type == CollisionShapeType::RECT) {
-    float s1width = s1.collisionShape.square.width;
-    float s1height = s1.collisionShape.square.height;
-    float s2width = s2.collisionShape.square.width;
-    float s2height = s2.collisionShape.square.height;
-    return (s1.x <= s2.x + s2width && s1.x + s1width >= s2.x &&
-            s1.y <= s2.y + s2height && s1.y + s1height >= s2.y);
-  }
-  return false;
-}
-
 void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent) {
 
-  // std::cout << ent->pos.x << std::endl;
-
   std::vector<std::string> inhabited_ids;
-  // There probably needs to be some sort of provision for entities that span
-  // multiple cells... or ones that overlap cell boundaries... Fuck
-  int cell_col = ent->pos.x / cell_size;
-  int cell_row = ent->pos.y / cell_size;
+
+  int base_cell_col = ent->pos.x / cell_size;
+  int base_cell_row = ent->pos.y / cell_size;
 
   std::string base_cell_id =
-      std::to_string(cell_row) + ":" + std::to_string(cell_col);
+      std::to_string(base_cell_row) + ":" + std::to_string(base_cell_col);
 
-  inhabited_ids.push_back(base_cell_id);
+  // If it's a rectangle, we wanna check cells left and down
+  int cells_right;
+  int cells_down;
+  int row_mod_start = 0;
+  int col_mod_start = 0;
 
-  cells[base_cell_id].push_back(ent);
+  // TODO: Need to find current distance to right edge of base cell
+  if (ent->collider.type == CollisionShapeType::RECT) {
+    cells_right = cell_size / ent->collider.collisionShape.rect.width;
+    cells_down = cell_size / ent->collider.collisionShape.rect.height;
+
+  } else if (ent->collider.type == CollisionShapeType::CIRCLE) {
+
+    cells_right = cell_size / (ent->collider.collisionShape.circle.radius * 2);
+    cells_down = cell_size / (ent->collider.collisionShape.circle.radius * 2);
+    col_mod_start = -cells_right / 2;
+    row_mod_start = -cells_down / 2;
+  }
+
+  for (int row_mod = row_mod_start; row_mod < cells_down; row_mod++) {
+    for (int col_mod = col_mod_start; col_mod < cells_right; col_mod++) {
+      Collider check_cell_collider;
+      check_cell_collider.type = CollisionShapeType::RECT;
+      check_cell_collider.x = (base_cell_col + col_mod) * cell_size;
+      check_cell_collider.y = (base_cell_row + row_mod) * cell_size;
+      check_cell_collider.collisionShape.rect.height = cell_size;
+      check_cell_collider.collisionShape.rect.width = cell_size;
+
+      if (CollisionManager::does_collide(&check_cell_collider,
+                                         &ent->collider)) {
+        std::string cell_id = std::to_string(base_cell_row + row_mod) + ":" +
+                              std::to_string(base_cell_col + col_mod);
+        inhabited_ids.push_back(cell_id);
+        cells[cell_id].push_back(ent);
+      }
+    }
+  }
+
   ent->update_collision_cells(inhabited_ids);
 }
 
@@ -130,4 +124,23 @@ void CollisionGrid::remove_entity(std::shared_ptr<Entity> ent) {
 
 void CollisionGrid::update_entity(std::shared_ptr<Entity> ent) {}
 
-void CollisionGrid::draw() {}
+void CollisionGrid::draw(sf::RenderWindow *window) {
+  for (auto const &cell_info : cells) {
+    std::string cell_id = cell_info.first;
+
+    int cell_row = std::stoi(cell_id.substr(0, cell_id.find(":")));
+    int cell_col =
+        std::stoi(cell_id.substr(cell_id.find(":") + 1, cell_id.length()));
+
+    // std::cout << cell_row * cell_size << std::endl;
+
+    sf::RectangleShape cell_rect(sf::Vector2f(cell_size, cell_size));
+    cell_rect.setPosition(
+        sf::Vector2f(cell_col * cell_size, cell_row * cell_size));
+    cell_rect.setFillColor(sf::Color(0, 0, 0, 0));
+    cell_rect.setOutlineColor(sf::Color(255, 0, 0));
+    cell_rect.setOutlineThickness(2);
+
+    window->draw(cell_rect);
+  }
+}

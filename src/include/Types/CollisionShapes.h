@@ -3,20 +3,25 @@ struct CollisionCircle {
   float radius;
 };
 
-struct CollisionSquare {
+struct CollisionRect {
   float width;
   float height;
 };
 
-union CollisionShape {
-  CollisionCircle circle;
-  CollisionSquare square;
+struct CollisionLine {
+  float p1x;
+  float p1y;
+  float p2x;
+  float p2y;
 };
 
-enum CollisionShapeType {
-  CIRCLE,
-  RECT,
+union CollisionShape {
+  CollisionCircle circle;
+  CollisionRect rect;
+  CollisionLine line;
 };
+
+enum CollisionShapeType { CIRCLE, RECT, LINE };
 
 struct Collider {
   CollisionShapeType type;

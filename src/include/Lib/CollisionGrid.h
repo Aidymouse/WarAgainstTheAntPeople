@@ -17,5 +17,5 @@ public:
   bool does_collide(Collider c1, Collider c2);
   void remove_entity(std::shared_ptr<Entity> ent);
   void update_entity(std::shared_ptr<Entity> ent);
-  void draw();
+  void draw(sf::RenderWindow *window);
 };

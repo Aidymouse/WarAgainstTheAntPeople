@@ -6,7 +6,7 @@
 #include <vector>
 
 std::vector<std::shared_ptr<Entity>> Gamestate::entities;
-CollisionGrid Gamestate::main_grid = CollisionGrid(64);
+CollisionGrid Gamestate::main_grid = CollisionGrid(100);
 
 std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent) {
 

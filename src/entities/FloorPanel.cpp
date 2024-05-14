@@ -8,6 +8,12 @@ FloorPanel::FloorPanel(float x, float y) : Entity::Entity(x, y) {
   tex = GraphicsManager::textures["floorpanel"];
   sprite.setTexture(*tex);
   sprite.setPosition(pos.x, pos.y);
+
+  collider.collisionShape.rect.width = 64;
+  collider.collisionShape.rect.height = 64;
+  collider.type = CollisionShapeType::RECT;
+  collider.x = x;
+  collider.y = y;
 }
 
 void FloorPanel::update(float dt) {
@@ -34,6 +40,9 @@ void FloorPanel::say_type() { std::cout << "FloorPanel" << std::endl; }
 
 void FloorPanel::handle_collision(Collision collision) {
   if (collision.type == Collisions::MALLET) {
+    for (int i = 0; i < inhabited_cell_ids.size(); i++) {
+      std::cout << inhabited_cell_ids.at(i);
+    }
     shake_timer = max_shake_timer;
   }
 }
