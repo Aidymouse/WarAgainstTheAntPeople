@@ -31,18 +31,20 @@ void FloorPanel::update(float dt) {
     if (shake_timer <= 0) {
       sprite.setPosition(pos.x, pos.y);
     }
+
   }
+  if (debug.show_collider_timer > 0) debug.show_collider_timer -= dt;
 }
 
-void FloorPanel::draw(sf::RenderWindow *window) { window->draw(sprite); }
+void FloorPanel::draw(sf::RenderWindow *window) {
+  window->draw(sprite);
+  if (debug.show_collider_timer > 0) draw_collider(window);
+}
 
 void FloorPanel::say_type() { std::cout << "FloorPanel" << std::endl; }
 
 void FloorPanel::handle_collision(Collision collision) {
   if (collision.type == Collisions::MALLET) {
-    for (int i = 0; i < inhabited_cell_ids.size(); i++) {
-      std::cout << inhabited_cell_ids.at(i);
-    }
     shake_timer = max_shake_timer;
   }
 }

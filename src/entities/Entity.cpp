@@ -11,6 +11,36 @@ Entity::Entity(float x, float y) {
   pos.y = y;
 }
 
+void Entity::draw(sf::RenderWindow *window) {
+  window->draw(sprite);
+}
+
+void Entity::draw_collider(sf::RenderWindow *window, sf::Color color) {
+  if (collider.type == CollisionShapeType::RECT) {
+    sf::RectangleShape rect;
+    rect.setPosition(sf::Vector2f(collider.x, collider.y));
+    rect.setSize(sf::Vector2f(collider.collisionShape.rect.width, collider.collisionShape.rect.height));
+    rect.setFillColor(sf::Color(0, 0, 0, 0));
+    rect.setOutlineThickness(2);
+    rect.setOutlineColor(color);
+    window->draw(rect);
+
+  } else if (collider.type == CollisionShapeType::CIRCLE) {
+    sf::CircleShape circle;
+    float radius = collider.collisionShape.circle.radius;
+    circle.setPosition(sf::Vector2f(collider.x, collider.y));
+    //circle.setPosition(sf::Vector2f(0, 0));
+    circle.setRadius(collider.collisionShape.circle.radius);
+    circle.setFillColor(sf::Color(0, 0, 0, 0));
+    circle.setOutlineThickness(2);
+    circle.setOutlineColor(color);
+    window->draw(circle);
+
+  } else {
+    std::cout << "No collider type set! Can't draw!";
+  }
+}
+
 void Entity::say_type() { std::cout << "Entity" << std::endl; }
 
 void Entity::init_animation(animation *anim) {
@@ -52,3 +82,4 @@ void Entity::update_collision_cells(std::vector<std::string> inhabited_ids) {
   // TODO
   inhabited_cell_ids = inhabited_ids;
 }
+

@@ -3,8 +3,14 @@
 #include "../Types/Animation.h"
 #include "../Types/CollisionShapes.h"
 #include "../Types/Collisions.h"
+#include "SFML/Graphics/Color.hpp"
 
 #pragma once
+
+struct debug_info {
+  float show_collider_timer;
+};
+
 class Entity {
 public:
   Entity() = default;
@@ -13,12 +19,15 @@ public:
 
   Collider collider;
 
+  debug_info debug;
+
   bool decoration = false;
   bool marked_for_deletion = false;
   bool should_update_collision = false;
 
   virtual void update(float dt){};
-  virtual void draw(sf::RenderWindow *window){};
+  virtual void draw(sf::RenderWindow *window);
+  virtual void draw_collider(sf::RenderWindow *window, sf::Color outline = sf::Color(255, 0 ,0));
   virtual void say_type();
   virtual void handle_collision(Collision collision){};
 

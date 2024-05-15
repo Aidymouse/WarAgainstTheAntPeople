@@ -6,13 +6,13 @@
 #include <vector>
 
 std::vector<std::shared_ptr<Entity>> Gamestate::entities;
-CollisionGrid Gamestate::main_grid = CollisionGrid(100);
+CollisionGrid Gamestate::main_grid = CollisionGrid(64);
 
-std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent) {
+std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent, bool debug) {
 
   entities.emplace_back(ent);
   if (!ent->decoration) {
-    main_grid.insert_entity(ent);
+    main_grid.insert_entity(ent, debug);
   }
   return ent;
 };

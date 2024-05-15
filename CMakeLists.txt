@@ -43,6 +43,7 @@ add_executable(EvilPikmin
     "src/include/Entities/Guy.h" "src/entities/Guy.cpp"  
     "src/include/Entities/Bomb.h"  "src/entities/Bomb.cpp"
     "src/include/Entities/FloorPanel.h" "src/entities/FloorPanel.cpp"
+    "src/include/Entities/TestEntity.h" "src/entities/TestEntity.cpp"
 
     "src/entities/decorations/Bloodstain.cpp"
 )

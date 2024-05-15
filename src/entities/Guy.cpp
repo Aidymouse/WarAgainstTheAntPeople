@@ -27,6 +27,8 @@ Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
 
   collider.type = CollisionShapeType::CIRCLE;
   collider.collisionShape.circle.radius = 2;
+  collider.x = x;
+  collider.y = y;
 
   spazz_mult = (5 + rand() % 6) / 10.0;
 

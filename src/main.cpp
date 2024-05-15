@@ -1,5 +1,6 @@
 #include "include/Entities/Entity.h"
 #include "include/Entities/FloorPanel.h"
+#include "include/Entities/TestEntity.h"
 #include "include/Entities/Guy.h"
 #include "include/Lib/AudioManager.h"
 #include "include/Lib/Gamestate.h"
@@ -21,15 +22,9 @@ const int NUM_GUYS = 1000;
 const int WINDOW_WIDTH = 800u;
 const int WINDOW_HEIGHT = 600u;
 
-// I have no idea why this doesn't work
-
 bool compare_entities(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2) {
-  if (e1->pos.z != e2->pos.z) {
-    return e1->pos.z < e2->pos.z; // Compare z positions first
-  } else {
-    return e1->pos.y <
-           e2->pos.y; // If z positions are equal, compare y positions
-  }
+  if (e1->pos.z != e2->pos.z) return e1->pos.z < e2->pos.z; // Compare z positions first
+  return e1->pos.y < e2->pos.y; // If z positions are equal, compare y positions
 }
 
 int main() {
@@ -75,8 +70,7 @@ int main() {
 
   // Make Guys
   for (int i = 0; i < NUM_GUYS; i++) {
-    Gamestate::insert_entity(std::make_shared<Guy>(&tex, rand() % WINDOW_WIDTH,
-                                                   rand() % WINDOW_HEIGHT));
+    Gamestate::insert_entity(std::make_shared<Guy>(&tex, rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT));
   }
 
   // Make Floor Panels
@@ -85,10 +79,10 @@ int main() {
 
   for (int row = 0; row < floor_panel_rows; row++) {
     for (int col = 0; col < floor_panel_columns; col++) {
-      Gamestate::insert_entity(
-          std::make_shared<FloorPanel>(col * 64, row * 64));
+      Gamestate::insert_entity(std::make_shared<FloorPanel>(col * 64, row * 64));
     }
   }
+
 
   // Game Loop
   while (window.isOpen()) {
@@ -97,15 +91,16 @@ int main() {
       if (event.type == sf::Event::Closed) {
         window.close();
       }
+
       if (event.type == sf::Event::MouseButtonPressed) {
+        //Gamestate::insert_entity(std::make_shared<TestEntity>(&tex, event.mouseButton.x, event.mouseButton.y));
       }
+
       if (event.type == sf::Event::MouseWheelScrolled) {
         current_tool_index +=
             event.mouseWheelScroll.delta / abs(event.mouseWheelScroll.delta);
-        if (current_tool_index > NUM_TOOLS - 1)
-          current_tool_index = 0;
-        if (current_tool_index < 0)
-          current_tool_index = NUM_TOOLS - 1;
+        if (current_tool_index > NUM_TOOLS - 1) current_tool_index = 0;
+        if (current_tool_index < 0) current_tool_index = NUM_TOOLS - 1;
         current_tool = tools[current_tool_index];
       }
       current_tool->handle_event(&event);
@@ -127,15 +122,14 @@ int main() {
 
     // DRAW
 
-    std::sort(Gamestate::entities.begin(), Gamestate::entities.end(),
-              compare_entities);
+    std::sort(Gamestate::entities.begin(), Gamestate::entities.end(), compare_entities);
 
     window.clear(sf::Color(229, 229, 229));
     for (auto &ent : Gamestate::entities) {
       ent->draw(&window);
     }
 
-    Gamestate::main_grid.draw(&window);
+    //Gamestate::main_grid.draw(&window);
 
     current_tool->draw(&window);
 

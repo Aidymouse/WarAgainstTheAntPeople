@@ -48,7 +48,7 @@ void Mallet::handle_event(sf::Event *event) {
           // evt.mouseButton.x, evt.mouseButton.y, ent->pos.x, ent->pos.y);
 
           collider.x = evt.mouseButton.x;
-          collider.y = evt.mouseButton.y;
+          collider.y = evt.mouseButton.y; 
 
           if (CollisionManager::does_collide(&collider, &(ent->collider))) {
             Collision col;

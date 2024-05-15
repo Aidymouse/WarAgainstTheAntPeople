@@ -1,6 +1,7 @@
 #include "../include/Lib/CollisionManager.h"
 
 #include <math.h>
+#include <iostream>
 
 bool circle_circle(Collider *s1, Collider *s2) {
   return sqrt((s1->x - s2->x) * (s1->x - s2->x) +
@@ -24,26 +25,21 @@ bool circle_rect(Collider *s1, Collider *s2) {
   float rect_width = rect->collisionShape.rect.width;
   float rect_height = rect->collisionShape.rect.height;
   float circ_radius = circle->collisionShape.circle.radius;
-  float rect_center_x = rect->x + rect_width / 2;
-  float rect_center_y = rect->y + rect_height / 2;
 
-  float circle_dist_x = circle->x - rect_center_x;
-  float circle_dist_y = circle->y - rect_center_y;
+  float testX = circle->x;
+  float testY = circle->y;
+  if ( (circle->x) < (rect->x) ) testX = rect->x;
+  else if ( (circle->x) > (rect->x + rect_width)) testX = rect->x + rect_width;
 
-  if (circle_dist_x > (rect_width / 2 + circ_radius))
-    return false;
-  if (circle_dist_y > (rect_height / 2 + circ_radius))
-    return false;
+  if ( (circle->y) < (rect->y) ) testY = rect->y;
+  else if (circle->y > rect->y + rect_height) testY = rect->y + rect_height;
 
-  if (circle_dist_x <= (rect_width / 2))
-    return true;
-  if (circle_dist_y <= (rect_height / 2))
-    return true;
+  //std::cout << testX << ", " << testY << std::endl;
+  float distX = circle->x - testX;
+  float distY = circle->y - testY;
+  float distance = sqrt( (distX*distX) + (distY*distY) );
 
-  float corner_dist_sq =
-      (circle_dist_x - rect_width / 2) * (circle_dist_x - rect_width / 2) +
-      (circle_dist_y - rect_height / 2) * (circle_dist_y - rect_height / 2);
-  return corner_dist_sq <= circ_radius * circ_radius;
+  return distance <= circ_radius;
 }
 
 float point_dist(float p1x, float p1y, float p2x, float p2y) {
@@ -86,3 +82,4 @@ bool CollisionManager::does_collide(Collider *s1, Collider *s2) {
   }
   return false;
 }
+
