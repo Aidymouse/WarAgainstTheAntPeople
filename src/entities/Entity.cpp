@@ -41,7 +41,7 @@ void Entity::draw_collider(sf::RenderWindow *window, sf::Color color) {
   }
 }
 
-void Entity::say_type() { std::cout << "Entity" << std::endl; }
+std::string Entity::type() { return "Entity"; }
 
 void Entity::init_animation(animation *anim) {
   cur_anim = anim;
@@ -80,6 +80,7 @@ void Entity::update_collider() {
 
 void Entity::update_collision_cells(std::vector<std::string> inhabited_ids) {
   // TODO
+  // Does this just work??
   inhabited_cell_ids = inhabited_ids;
 }
 

@@ -13,3 +13,4 @@ void GraphicsManager::load_texture(std::string tex_name,
   textures[tex_name] = std::make_shared<sf::Texture>();
   textures[tex_name]->loadFromFile(tex_filename);
 }
+

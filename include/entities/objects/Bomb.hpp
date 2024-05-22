@@ -8,6 +8,7 @@ const float MAX_LIFETIME = 4;
 #pragma once
 class Bomb : public Entity {
 public:
+  std::string type = "Bomb";
   sf::CircleShape ellipse;
   sf::Texture *tex;
   float timer = MAX_FUSE_TIMER;
@@ -15,6 +16,5 @@ public:
   Bomb(sf::Texture *tex, float x, float y);
   void update(float dt) override;
   void draw(sf::RenderWindow *window) override;
-  void say_type() override;
   bool exploded = false;
 };

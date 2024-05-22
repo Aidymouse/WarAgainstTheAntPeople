@@ -75,4 +75,3 @@ void Bomb::update(float dt) {
 
 void Bomb::draw(sf::RenderWindow *window) { window->draw(sprite); }
 
-void Bomb::say_type() { std::cout << "Bomb" << std::endl; }

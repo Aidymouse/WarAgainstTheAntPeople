@@ -2,6 +2,7 @@
 #include "include/Entities/Entity.h"
 #include "include/Lib/CollisionManager.h"
 #include "include/Types/CollisionShapes.h"
+#include "include/Lib/Debug.h"
 #include <iostream>
 #include <string>
 
@@ -23,7 +24,7 @@ cell_pos id_to_row_col(std::string cell_id) {
     return pos;
 }
 
-void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent, bool debug) {
+void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent) {
 
   std::vector<std::string> inhabited_ids;
 
@@ -44,16 +45,15 @@ void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent, bool debug) {
 
   } else if (ent->collider.type == CollisionShapeType::CIRCLE) {
 
-    cells_right =
-        cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
-    cells_down =
-        cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
+    cells_right = cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
+    cells_down = cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
     col_mod_start = -cells_right / 2;
     row_mod_start = -cells_down / 2;
   } else {
 
   }
 
+  // Check if cells 
   for (int row_mod = row_mod_start; row_mod < cells_down; row_mod++) {
     for (int col_mod = col_mod_start; col_mod < cells_right; col_mod++) {
       Collider check_cell_collider;
@@ -72,8 +72,8 @@ void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent, bool debug) {
   }
 
   ent->update_collision_cells(inhabited_ids);
-  if (debug) {
-    std::cout << "Inhabited ids for this entity: ";
+  if (Debug::DEBUG) {
+    std::cout << "Inhabited ids for this entity (" << ent->type() << "): ";
     for (auto const id : inhabited_ids) {
       std::cout<< id << ", ";
     }

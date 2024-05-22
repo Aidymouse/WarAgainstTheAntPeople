@@ -1,13 +1,15 @@
-#include "include/Entities/Entity.h"
-#include "include/Entities/FloorPanel.h"
-#include "include/Entities/TestEntity.h"
-#include "include/Entities/Guy.h"
-#include "include/Lib/AudioManager.h"
-#include "include/Lib/Gamestate.h"
-#include "include/Lib/GraphicsManager.h"
-#include "include/Tools/Bombs.h"
-#include "include/Tools/Mallet.h"
-#include "include/lib/ParticleSystem.hpp"
+#include <entities/Entity.hpp>
+#include <entities/objects/FloorPanel.hpp>
+#include <entities/objects/TestEntity.hpp>
+#include <entities/creatures/Guy.hpp>
+#include <state/AudioManager.hpp>
+#include <helper/Debug.hpp>
+#include <state/Gamestate.hpp>
+#include <state/GraphicsManager.hpp>
+#include <entities/tools/Bombs.hpp>
+#include <entities/tools/Mallet.hpp>
+#include <state/ParticleSystem.hpp>
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -129,7 +131,7 @@ int main() {
       ent->draw(&window);
     }
 
-    //Gamestate::main_grid.draw(&window);
+    //if (Debug::DEBUG) Gamestate::main_grid.draw(&window);
 
     current_tool->draw(&window);
 

@@ -8,11 +8,11 @@
 std::vector<std::shared_ptr<Entity>> Gamestate::entities;
 CollisionGrid Gamestate::main_grid = CollisionGrid(64);
 
-std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent, bool debug) {
+std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent) {
 
   entities.emplace_back(ent);
   if (!ent->decoration) {
-    main_grid.insert_entity(ent, debug);
+    main_grid.insert_entity(ent);
   }
   return ent;
 };

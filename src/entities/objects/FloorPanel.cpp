@@ -10,7 +10,7 @@ FloorPanel::FloorPanel(float x, float y) : Entity::Entity(x, y) {
   sprite.setPosition(pos.x, pos.y);
 
   collider.collisionShape.rect.width = 64;
-  collider.collisionShape.rect.height = 64;
+  collider.collisionShape.rect.height = 48;
   collider.type = CollisionShapeType::RECT;
   collider.x = x;
   collider.y = y;
@@ -36,12 +36,13 @@ void FloorPanel::update(float dt) {
   if (debug.show_collider_timer > 0) debug.show_collider_timer -= dt;
 }
 
+std::string FloorPanel::type() { return "FloorPanel"; }
+
 void FloorPanel::draw(sf::RenderWindow *window) {
   window->draw(sprite);
   if (debug.show_collider_timer > 0) draw_collider(window);
 }
 
-void FloorPanel::say_type() { std::cout << "FloorPanel" << std::endl; }
 
 void FloorPanel::handle_collision(Collision collision) {
   if (collision.type == Collisions::MALLET) {

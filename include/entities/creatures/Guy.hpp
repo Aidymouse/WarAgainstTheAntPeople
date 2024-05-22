@@ -29,6 +29,6 @@ public:
   Guy(sf::Texture *tex, float x, float y);
   void update(float dt) override;
   void draw(sf::RenderWindow *window) override;
-  void say_type() override;
+  std::string type() override;
   void handle_collision(Collision collision) override;
 };

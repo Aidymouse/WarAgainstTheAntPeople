@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include <entities/Entity.h>
 
 class FloorPanel : public Entity {
 public:
@@ -15,6 +15,6 @@ public:
   FloorPanel(float x, float y);
   void update(float dt) override;
   void draw(sf::RenderWindow *window) override;
-  void say_type() override;
   void handle_collision(Collision collision) override;
+  std::string type() override;
 };

@@ -77,9 +77,9 @@ void Guy::update(float dt) {
   }
 }
 
-void Guy::draw(sf::RenderWindow *window) { window->draw(sprite); }
+std::string Guy::type() { return "Guy"; }
 
-void Guy::say_type() { std::cout << "Guy" << std::endl; }
+void Guy::draw(sf::RenderWindow *window) { window->draw(sprite); }
 
 void Guy::handle_collision(Collision collision) {
 

@@ -17,35 +17,31 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(EvilPikmin
     "src/main.cpp"
-    "src/CollisionGrid.cpp"
-    "src/Gamestate.cpp"
 
-    "src/include/Lib/Gamestate.h" 
-    "src/include/Types/Animation.h"
-    "src/include/Types/Collisions.h"
-    "src/include/Types/CollisionShapes.h"
+    "include/state/AudioManager.hpp" "src/state/AudioManager.cpp"
+    "include/state/CollisionGrid.hpp" "src/state/CollisionGrid.cpp"
+    "include/state/CollisionManager.hpp" "src/state/CollisionManager.cpp"
+    "include/state/Gamestate.hpp" "src/state/Gamestate.cpp"
+    "include/state/GraphicsManager.hpp" "src/state/GraphicsManager.cpp"
 
-    "src/include/Lib/AnimationGenerator.h"
-    "src/include/Lib/GraphicsManager.h" "src/lib/GraphicsManager.cpp"
-    "src/include/Lib/CollisionManager.h" "src/lib/CollisionManager.cpp"
+    "include/helper/AnimationGenerator.hpp"
+    "include/helper/Debug.hpp" "src/helper/Debug.cpp"
 
-    "src/lib/AnimationGenerator.cpp"
-    "src/include/Lib/AudioManager.h" "src/lib/AudioManager.cpp" 
+    "include/entities/Entity.hpp" "src/entities/Entity.cpp"
+    "include/entities/TestEntity.hpp" "src/entities/TestEntity.cpp"
 
-    "src/include/Lib/Helper.hpp"
+    "include/entities/creatures/Guy.hpp" "src/entities/creatures/Guy.cpp"
 
-    "src/tools/Tool.cpp"
-    "src/include/Tools/Mallet.h" "src/tools/Mallet.cpp"
-    "src/include/Tools/Bombs.h" "src/tools/Bombs.cpp" 
-    "src/include/Tools/Fire.h" "src/tools/Fire.cpp"
+    "include/entities/decorations/Bloodstain.hpp" "src/entities/decorations/Bloodstain.cpp"
 
-    "src/include/Entities/Entity.h" "src/entities/Entity.cpp"
-    "src/include/Entities/Guy.h" "src/entities/Guy.cpp"  
-    "src/include/Entities/Bomb.h"  "src/entities/Bomb.cpp"
-    "src/include/Entities/FloorPanel.h" "src/entities/FloorPanel.cpp"
-    "src/include/Entities/TestEntity.h" "src/entities/TestEntity.cpp"
+    "include/entities/objects/Bomb.hpp" "src/entities/objects/Bomb.cpp"
+    "include/entities/objects/FloorPanel.hpp" "src/entities/objects/FloorPanel.cpp"
 
-    "src/entities/decorations/Bloodstain.cpp"
+    "include/entities/tools/Bombs.hpp" "src/entities/tools/Bombs.cpp"
+    "include/entities/tools/Fire.hpp" "src/entities/tools/Fire.cpp"
+    "include/entities/tools/Mallet.hpp" "src/entities/tools/Mallet.cpp"
+    "include/entities/tools/Tool.hpp" "src/entities/tools/Tool.cpp"
+
 )
 
 

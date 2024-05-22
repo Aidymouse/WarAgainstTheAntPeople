@@ -1,9 +1,9 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
 
-#include "../Types/Animation.h"
-#include "../Types/CollisionShapes.h"
-#include "../Types/Collisions.h"
-#include "SFML/Graphics/Color.hpp"
+#include <types/Animation.hpp>
+#include <types/CollisionShapes.hpp>
+#include <types/Collisions.hpp>
 
 #pragma once
 
@@ -13,6 +13,7 @@ struct debug_info {
 
 class Entity {
 public:
+
   Entity() = default;
   Entity(float x, float y);
   sf::Vector3<float> pos;
@@ -28,7 +29,6 @@ public:
   virtual void update(float dt){};
   virtual void draw(sf::RenderWindow *window);
   virtual void draw_collider(sf::RenderWindow *window, sf::Color outline = sf::Color(255, 0 ,0));
-  virtual void say_type();
   virtual void handle_collision(Collision collision){};
 
   std::vector<std::string> inhabited_cell_ids;
@@ -41,4 +41,5 @@ public:
   virtual void update_animation(float dt);
   virtual void init_animation(animation *anim);
   virtual void update_collider();
+  virtual std::string type();
 };

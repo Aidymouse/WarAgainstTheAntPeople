@@ -19,9 +19,6 @@ TestEntity::TestEntity(sf::Texture *t, float x, float y) : Entity::Entity(x, y) 
   collider.y = y-20;
 }
 
-void TestEntity::say_type() {
-  std::cout << "Test Entity";
-}
 
 void TestEntity::draw(sf::RenderWindow *window) {
   draw_collider(window, sf::Color(0, 255, 0));
