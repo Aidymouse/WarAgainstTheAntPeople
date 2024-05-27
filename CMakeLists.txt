@@ -25,7 +25,7 @@ add_executable(EvilPikmin
     "include/state/GraphicsManager.hpp" "src/state/GraphicsManager.cpp"
 
     "include/helper/AnimationGenerator.hpp"
-    "include/helper/Debug.hpp" "src/helper/Debug.cpp"
+    "include/helper/Debug.hpp" 
 
     "include/entities/Entity.hpp" "src/entities/Entity.cpp"
     "include/entities/TestEntity.hpp" "src/entities/TestEntity.cpp"

@@ -26,6 +26,8 @@ cell_pos id_to_row_col(std::string cell_id) {
 
 void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent) {
 
+  if (Debug::DEBUG) std::cout << "Type " << ent->type() << ent->collider.type;
+
   std::vector<std::string> inhabited_ids;
 
   int base_cell_col = ent->pos.x / cell_size;
@@ -45,11 +47,13 @@ void CollisionGrid::insert_entity(std::shared_ptr<Entity> ent) {
 
   } else if (ent->collider.type == CollisionShapeType::CIRCLE) {
 
-    cells_right = cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
-    cells_down = cell_size / (ent->collider.collisionShape.circle.radius * 2) + 1;
+    cells_right = (cell_size / (ent->collider.collisionShape.circle.radius * 2))*2 + 1;
+    cells_down = (cell_size / (ent->collider.collisionShape.circle.radius * 2))*2 + 1;
     col_mod_start = -cells_right / 2;
     row_mod_start = -cells_down / 2;
+
   } else {
+    std::cout << "No collider type! Going nuclear!!!";
 
   }
 

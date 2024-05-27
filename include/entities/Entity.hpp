@@ -17,6 +17,7 @@ public:
   Entity() = default;
   Entity(float x, float y);
   sf::Vector3<float> pos;
+  sf::Vector3<float> sprite_offset;
 
   Collider collider;
 

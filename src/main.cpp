@@ -1,3 +1,6 @@
+#include "SFML/Window/Event.hpp"
+#include "state/CollisionManager.hpp"
+#include "types/CollisionShapes.hpp"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -20,7 +23,7 @@
 #include <string>
 #include <time.h>
 
-const int NUM_GUYS = 1000;
+const int NUM_GUYS = 000;
 
 const int WINDOW_WIDTH = 800u;
 const int WINDOW_HEIGHT = 600u;
@@ -53,10 +56,9 @@ int main() {
   AudioManager::load_sound("vine boom", audio_path + "vine boom.ogg");
 
   // Load Textures
-  sf::Texture tex;
-  tex.loadFromFile(graphics_path + "guy sheet.png");
-
+  GraphicsManager::load_texture("guy", graphics_path + "guy sheet.png");
   GraphicsManager::load_texture("floorpanel", graphics_path + "floorpanel.png");
+  GraphicsManager::load_texture("mallet", graphics_path + "mallet.png");
 
   // Set up delta time clock
   sf::Clock delta_clock;
@@ -64,16 +66,10 @@ int main() {
 
   // LOAD
   sf::Time elapsed;
-  Mallet mallet(graphics_path + "mallet.png", 32, 32);
-  Bombs bombs(graphics_path + "bombs.png", 16, 16);
-  const int NUM_TOOLS = 2;
-  Tool *tools[NUM_TOOLS] = {&mallet, &bombs};
-  int current_tool_index = 0;
-  Tool *current_tool = tools[current_tool_index];
 
   // Make Guys
   for (int i = 0; i < NUM_GUYS; i++) {
-    Gamestate::insert_entity(std::make_shared<Guy>(&tex, rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT));
+    Gamestate::insert_entity(std::make_shared<Guy>(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT));
   }
 
   // Make Floor Panels
@@ -82,8 +78,18 @@ int main() {
 
   for (int row = 0; row < floor_panel_rows; row++) {
     for (int col = 0; col < floor_panel_columns; col++) {
-      Gamestate::insert_entity(std::make_shared<FloorPanel>(col * 64, row * 64));
+      //Gamestate::insert_entity(std::make_shared<FloorPanel>(col * 64, row * 64));
     }
+  }
+
+  // Add Tools
+  enum tool_type { MALLET };
+  std::shared_ptr<Entity> tools[1] = {
+    std::make_shared<Mallet>(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT)
+  };
+
+  for (auto &tool : tools) {
+    Gamestate::insert_entity(tool);
   }
 
 
@@ -97,16 +103,27 @@ int main() {
 
       if (event.type == sf::Event::MouseButtonPressed) {
         //Gamestate::insert_entity(std::make_shared<TestEntity>(&tex, event.mouseButton.x, event.mouseButton.y));
+        if (event.mouseButton.button == sf::Mouse::Button::Left) {
+          Collider mouse_collider;
+          mouse_collider.type = CollisionShapeType::CIRCLE;
+          mouse_collider.collisionShape.circle.radius = 2;
+          mouse_collider.x = event.mouseButton.x;
+          mouse_collider.y = event.mouseButton.y;
+
+          std::vector<grid_cell *> clicked_cells = Gamestate::main_grid.get_cells_within(1, mouse_collider.x, mouse_collider.y);
+
+          for (auto &cell : clicked_cells) {
+            for (auto &ent : *cell) {
+              if (CollisionManager::does_collide(&mouse_collider, &(ent->collider))) {
+                std::cout << ent->type();
+              }
+            }
+          }
+        }
       }
 
       if (event.type == sf::Event::MouseWheelScrolled) {
-        current_tool_index +=
-            event.mouseWheelScroll.delta / abs(event.mouseWheelScroll.delta);
-        if (current_tool_index > NUM_TOOLS - 1) current_tool_index = 0;
-        if (current_tool_index < 0) current_tool_index = NUM_TOOLS - 1;
-        current_tool = tools[current_tool_index];
       }
-      current_tool->handle_event(&event);
     }
 
     // UPDATE
@@ -121,8 +138,6 @@ int main() {
 
     Gamestate::remove_marked_entities();
 
-    current_tool->update(delta_time, &window);
-
     // DRAW
 
     std::sort(Gamestate::entities.begin(), Gamestate::entities.end(), compare_entities);
@@ -130,11 +145,10 @@ int main() {
     window.clear(sf::Color(229, 229, 229));
     for (auto &ent : Gamestate::entities) {
       ent->draw(&window);
+      if (Debug::draw_colliders) { ent->draw_collider(&window); }
     }
 
-    //if (Debug::DEBUG) Gamestate::main_grid.draw(&window);
-
-    current_tool->draw(&window);
+    if (Debug::DEBUG) Gamestate::main_grid.draw(&window);
 
     window.display();
   }

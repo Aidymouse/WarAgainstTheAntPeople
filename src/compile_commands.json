@@ -37,12 +37,6 @@
 },
 {
   "directory": "C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DRESOURCE_PATH=\\\"C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/resources/\\\" -DSFML_STATIC -IC:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/include -IC:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out/_deps/sfml-src/include -O0 -g -Xclang -gcodeview -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\EvilPikmin.dir\\src\\helper\\Debug.cpp.obj -c C:\\Users\\aidan\\Desktop\\Programming\\cpp\\EvilPikmin\\src\\helper\\Debug.cpp",
-  "file": "C:\\Users\\aidan\\Desktop\\Programming\\cpp\\EvilPikmin\\src\\helper\\Debug.cpp",
-  "output": "CMakeFiles\\EvilPikmin.dir\\src\\helper\\Debug.cpp.obj"
-},
-{
-  "directory": "C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out",
   "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -DRESOURCE_PATH=\\\"C:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/resources/\\\" -DSFML_STATIC -IC:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/include -IC:/Users/aidan/Desktop/Programming/cpp/EvilPikmin/ninja_out/_deps/sfml-src/include -O0 -g -Xclang -gcodeview -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\EvilPikmin.dir\\src\\entities\\Entity.cpp.obj -c C:\\Users\\aidan\\Desktop\\Programming\\cpp\\EvilPikmin\\src\\entities\\Entity.cpp",
   "file": "C:\\Users\\aidan\\Desktop\\Programming\\cpp\\EvilPikmin\\src\\entities\\Entity.cpp",
   "output": "CMakeFiles\\EvilPikmin.dir\\src\\entities\\Entity.cpp.obj"

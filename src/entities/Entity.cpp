@@ -30,7 +30,7 @@ void Entity::draw_collider(sf::RenderWindow *window, sf::Color color) {
   } else if (collider.type == CollisionShapeType::CIRCLE) {
     sf::CircleShape circle;
     float radius = collider.collisionShape.circle.radius;
-    circle.setPosition(sf::Vector2f(collider.x, collider.y));
+    circle.setPosition(sf::Vector2f(collider.x - radius, collider.y - radius));
     //circle.setPosition(sf::Vector2f(0, 0));
     circle.setRadius(collider.collisionShape.circle.radius);
     circle.setFillColor(sf::Color(0, 0, 0, 0));

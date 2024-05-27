@@ -26,7 +26,7 @@ public:
 
   float gravity_strength = 20;
 
-  Guy(sf::Texture *tex, float x, float y);
+  Guy(float x, float y);
   void update(float dt) override;
   void draw(sf::RenderWindow *window) override;
   std::string type() override;

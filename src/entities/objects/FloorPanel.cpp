@@ -9,7 +9,7 @@ FloorPanel::FloorPanel(float x, float y) : Entity::Entity(x, y) {
   sprite.setPosition(pos.x, pos.y);
 
   collider.collisionShape.rect.width = 64;
-  collider.collisionShape.rect.height = 48;
+  collider.collisionShape.rect.height = 64;
   collider.type = CollisionShapeType::RECT;
   collider.x = x;
   collider.y = y;

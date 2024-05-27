@@ -1,14 +1,13 @@
+#include <entities/Entity.hpp>
 #include <types/CollisionShapes.hpp>
-#include <entities/tools/Tool.hpp>
-
 #include <SFML/Audio.hpp>
 
 #pragma once
-class Mallet : public Tool {
+class Mallet : public Entity {
 public:
-  Mallet(std::string tex_filename, float origin_x, float origin_y);
+  Mallet(float x, float y);
   sf::Sound sound;
   void draw(sf::RenderWindow *window) override;
-  void handle_event(sf::Event *event) override;
-  Collider collider;
+  void handle_event(sf::Event *event);
+  std::string type() override;
 };

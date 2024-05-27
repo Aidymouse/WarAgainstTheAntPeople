@@ -1,3 +1,4 @@
+#include "state/GraphicsManager.hpp"
 #include <entities/Entity.hpp>
 #include <entities/creatures/Guy.hpp>
 #include <entities/Decorations/Bloodstain.hpp>
@@ -19,9 +20,8 @@ struct {
   animation g2 = {guy_graphic_rects.g2, 0.15, &g1, 8, 8};
 } guy_anims;
 
-Guy::Guy(sf::Texture *t, float x, float y) : Entity::Entity(x, y) {
-  tex = t;
-  sprite.setTexture(*tex);
+Guy::Guy(float x, float y) : Entity::Entity(x, y) {
+  sprite.setTexture(*GraphicsManager::textures["guy"]);
   sprite.setPosition(pos.x, pos.y);
 
   collider.type = CollisionShapeType::CIRCLE;
