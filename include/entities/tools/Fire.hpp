@@ -1,4 +1,4 @@
-#include "Tool.h"
+#include <entities/tools/Tool.hpp>
 
 #include <SFML/Audio.hpp>
 

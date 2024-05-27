@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include <entities/Entity.hpp>
 
 const int BOMB_RADIUS = 10;
 const int EXPLOSION_RADIUS = 50;

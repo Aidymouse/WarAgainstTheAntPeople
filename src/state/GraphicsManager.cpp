@@ -1,4 +1,4 @@
-#include "../include/Lib/GraphicsManager.h"
+#include <state/GraphicsManager.hpp>
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <memory>

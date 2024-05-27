@@ -1,6 +1,6 @@
-#include "include/Lib/Gamestate.h"
-#include "include/Entities/Entity.h"
-#include "include/Lib/CollisionGrid.h"
+#include <state/Gamestate.hpp>
+#include <entities/Entity.hpp>
+#include <state/CollisionGrid.hpp>
 
 #include <memory>
 #include <vector>

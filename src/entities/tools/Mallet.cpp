@@ -1,8 +1,8 @@
-#include "../include/Tools/Mallet.h"
-#include "../include/Lib/AudioManager.h"
-#include "../include/Lib/CollisionManager.h"
-#include "../include/Lib/Gamestate.h"
-#include "../include/Lib/Helper.hpp"
+#include <entities/tools/Mallet.hpp>
+#include <state/AudioManager.hpp>
+#include <state/CollisionManager.hpp>
+#include <state/Gamestate.hpp>
+#include <helper/Helper.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>

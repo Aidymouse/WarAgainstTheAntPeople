@@ -1,5 +1,5 @@
-#include "../Entities/Entity.h"
-#include "../Lib/Helper.hpp"
+#include <entities/Entity.hpp>
+#include <helper/Helper.hpp>
 
 #pragma once
 struct timers {

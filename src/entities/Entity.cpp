@@ -1,6 +1,8 @@
-#include "../include/Entities/Entity.h"
-#include "../include/Types/Animation.h"
 #include <SFML/Graphics.hpp>
+
+#include <entities/Entity.hpp>
+#include <types/Animation.hpp>
+
 #include <iostream>
 #include <stdio.h>
 

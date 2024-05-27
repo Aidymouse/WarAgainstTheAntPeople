@@ -1,8 +1,7 @@
-#include "../../include/Entities/Decorations/Bloodstain.h"
-#include "../../include/Lib/AnimationGenerator.h"
+#include <entities/Decorations/Bloodstain.hpp>
+#include <helper/AnimationGenerator.hpp>
 
-const std::vector<sf::IntRect> bloodstain_rects =
-    AnimationGenerator::generate_texture_rects(116, 16, 16, 16);
+const std::vector<sf::IntRect> bloodstain_rects = AnimationGenerator::generate_texture_rects(116, 16, 16, 16);
 
 struct {
   animation splat1{bloodstain_rects[1], 0.05, &splat2, 8, 8};

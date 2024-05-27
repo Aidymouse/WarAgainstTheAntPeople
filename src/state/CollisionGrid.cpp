@@ -1,8 +1,8 @@
-#include "include/Lib/CollisionGrid.h"
-#include "include/Entities/Entity.h"
-#include "include/Lib/CollisionManager.h"
-#include "include/Types/CollisionShapes.h"
-#include "include/Lib/Debug.h"
+#include <state/CollisionGrid.hpp>
+#include <state/CollisionManager.hpp>
+#include <helper/Debug.hpp>
+#include <types/CollisionShapes.hpp>
+#include <entities/Entity.hpp>
 #include <iostream>
 #include <string>
 

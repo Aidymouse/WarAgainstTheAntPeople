@@ -1,7 +1,6 @@
-#include "../include/Entities/FloorPanel.h"
-#include "../include/Lib/GraphicsManager.h"
-#include "../include/Types/Collisions.h"
-#include <iostream>
+#include <entities/objects/FloorPanel.hpp>
+#include <state/GraphicsManager.hpp>
+#include <types/Collisions.hpp>
 
 FloorPanel::FloorPanel(float x, float y) : Entity::Entity(x, y) {
   pos.z = -1;

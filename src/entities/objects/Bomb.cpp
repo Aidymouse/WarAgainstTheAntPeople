@@ -1,13 +1,12 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
 
-#include "../include/Lib/AnimationGenerator.h"
-#include "../include/Lib/Gamestate.h"
-#include "../include/Lib/Helper.hpp"
-#include "../include/Types/Animation.h"
+#include <helper/AnimationGenerator.hpp>
+#include <state/Gamestate.hpp>
+#include <helper/Helper.hpp>
+#include <types/Animation.hpp>
 
-#include "../include/Entities/Bomb.h"
-#include "../include/Entities/Entity.h"
+#include <entities/Entity.hpp>
+#include <entities/objects/Bomb.hpp>
 
 const std::vector<sf::IntRect> bomb_graphics_rects =
     AnimationGenerator::generate_texture_rects(64, 64, 16, 16);

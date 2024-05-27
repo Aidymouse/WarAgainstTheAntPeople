@@ -1,6 +1,6 @@
-#include "../include/Entities/TestEntity.h"
-#include "../include/Entities/Entity.h"
-#include "SFML/Graphics/Color.hpp"
+#include <entities/TestEntity.hpp>
+#include <entities/Entity.hpp>
+#include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 

@@ -55,7 +55,7 @@ else()
     #set(RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/${CMAKE_PROJECT_NAME}/resources/")
 endif()
 
-target_include_directories(EvilPikmin PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+target_include_directories(EvilPikmin PRIVATE "include")
 
 target_link_libraries(EvilPikmin PRIVATE sfml-graphics)
 target_link_libraries(EvilPikmin PRIVATE sfml-audio)

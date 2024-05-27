@@ -1,11 +1,10 @@
-#include "../include/Entities/Guy.h"
-#include "../include/Entities/Decorations/Bloodstain.h"
-#include "../include/Entities/Entity.h"
-#include "../include/Lib/Gamestate.h"
-#include "../include/Lib/Helper.hpp"
-#include "../include/Types/Animation.h"
+#include <entities/Entity.hpp>
+#include <entities/creatures/Guy.hpp>
+#include <entities/Decorations/Bloodstain.hpp>
+#include <state/Gamestate.hpp>
+#include <helper/Helper.hpp>
+#include <types/Animation.hpp>
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <stdlib.h>
 
 static float speed = 100.0;

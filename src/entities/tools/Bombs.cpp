@@ -1,7 +1,7 @@
-#include "../include/Tools/Bombs.h"
-#include "../include/Entities/Bomb.h"
-#include "../include/Lib/Gamestate.h"
-#include "../include/Tools/Tool.h"
+#include <entities/tools/Bombs.hpp>
+#include <entities/objects/Bomb.hpp>
+#include <state/Gamestate.hpp>
+#include <entities/tools/Tool.hpp>
 
 Bombs::Bombs(std::string filename, float origin_x, float origin_y)
     : Tool::Tool(filename, origin_x, origin_y) {

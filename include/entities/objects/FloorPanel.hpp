@@ -1,4 +1,4 @@
-#include <entities/Entity.h>
+#include <entities/Entity.hpp>
 
 class FloorPanel : public Entity {
 public:

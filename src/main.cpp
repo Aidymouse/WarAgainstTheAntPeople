@@ -1,6 +1,10 @@
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
 #include <entities/Entity.hpp>
 #include <entities/objects/FloorPanel.hpp>
-#include <entities/objects/TestEntity.hpp>
+#include <entities/TestEntity.hpp>
 #include <entities/creatures/Guy.hpp>
 #include <state/AudioManager.hpp>
 #include <helper/Debug.hpp>
@@ -10,9 +14,6 @@
 #include <entities/tools/Mallet.hpp>
 #include <state/ParticleSystem.hpp>
 
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
 #include <algorithm>
 #include <memory>
 #include <stdlib.h>

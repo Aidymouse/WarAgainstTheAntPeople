@@ -1,4 +1,4 @@
-#include "../Lib/CollisionGrid.h"
+#include <state/CollisionGrid.hpp>
 #include <vector>
 
 #pragma once

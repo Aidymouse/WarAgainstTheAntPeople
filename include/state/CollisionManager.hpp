@@ -1,4 +1,4 @@
-#include "../Types/CollisionShapes.h"
+#include <types/CollisionShapes.hpp>
 
 #pragma once
 class CollisionManager {

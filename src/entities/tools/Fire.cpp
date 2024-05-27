@@ -1,3 +1,3 @@
-#include "../include/Tools/Fire.h"
+#include <entities/tools/Fire.hpp>
 
 void handle_event(sf::Event *event) {}

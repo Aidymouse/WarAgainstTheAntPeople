@@ -1,5 +1,5 @@
-#include "../Types/CollisionShapes.h"
-#include "Tool.h"
+#include <types/CollisionShapes.hpp>
+#include <entities/tools/Tool.hpp>
 
 #include <SFML/Audio.hpp>
 

@@ -1,4 +1,4 @@
-#include "../include/Tools/Tool.h"
+#include <entities/tools/Tool.hpp>
 #include <SFML/Graphics.hpp>
 
 Tool::Tool(std::string filename) {

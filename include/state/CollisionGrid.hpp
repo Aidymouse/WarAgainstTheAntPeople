@@ -1,4 +1,4 @@
-#include "../Entities/Entity.h"
+#include <entities/Entity.hpp>
 #include <map>
 #include <vector>
 
