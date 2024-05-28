@@ -3,8 +3,7 @@
 #include <state/Gamestate.hpp>
 #include <entities/tools/Tool.hpp>
 
-Bombs::Bombs(std::string filename, float origin_x, float origin_y)
-    : Tool::Tool(filename, origin_x, origin_y) {
+Bombs::Bombs(float x, float y) : Tool::Tool(x, y) {
   bomb_tex.loadFromFile((std::string)RESOURCE_PATH + "graphics/bomb sheet.png");
 }
 

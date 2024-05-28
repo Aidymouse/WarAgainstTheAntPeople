@@ -1,4 +1,5 @@
 #include "SFML/Window/Event.hpp"
+#include "SFML/Window/Mouse.hpp"
 #include "state/CollisionManager.hpp"
 #include "types/CollisionShapes.hpp"
 #include <SFML/Audio.hpp>
@@ -84,7 +85,7 @@ int main() {
 
   // Add Tools
   enum tool_type { MALLET };
-  std::shared_ptr<Entity> tools[1] = {
+  std::shared_ptr<Tool> tools[1] = {
     std::make_shared<Mallet>(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT)
   };
 
@@ -103,22 +104,34 @@ int main() {
 
       if (event.type == sf::Event::MouseButtonPressed) {
         //Gamestate::insert_entity(std::make_shared<TestEntity>(&tex, event.mouseButton.x, event.mouseButton.y));
-        if (event.mouseButton.button == sf::Mouse::Button::Left) {
-          Collider mouse_collider;
-          mouse_collider.type = CollisionShapeType::CIRCLE;
-          mouse_collider.collisionShape.circle.radius = 2;
-          mouse_collider.x = event.mouseButton.x;
-          mouse_collider.y = event.mouseButton.y;
+        switch (event.mouseButton.button) {
+          case (sf::Mouse::Button::Left): {
+            Collider mouse_collider;
+            mouse_collider.type = CollisionShapeType::CIRCLE;
+            mouse_collider.collisionShape.circle.radius = 2;
+            mouse_collider.x = event.mouseButton.x;
+            mouse_collider.y = event.mouseButton.y;
 
-          std::vector<grid_cell *> clicked_cells = Gamestate::main_grid.get_cells_within(1, mouse_collider.x, mouse_collider.y);
+            std::vector<grid_cell *> clicked_cells = Gamestate::main_grid.get_cells_within(1, mouse_collider.x, mouse_collider.y);
 
-          for (auto &cell : clicked_cells) {
-            for (auto &ent : *cell) {
-              if (CollisionManager::does_collide(&mouse_collider, &(ent->collider))) {
-                std::cout << ent->type();
+            for (auto &tool : tools) {
+              if (CollisionManager::does_collide( &mouse_collider, &(tool->collider))) {
+                tool->pick_up();
+                Gamestate::equipped_tool = tool;
+                break;
               }
             }
+
+            break;
           }
+
+          case (sf::Mouse::Button::Right): {
+            Gamestate::equipped_tool->set_down();
+            Gamestate::equipped_tool.reset();
+          }
+
+          default: {}
+
         }
       }
 

@@ -7,6 +7,7 @@
 
 std::vector<std::shared_ptr<Entity>> Gamestate::entities;
 CollisionGrid Gamestate::main_grid = CollisionGrid(64);
+std::shared_ptr<Tool> Gamestate::equipped_tool;
 
 std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent) {
 

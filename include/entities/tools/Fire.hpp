@@ -1,11 +1,11 @@
 #include <entities/tools/Tool.hpp>
 
-#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 #pragma once
 class Fire : public Tool {
 public:
-  Fire(std::string tex_filename, float origin_x, float origin_y);
+  Fire(float x, float y);
   void draw(sf::RenderWindow *window) override;
   void handle_event(sf::Event *event) override;
 };

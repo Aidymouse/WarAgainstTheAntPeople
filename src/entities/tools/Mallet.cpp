@@ -6,7 +6,7 @@
 #include <helper/AnimationGenerator.hpp>
 #include <types/Collisions.hpp>
 #include <entities/tools/Mallet.hpp>
-#include <entities/Entity.hpp>
+#include <entities/tools/Tool.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -21,19 +21,25 @@ struct {
 
 const float MALLET_RANGE = 20.0;
 
-Mallet::Mallet(float x, float y) : Entity::Entity(x, y) {
+Mallet::Mallet(float x, float y) : Tool::Tool(x, y) {
 
   sprite.setTexture( *GraphicsManager::textures["mallet"]);
   sprite.setPosition( sf::Vector2f(x+sprite_offset.x, y+sprite_offset.y) );
   sprite.setTextureRect(mallet_rects.lying);
 
-  sprite.setOrigin(16, 16);
+  sprite_offset.x = 16;
+  sprite_offset.y = 16;
+  sprite.setOrigin(sprite_offset.x, sprite_offset.y);
 
   collider.type = CollisionShapeType::CIRCLE;
   collider.collisionShape.circle.radius = 16;
   collider.x = x;
   collider.y = y;
 
+}
+
+void Mallet::update(float dt) {
+  sprite.setOrigin(sprite_offset.x, sprite_offset.y);
 }
 
 void Mallet::handle_event(sf::Event *event) {
@@ -86,4 +92,14 @@ void Mallet::draw(sf::RenderWindow *window) { window->draw(sprite); }
 
 std::string Mallet::type() {
   return "Mallet";
+}
+
+void Mallet::pick_up() {
+  equipped = true;
+  sprite_offset.y = 32;
+}
+
+void Mallet::set_down() {
+  equipped = false;
+  sprite_offset.y = 16;
 }
