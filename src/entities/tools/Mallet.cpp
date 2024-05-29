@@ -40,6 +40,16 @@ Mallet::Mallet(float x, float y) : Tool::Tool(x, y) {
 
 void Mallet::update(float dt) {
   sprite.setOrigin(sprite_offset.x, sprite_offset.y);
+  
+  collider.x = pos.x;
+  collider.y = pos.y;
+
+  if (equipped) {
+    pos.x = Gamestate::mouse_pos.x;
+    pos.y = Gamestate::mouse_pos.y;
+  }
+
+  sprite.setPosition(pos.x, pos.y);
 }
 
 void Mallet::handle_event(sf::Event *event) {
@@ -97,9 +107,11 @@ std::string Mallet::type() {
 void Mallet::pick_up() {
   equipped = true;
   sprite_offset.y = 32;
+  sprite.setTextureRect(mallet_rects.up);
 }
 
 void Mallet::set_down() {
   equipped = false;
   sprite_offset.y = 16;
+  sprite.setTextureRect(mallet_rects.lying);
 }

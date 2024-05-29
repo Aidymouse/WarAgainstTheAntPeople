@@ -97,6 +97,10 @@ int main() {
   // Game Loop
   while (window.isOpen()) {
     // EVENTS
+    sf::Vector2i mouse = sf::Mouse::getPosition(window);
+    Gamestate::mouse_pos.x = mouse.x;
+    Gamestate::mouse_pos.y = mouse.y;
+
     for (auto event = sf::Event{}; window.pollEvent(event);) {
       if (event.type == sf::Event::Closed) {
         window.close();
