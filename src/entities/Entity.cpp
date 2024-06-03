@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <entities/Entity.hpp>
+#include <exception>
 #include <types/Animation.hpp>
 
 #include <iostream>
@@ -53,6 +54,7 @@ void Entity::init_animation(animation *anim) {
 }
 
 void Entity::update_animation(float dt) {
+  if (!cur_anim) { throw new std::exception("No animation init"); }
   if (cur_anim->next_anim == NULL) {
     return;
   }
@@ -84,5 +86,14 @@ void Entity::update_collision_cells(std::vector<std::string> inhabited_ids) {
   // TODO
   // Does this just work??
   inhabited_cell_ids = inhabited_ids;
+}
+
+void Entity::generic_upkeep() {
+
+  sprite.setPosition(pos.x, pos.y);
+  sprite.setOrigin(sprite_offset.x, sprite_offset.y);
+  collider.x = pos.x;
+  collider.y = pos.y;
+
 }
 

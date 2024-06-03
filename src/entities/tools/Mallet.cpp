@@ -10,6 +10,7 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
+#include <types/ToolStates.hpp>
 
 std::vector<sf::IntRect> mallet_graphic_rects = AnimationGenerator::generate_texture_rects(128, 128, 32, 32);
 
@@ -18,6 +19,7 @@ struct {
   const sf::IntRect smash = mallet_graphic_rects.at(1);
   const sf::IntRect lying = mallet_graphic_rects.at(2);
 } mallet_rects;
+
 
 const float MALLET_RANGE = 20.0;
 
@@ -39,79 +41,84 @@ Mallet::Mallet(float x, float y) : Tool::Tool(x, y) {
 }
 
 void Mallet::update(float dt) {
-  sprite.setOrigin(sprite_offset.x, sprite_offset.y);
   
-  collider.x = pos.x;
-  collider.y = pos.y;
-
   if (equipped) {
     pos.x = Gamestate::mouse_pos.x;
     pos.y = Gamestate::mouse_pos.y;
   }
 
-  sprite.setPosition(pos.x, pos.y);
-}
+  switch (state) {
+    case Mallet_States::LYING: { break; }
 
-void Mallet::handle_event(sf::Event *event) {
+    case Mallet_States::SMASHING: {
+      timers.smashing -= dt;
+      if (timers.smashing <= 0) {
+        sprite.setTextureRect(mallet_rects.smash);
 
-  sf::Event evt = *event;
+        // Collisions
+        std::vector<grid_cell *> mallet_cells = Gamestate::main_grid.get_cells_within(MALLET_RANGE, pos.x, pos.y);
 
-  if (evt.type == sf::Event::MouseButtonPressed) {
+        for (auto &cell : mallet_cells) {
+          for (auto &ent : *cell) {
 
-    if (evt.mouseButton.button == sf::Mouse::Left) {
+            // float dist = Helper::dist_tween_points(
+            // evt.mouseButton.x, evt.mouseButton.y, ent->pos.x, ent->pos.y);
+            collider.x = pos.x;
+            collider.y = pos.y;
 
-      // int splat_number = Helper::random(1, 3);
-      // AudioManager::play_sound("splat" + std::to_string(splat_number));
-      // AudioManager::play_sound("vine boom");
+            if (CollisionManager::does_collide(&collider, &(ent->collider))) {
+              Collision col;
+              col.type = Collisions::MALLET;
 
-      // Graphic
-      sprite.setTextureRect(mallet_rects.smash);
-
-      // Collisions
-      std::vector<grid_cell *> mallet_cells = Gamestate::main_grid.get_cells_within(MALLET_RANGE, evt.mouseButton.x, evt.mouseButton.y);
-
-      for (auto &cell : mallet_cells) {
-        for (auto &ent : *cell) {
-
-          // float dist = Helper::dist_tween_points(
-          // evt.mouseButton.x, evt.mouseButton.y, ent->pos.x, ent->pos.y);
-
-          collider.x = evt.mouseButton.x;
-          collider.y = evt.mouseButton.y; 
-
-          if (CollisionManager::does_collide(&collider, &(ent->collider))) {
-            Collision col;
-            col.type = Collisions::MALLET;
-
-            ent->handle_collision(col);
+              ent->handle_collision(col);
+            }
           }
         }
+
+        timers.rising = durations.rising;
+        state = Mallet_States::RISING;
       }
     }
-  }
 
-  if (evt.type == sf::Event::MouseButtonReleased) {
-
-    if (evt.mouseButton.button == sf::Mouse::Left) {
-      sprite.setTextureRect(mallet_rects.up);
+    case Mallet_States::RISING: {
+      timers.rising -= dt;
+      if (timers.rising <= 0) {
+        sprite.setTextureRect(mallet_rects.up);
+        state = Mallet_States::HELD;
+      }
+      break;
     }
   }
+
+  //update_animation(dt);
+  generic_upkeep();
 }
+
+void Mallet::activate() {
+  if (state != Mallet_States::HELD) return;
+
+  timers.smashing = durations.smashing;
+  state = Mallet_States::SMASHING;
+}
+
+void Mallet::handle_event(sf::Event *event) {}
 
 void Mallet::draw(sf::RenderWindow *window) { window->draw(sprite); }
 
-std::string Mallet::type() {
-  return "Mallet";
-}
+std::string Mallet::type() { return "Mallet"; }
 
 void Mallet::pick_up() {
   equipped = true;
   sprite_offset.y = 32;
   sprite.setTextureRect(mallet_rects.up);
+  state = Mallet_States::HELD;
 }
 
 void Mallet::set_down() {
   equipped = false;
   sprite_offset.y = 16;
   sprite.setTextureRect(mallet_rects.lying);
+  state = Mallet_States::LYING;
+  // TODO: Update position in the collision grid
 }
+

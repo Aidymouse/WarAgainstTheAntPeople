@@ -24,7 +24,7 @@
 #include <string>
 #include <time.h>
 
-const int NUM_GUYS = 000;
+const int NUM_GUYS = 1000;
 
 const int WINDOW_WIDTH = 800u;
 const int WINDOW_HEIGHT = 600u;
@@ -110,19 +110,23 @@ int main() {
         //Gamestate::insert_entity(std::make_shared<TestEntity>(&tex, event.mouseButton.x, event.mouseButton.y));
         switch (event.mouseButton.button) {
           case (sf::Mouse::Button::Left): {
-            Collider mouse_collider;
-            mouse_collider.type = CollisionShapeType::CIRCLE;
-            mouse_collider.collisionShape.circle.radius = 2;
-            mouse_collider.x = event.mouseButton.x;
-            mouse_collider.y = event.mouseButton.y;
+            if (Gamestate::equipped_tool) {
+              Gamestate::equipped_tool->activate();
+            } else {
+              Collider mouse_collider;
+              mouse_collider.type = CollisionShapeType::CIRCLE;
+              mouse_collider.collisionShape.circle.radius = 2;
+              mouse_collider.x = event.mouseButton.x;
+              mouse_collider.y = event.mouseButton.y;
 
-            std::vector<grid_cell *> clicked_cells = Gamestate::main_grid.get_cells_within(1, mouse_collider.x, mouse_collider.y);
+              std::vector<grid_cell *> clicked_cells = Gamestate::main_grid.get_cells_within(1, mouse_collider.x, mouse_collider.y);
 
-            for (auto &tool : tools) {
-              if (CollisionManager::does_collide( &mouse_collider, &(tool->collider))) {
-                tool->pick_up();
-                Gamestate::equipped_tool = tool;
-                break;
+              for (auto &tool : tools) {
+                if (CollisionManager::does_collide( &mouse_collider, &(tool->collider))) {
+                  tool->pick_up();
+                  Gamestate::equipped_tool = tool;
+                  break;
+                }
               }
             }
 
@@ -130,8 +134,10 @@ int main() {
           }
 
           case (sf::Mouse::Button::Right): {
-            Gamestate::equipped_tool->set_down();
-            Gamestate::equipped_tool.reset();
+            if (Gamestate::equipped_tool) {
+              Gamestate::equipped_tool->set_down();
+              Gamestate::equipped_tool.reset();
+            }
           }
 
           default: {}
@@ -165,7 +171,7 @@ int main() {
       if (Debug::draw_colliders) { ent->draw_collider(&window); }
     }
 
-    if (Debug::DEBUG) Gamestate::main_grid.draw(&window);
+    if (Debug::draw_collision_grid) Gamestate::main_grid.draw(&window);
 
     window.display();
   }

@@ -40,7 +40,7 @@ add_executable(EvilPikmin
     "include/entities/tools/Bombs.hpp" "src/entities/tools/Bombs.cpp"
     "include/entities/tools/Fire.hpp" "src/entities/tools/Fire.cpp"
     "include/entities/tools/Mallet.hpp" "src/entities/tools/Mallet.cpp"
-    "include/entities/tools/Tool.hpp" "src/entities/tools/Tool.cpp"
+    "include/entities/tools/Tool.hpp"
 
 )
 

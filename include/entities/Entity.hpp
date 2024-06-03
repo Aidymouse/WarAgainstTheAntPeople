@@ -16,6 +16,7 @@ public:
 
   Entity() = default;
   Entity(float x, float y);
+
   sf::Vector3<float> pos;
   sf::Vector3<float> sprite_offset;
 
@@ -42,5 +43,6 @@ public:
   virtual void update_animation(float dt);
   virtual void init_animation(animation *anim);
   virtual void update_collider();
+  void generic_upkeep();
   virtual std::string type();
 };
