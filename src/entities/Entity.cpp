@@ -96,4 +96,3 @@ void Entity::generic_upkeep() {
   collider.y = pos.y;
 
 }
-

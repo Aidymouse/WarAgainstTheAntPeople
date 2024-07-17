@@ -1,8 +1,9 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <memory>
 
-#pragma once
 class GraphicsManager {
 public:
   static std::map<std::string, std::shared_ptr<sf::Texture>> textures;

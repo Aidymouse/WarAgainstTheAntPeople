@@ -1,8 +1,9 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 #include <map>
 #include <vector>
 
-#pragma once
 typedef std::vector<std::shared_ptr<Entity>> grid_cell;
 
 class CollisionGrid {

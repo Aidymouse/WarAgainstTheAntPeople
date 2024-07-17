@@ -1,7 +1,8 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 #include <SFML/Graphics.hpp>
 
-#pragma once
 class Bloodstain : public Entity {
 public:
   Bloodstain(float x, float y);

@@ -1,7 +1,8 @@
+#pragma once
+
 #include <entities/tools/Tool.hpp>
 #include <SFML/Graphics.hpp>
 
-#pragma once
 class Bombs : public Tool {
 public:
   Bombs(float x, float y);

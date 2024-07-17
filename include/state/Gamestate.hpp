@@ -1,8 +1,9 @@
+#pragma once
+
 #include <state/CollisionGrid.hpp>
 #include <entities/tools/Tool.hpp>
 #include <vector>
 
-#pragma once
 class Gamestate {
 public:
   static const int WINDOW_WIDTH = 800u;

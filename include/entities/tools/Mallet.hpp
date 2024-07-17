@@ -1,10 +1,11 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 #include <entities/tools/Tool.hpp>
 #include <types/CollisionShapes.hpp>
 #include <SFML/Audio.hpp>
 #include <types/ToolStates.hpp>
 
-#pragma once
 class Mallet : public Tool {
 public:
   Mallet_States state = Mallet_States::LYING;

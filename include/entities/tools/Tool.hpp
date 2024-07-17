@@ -1,8 +1,9 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 #include <SFML/System.hpp>
 #include <memory>
 
-#pragma once
 class Tool : public Entity {
 public:
 	Tool(float x, float y) : Entity::Entity(x, y) {};

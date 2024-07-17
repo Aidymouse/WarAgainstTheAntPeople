@@ -1,8 +1,9 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
 
-#pragma once
 class Helper {
 public:
 	static float dist_tween_points(float x1, float y1, float x2, float y2) {

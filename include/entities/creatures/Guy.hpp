@@ -1,7 +1,7 @@
+#pragma once
 #include <entities/Entity.hpp>
 #include <helper/Helper.hpp>
 
-#pragma once
 struct timers {
   float animation = 0;
 };
@@ -21,7 +21,6 @@ public:
 
   sf::Vector3<float> ground_vel_dir;
   float ground_velocity = 0;
-
   float z_vel = 0;
 
   float gravity_strength = 20;

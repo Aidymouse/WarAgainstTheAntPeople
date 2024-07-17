@@ -1,3 +1,5 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 
 const int BOMB_RADIUS = 10;
@@ -5,7 +7,6 @@ const int EXPLOSION_RADIUS = 50;
 const float MAX_FUSE_TIMER = 3;
 const float MAX_LIFETIME = 4;
 
-#pragma once
 class Bomb : public Entity {
 public:
   std::string type = "Bomb";

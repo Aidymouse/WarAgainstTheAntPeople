@@ -1,4 +1,3 @@
-
 #pragma once
 enum Mallet_States {
   LYING,

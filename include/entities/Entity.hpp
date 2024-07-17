@@ -1,11 +1,14 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 
+#include <memory>
 #include <types/Animation.hpp>
 #include <types/CollisionShapes.hpp>
 #include <types/Collisions.hpp>
 
-#pragma once
+class Tool;
 
 struct debug_info {
   float show_collider_timer;
@@ -35,6 +38,9 @@ public:
 
   std::vector<std::string> inhabited_cell_ids;
   virtual void update_collision_cells(std::vector<std::string> ids);
+
+  virtual void pickup_tool(){};
+  virtual void activate_tool(){};
 
   sf::Texture tex;
   sf::Sprite sprite;

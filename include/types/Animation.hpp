@@ -1,6 +1,7 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 
-#pragma once
 
 struct animation {
 	sf::IntRect texture_rectangle;

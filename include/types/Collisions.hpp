@@ -1,6 +1,6 @@
+#pragma once
 class Entity;
 
-#pragma once
 struct explosion_collision {
   float distance;
   float bomb_pos_x;

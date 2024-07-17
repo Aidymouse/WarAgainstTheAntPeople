@@ -1,7 +1,7 @@
+#pragma once
+
 #include <entities/Entity.hpp>
 #include <SFML/Graphics.hpp>
-
-#pragma once
 
 class TestEntity : public Entity {
 public:

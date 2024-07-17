@@ -1,4 +1,4 @@
-#include "state/GraphicsManager.hpp"
+#include <state/GraphicsManager.hpp>
 #include <entities/Entity.hpp>
 #include <entities/creatures/Guy.hpp>
 #include <entities/Decorations/Bloodstain.hpp>

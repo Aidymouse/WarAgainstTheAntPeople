@@ -34,8 +34,9 @@ bool compare_entities(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2) {
   return e1->pos.y < e2->pos.y; // If z positions are equal, compare y positions
 }
 
+
 int main() {
-  auto window = sf::RenderWindow{{WINDOW_WIDTH, WINDOW_HEIGHT}, "Evil Pikmin"};
+  auto window = sf::RenderWindow{{WINDOW_WIDTH, WINDOW_HEIGHT}, "Evil Pikmin 2"};
   window.setFramerateLimit(144);
 
   // window.setMouseCursorVisible(false);
@@ -79,7 +80,7 @@ int main() {
 
   for (int row = 0; row < floor_panel_rows; row++) {
     for (int col = 0; col < floor_panel_columns; col++) {
-      //Gamestate::insert_entity(std::make_shared<FloorPanel>(col * 64, row * 64));
+      Gamestate::insert_entity(std::make_shared<FloorPanel>(col * 64, row * 64));
     }
   }
 
