@@ -1,7 +1,9 @@
+#pragma once
+
+#include <entities/tools/Tool.hpp>
 #include <entities/tools/Bombs.hpp>
 #include <entities/objects/Bomb.hpp>
 #include <state/Gamestate.hpp>
-#include <entities/tools/Tool.hpp>
 
 Bombs::Bombs(float x, float y) : Tool::Tool(x, y) {
   bomb_tex.loadFromFile((std::string)RESOURCE_PATH + "graphics/bomb sheet.png");

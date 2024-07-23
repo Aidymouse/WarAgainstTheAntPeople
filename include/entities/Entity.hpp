@@ -7,6 +7,7 @@
 #include <types/Animation.hpp>
 #include <types/CollisionShapes.hpp>
 #include <types/Collisions.hpp>
+//#include <entities/tools/Tool.hpp>
 
 class Tool;
 
@@ -31,17 +32,23 @@ public:
   bool marked_for_deletion = false;
   bool should_update_collision = false;
 
+  /* Core */
   virtual void update(float dt){};
   virtual void draw(sf::RenderWindow *window);
   virtual void draw_collider(sf::RenderWindow *window, sf::Color outline = sf::Color(255, 0 ,0));
-  virtual void handle_collision(Collision collision){};
 
+  /* Collision Stuff */
+  virtual void handle_collision(Collision collision){};
   std::vector<std::string> inhabited_cell_ids;
   virtual void update_collision_cells(std::vector<std::string> ids);
 
+  /* Tools */
   virtual void pickup_tool(){};
   virtual void activate_tool(){};
+  virtual void drop_tool() {};
+  std::shared_ptr<Tool> held_tool;
 
+  /* Sprite and Animation */
   sf::Texture tex;
   sf::Sprite sprite;
   animation *cur_anim = NULL;

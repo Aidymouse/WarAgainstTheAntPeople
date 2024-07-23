@@ -1,4 +1,5 @@
 #pragma once
+
 #include <state/AudioManager.hpp>
 #include <state/GraphicsManager.hpp>
 #include <state/CollisionManager.hpp>

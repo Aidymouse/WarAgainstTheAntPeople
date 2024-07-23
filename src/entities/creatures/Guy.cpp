@@ -1,3 +1,5 @@
+#pragma once
+
 #include <state/GraphicsManager.hpp>
 #include <entities/Entity.hpp>
 #include <entities/creatures/Guy.hpp>

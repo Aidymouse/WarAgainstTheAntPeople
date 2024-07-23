@@ -1,13 +1,19 @@
+#pragma once
+
 #include <state/Gamestate.hpp>
 #include <entities/Entity.hpp>
 #include <state/CollisionGrid.hpp>
+#include <entities/tools/ToolHolder.hpp>
+#include <entities/creatures/Guy.hpp>
 
 #include <memory>
 #include <vector>
 
+//Guy g = Guy(0, 0);
+
 std::vector<std::shared_ptr<Entity>> Gamestate::entities;
+//ToolHolder Gamestate::tool_holder;
 CollisionGrid Gamestate::main_grid = CollisionGrid(64);
-std::shared_ptr<Tool> Gamestate::equipped_tool;
 sf::Vector2i Gamestate::mouse_pos;
 
 std::shared_ptr<Entity> Gamestate::insert_entity(std::shared_ptr<Entity> ent) {

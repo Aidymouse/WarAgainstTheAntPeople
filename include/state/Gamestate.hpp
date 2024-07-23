@@ -1,8 +1,12 @@
 #pragma once
 
+#include <memory>
+#include <entities/tools/ToolHolder.hpp>
 #include <state/CollisionGrid.hpp>
-#include <entities/tools/Tool.hpp>
+//#include <entities/tools/Tool.hpp>
 #include <vector>
+
+class Entity;
 
 class Gamestate {
 public:
@@ -12,8 +16,9 @@ public:
   static sf::Vector2i mouse_pos;
 
   static CollisionGrid main_grid;
+  static ToolHolder tool_holder; 
   static std::vector<std::shared_ptr<Entity>> entities;
-  static std::shared_ptr<Tool> equipped_tool;
+  //static std::shared_ptr<Tool> equipped_tool;
 
   static std::shared_ptr<Entity> insert_entity(std::shared_ptr<Entity> ent);
   static void remove_marked_entities();

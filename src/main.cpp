@@ -7,16 +7,20 @@
 #include <SFML/Window.hpp>
 
 #include <entities/Entity.hpp>
+#include <entities/tools/Tool.hpp>
+#include <entities/tools/ToolHolder.hpp>
+
 #include <entities/objects/FloorPanel.hpp>
 #include <entities/TestEntity.hpp>
 #include <entities/creatures/Guy.hpp>
 #include <state/AudioManager.hpp>
 #include <helper/Debug.hpp>
-#include <state/Gamestate.hpp>
 #include <state/GraphicsManager.hpp>
 #include <entities/tools/Bombs.hpp>
 #include <entities/tools/Mallet.hpp>
 #include <state/ParticleSystem.hpp>
+
+#include <state/Gamestate.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -29,6 +33,8 @@ const int NUM_GUYS = 1000;
 const int WINDOW_WIDTH = 800u;
 const int WINDOW_HEIGHT = 600u;
 
+//ToolHolder t = ToolHolder(5.0, 5.0);
+
 bool compare_entities(std::shared_ptr<Entity> e1, std::shared_ptr<Entity> e2) {
   if (e1->pos.z != e2->pos.z) return e1->pos.z < e2->pos.z; // Compare z positions first
   return e1->pos.y < e2->pos.y; // If z positions are equal, compare y positions
@@ -40,6 +46,9 @@ int main() {
   window.setFramerateLimit(144);
 
   // window.setMouseCursorVisible(false);
+  //Guy g = Guy(0, 0);
+
+  ToolHolder tool_holder = ToolHolder(0, 0); // TODO why can't this go in gamestate ????
 
   // Seed Randomizer
   srand(time(NULL));
@@ -57,10 +66,14 @@ int main() {
   AudioManager::load_sound("mumble3", audio_path + "mumble 3.ogg");
   AudioManager::load_sound("vine boom", audio_path + "vine boom.ogg");
 
+
   // Load Textures
   GraphicsManager::load_texture("guy", graphics_path + "guy sheet.png");
   GraphicsManager::load_texture("floorpanel", graphics_path + "floorpanel.png");
   GraphicsManager::load_texture("mallet", graphics_path + "mallet.png");
+  GraphicsManager::load_texture("blank", graphics_path + "holder.png");
+
+  //Gamestate::tool_holder = ToolHolder(0, 0);
 
   // Set up delta time clock
   sf::Clock delta_clock;
@@ -111,8 +124,10 @@ int main() {
         //Gamestate::insert_entity(std::make_shared<TestEntity>(&tex, event.mouseButton.x, event.mouseButton.y));
         switch (event.mouseButton.button) {
           case (sf::Mouse::Button::Left): {
-            if (Gamestate::equipped_tool) {
-              Gamestate::equipped_tool->activate();
+            if (tool_holder.held_tool) {
+              
+              tool_holder.activate_tool();
+
             } else {
               Collider mouse_collider;
               mouse_collider.type = CollisionShapeType::CIRCLE;
@@ -125,7 +140,9 @@ int main() {
               for (auto &tool : tools) {
                 if (CollisionManager::does_collide( &mouse_collider, &(tool->collider))) {
                   tool->pick_up();
-                  Gamestate::equipped_tool = tool;
+                  //Gamestate::equipped_tool = tool;
+                  //Gamestate::tool_holder.held_tool = tool;
+                  tool_holder.held_tool = tool;
                   break;
                 }
               }
@@ -135,10 +152,7 @@ int main() {
           }
 
           case (sf::Mouse::Button::Right): {
-            if (Gamestate::equipped_tool) {
-              Gamestate::equipped_tool->set_down();
-              Gamestate::equipped_tool.reset();
-            }
+            tool_holder.drop_tool();
           }
 
           default: {}

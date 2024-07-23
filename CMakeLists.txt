@@ -37,11 +37,11 @@ add_executable(EvilPikmin
     "include/entities/objects/Bomb.hpp" "src/entities/objects/Bomb.cpp"
     "include/entities/objects/FloorPanel.hpp" "src/entities/objects/FloorPanel.cpp"
 
+    "include/entities/tools/Tool.hpp"
     "include/entities/tools/ToolHolder.hpp" "src/entities/tools/ToolHolder.cpp"
     "include/entities/tools/Bombs.hpp" "src/entities/tools/Bombs.cpp"
     "include/entities/tools/Fire.hpp" "src/entities/tools/Fire.cpp"
     "include/entities/tools/Mallet.hpp" "src/entities/tools/Mallet.cpp"
-    "include/entities/tools/Tool.hpp"
 
 )
 
