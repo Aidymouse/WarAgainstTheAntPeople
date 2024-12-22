@@ -54,27 +54,24 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/aidymouse/code/EvilPikmin
+CMAKE_SOURCE_DIR = /home/aidymouse/code/LittleGuyGame
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/aidymouse/code/EvilPikmin/build
+CMAKE_BINARY_DIR = /home/aidymouse/code/LittleGuyGame/build
 
 #=============================================================================
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
 all: src/all
-all: src/engine/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
 preinstall: src/preinstall
-preinstall: src/engine/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
 clean: src/clean
-clean: src/engine/clean
 .PHONY : clean
 
 #=============================================================================
@@ -82,14 +79,16 @@ clean: src/engine/clean
 
 # Recursive "all" directory target.
 src/all: src/CMakeFiles/EvilPikmin.dir/all
+src/all: src/engine/all
 .PHONY : src/all
 
 # Recursive "preinstall" directory target.
-src/preinstall:
+src/preinstall: src/engine/preinstall
 .PHONY : src/preinstall
 
 # Recursive "clean" directory target.
 src/clean: src/CMakeFiles/EvilPikmin.dir/clean
+src/clean: src/engine/clean
 .PHONY : src/clean
 
 #=============================================================================
@@ -114,14 +113,14 @@ src/engine/clean:
 src/CMakeFiles/EvilPikmin.dir/all:
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/aidymouse/code/EvilPikmin/build/CMakeFiles --progress-num=1,2,3 "Built target EvilPikmin"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/aidymouse/code/LittleGuyGame/build/CMakeFiles --progress-num=1,2,3,4 "Built target EvilPikmin"
 .PHONY : src/CMakeFiles/EvilPikmin.dir/all
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/EvilPikmin.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/EvilPikmin/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/LittleGuyGame/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/EvilPikmin.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/EvilPikmin/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/LittleGuyGame/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/EvilPikmin.dir/rule
 
 # Convenience name for target.

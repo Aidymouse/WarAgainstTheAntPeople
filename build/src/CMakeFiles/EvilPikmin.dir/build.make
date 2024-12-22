@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/aidymouse/code/EvilPikmin
+CMAKE_SOURCE_DIR = /home/aidymouse/code/LittleGuyGame
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/aidymouse/code/EvilPikmin/build
+CMAKE_BINARY_DIR = /home/aidymouse/code/LittleGuyGame/build
 
 # Include any dependencies generated for this target.
 include src/CMakeFiles/EvilPikmin.dir/depend.make
@@ -72,55 +72,71 @@ include src/CMakeFiles/EvilPikmin.dir/flags.make
 src/CMakeFiles/EvilPikmin.dir/main.cpp.o: src/CMakeFiles/EvilPikmin.dir/flags.make
 src/CMakeFiles/EvilPikmin.dir/main.cpp.o: ../src/main.cpp
 src/CMakeFiles/EvilPikmin.dir/main.cpp.o: src/CMakeFiles/EvilPikmin.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aidymouse/code/EvilPikmin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/CMakeFiles/EvilPikmin.dir/main.cpp.o"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/EvilPikmin.dir/main.cpp.o -MF CMakeFiles/EvilPikmin.dir/main.cpp.o.d -o CMakeFiles/EvilPikmin.dir/main.cpp.o -c /home/aidymouse/code/EvilPikmin/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aidymouse/code/LittleGuyGame/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object src/CMakeFiles/EvilPikmin.dir/main.cpp.o"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/EvilPikmin.dir/main.cpp.o -MF CMakeFiles/EvilPikmin.dir/main.cpp.o.d -o CMakeFiles/EvilPikmin.dir/main.cpp.o -c /home/aidymouse/code/LittleGuyGame/src/main.cpp
 
 src/CMakeFiles/EvilPikmin.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/EvilPikmin.dir/main.cpp.i"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aidymouse/code/EvilPikmin/src/main.cpp > CMakeFiles/EvilPikmin.dir/main.cpp.i
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aidymouse/code/LittleGuyGame/src/main.cpp > CMakeFiles/EvilPikmin.dir/main.cpp.i
 
 src/CMakeFiles/EvilPikmin.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/EvilPikmin.dir/main.cpp.s"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aidymouse/code/EvilPikmin/src/main.cpp -o CMakeFiles/EvilPikmin.dir/main.cpp.s
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aidymouse/code/LittleGuyGame/src/main.cpp -o CMakeFiles/EvilPikmin.dir/main.cpp.s
 
 src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o: src/CMakeFiles/EvilPikmin.dir/flags.make
 src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o: ../src/engine/GameEngine.cpp
 src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o: src/CMakeFiles/EvilPikmin.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aidymouse/code/EvilPikmin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o -MF CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o.d -o CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o -c /home/aidymouse/code/EvilPikmin/src/engine/GameEngine.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aidymouse/code/LittleGuyGame/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o -MF CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o.d -o CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o -c /home/aidymouse/code/LittleGuyGame/src/engine/GameEngine.cpp
 
 src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aidymouse/code/EvilPikmin/src/engine/GameEngine.cpp > CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aidymouse/code/LittleGuyGame/src/engine/GameEngine.cpp > CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i
 
 src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s"
-	cd /home/aidymouse/code/EvilPikmin/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aidymouse/code/EvilPikmin/src/engine/GameEngine.cpp -o CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aidymouse/code/LittleGuyGame/src/engine/GameEngine.cpp -o CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s
+
+src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o: src/CMakeFiles/EvilPikmin.dir/flags.make
+src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o: ../src/engine/MenuState.cpp
+src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o: src/CMakeFiles/EvilPikmin.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/aidymouse/code/LittleGuyGame/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o -MF CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o.d -o CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o -c /home/aidymouse/code/LittleGuyGame/src/engine/MenuState.cpp
+
+src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.i"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/aidymouse/code/LittleGuyGame/src/engine/MenuState.cpp > CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.i
+
+src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.s"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/aidymouse/code/LittleGuyGame/src/engine/MenuState.cpp -o CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.s
 
 # Object files for target EvilPikmin
 EvilPikmin_OBJECTS = \
 "CMakeFiles/EvilPikmin.dir/main.cpp.o" \
-"CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o"
+"CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o" \
+"CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o"
 
 # External object files for target EvilPikmin
 EvilPikmin_EXTERNAL_OBJECTS =
 
 src/EvilPikmin: src/CMakeFiles/EvilPikmin.dir/main.cpp.o
 src/EvilPikmin: src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o
+src/EvilPikmin: src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o
 src/EvilPikmin: src/CMakeFiles/EvilPikmin.dir/build.make
 src/EvilPikmin: src/CMakeFiles/EvilPikmin.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/aidymouse/code/EvilPikmin/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable EvilPikmin"
-	cd /home/aidymouse/code/EvilPikmin/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/EvilPikmin.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/aidymouse/code/LittleGuyGame/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable EvilPikmin"
+	cd /home/aidymouse/code/LittleGuyGame/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/EvilPikmin.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/CMakeFiles/EvilPikmin.dir/build: src/EvilPikmin
 .PHONY : src/CMakeFiles/EvilPikmin.dir/build
 
 src/CMakeFiles/EvilPikmin.dir/clean:
-	cd /home/aidymouse/code/EvilPikmin/build/src && $(CMAKE_COMMAND) -P CMakeFiles/EvilPikmin.dir/cmake_clean.cmake
+	cd /home/aidymouse/code/LittleGuyGame/build/src && $(CMAKE_COMMAND) -P CMakeFiles/EvilPikmin.dir/cmake_clean.cmake
 .PHONY : src/CMakeFiles/EvilPikmin.dir/clean
 
 src/CMakeFiles/EvilPikmin.dir/depend:
-	cd /home/aidymouse/code/EvilPikmin/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/aidymouse/code/EvilPikmin /home/aidymouse/code/EvilPikmin/src /home/aidymouse/code/EvilPikmin/build /home/aidymouse/code/EvilPikmin/build/src /home/aidymouse/code/EvilPikmin/build/src/CMakeFiles/EvilPikmin.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/aidymouse/code/LittleGuyGame/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/aidymouse/code/LittleGuyGame /home/aidymouse/code/LittleGuyGame/src /home/aidymouse/code/LittleGuyGame/build /home/aidymouse/code/LittleGuyGame/build/src /home/aidymouse/code/LittleGuyGame/build/src/CMakeFiles/EvilPikmin.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/CMakeFiles/EvilPikmin.dir/depend
 

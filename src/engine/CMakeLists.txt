@@ -1,2 +1,5 @@
 
-target_sources(EvilPikmin PRIVATE GameEngine.cpp)
+target_sources(EvilPikmin PRIVATE
+	GameEngine.cpp
+	MenuState.cpp
+)

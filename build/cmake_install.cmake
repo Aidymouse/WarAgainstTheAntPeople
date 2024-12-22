@@ -1,4 +1,4 @@
-# Install script for directory: /home/aidymouse/code/EvilPikmin
+# Install script for directory: /home/aidymouse/code/LittleGuyGame
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,12 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/aidymouse/code/EvilPikmin/build/src/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("/home/aidymouse/code/EvilPikmin/build/src/engine/cmake_install.cmake")
+  include("/home/aidymouse/code/LittleGuyGame/build/src/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -60,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/aidymouse/code/EvilPikmin/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/aidymouse/code/LittleGuyGame/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

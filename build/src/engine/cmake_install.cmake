@@ -1,4 +1,4 @@
-# Install script for directory: /home/aidymouse/code/EvilPikmin/src/engine
+# Install script for directory: /home/aidymouse/code/LittleGuyGame/src/engine
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

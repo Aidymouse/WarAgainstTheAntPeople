@@ -8,8 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/aidymouse/code/EvilPikmin/src/engine/GameEngine.cpp" "src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o" "gcc" "src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o.d"
-  "/home/aidymouse/code/EvilPikmin/src/main.cpp" "src/CMakeFiles/EvilPikmin.dir/main.cpp.o" "gcc" "src/CMakeFiles/EvilPikmin.dir/main.cpp.o.d"
+  "/home/aidymouse/code/LittleGuyGame/src/engine/GameEngine.cpp" "src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o" "gcc" "src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o.d"
+  "/home/aidymouse/code/LittleGuyGame/src/engine/MenuState.cpp" "src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o" "gcc" "src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o.d"
+  "/home/aidymouse/code/LittleGuyGame/src/main.cpp" "src/CMakeFiles/EvilPikmin.dir/main.cpp.o" "gcc" "src/CMakeFiles/EvilPikmin.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

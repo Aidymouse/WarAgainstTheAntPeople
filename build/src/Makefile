@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/aidymouse/code/EvilPikmin
+CMAKE_SOURCE_DIR = /home/aidymouse/code/LittleGuyGame
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/aidymouse/code/EvilPikmin/build
+CMAKE_BINARY_DIR = /home/aidymouse/code/LittleGuyGame/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/aidymouse/code/EvilPikmin/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/EvilPikmin/build/CMakeFiles /home/aidymouse/code/EvilPikmin/build/src//CMakeFiles/progress.marks
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/EvilPikmin/build/CMakeFiles 0
+	cd /home/aidymouse/code/LittleGuyGame/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/LittleGuyGame/build/CMakeFiles /home/aidymouse/code/LittleGuyGame/build/src//CMakeFiles/progress.marks
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/aidymouse/code/LittleGuyGame/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,22 +103,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/aidymouse/code/EvilPikmin/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/aidymouse/code/LittleGuyGame/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/CMakeFiles/EvilPikmin.dir/rule:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/EvilPikmin.dir/rule
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/EvilPikmin.dir/rule
 .PHONY : src/CMakeFiles/EvilPikmin.dir/rule
 
 # Convenience name for target.
@@ -127,7 +127,7 @@ EvilPikmin: src/CMakeFiles/EvilPikmin.dir/rule
 
 # fast build rule for target.
 EvilPikmin/fast:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/build
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/build
 .PHONY : EvilPikmin/fast
 
 engine/GameEngine.o: engine/GameEngine.cpp.o
@@ -135,7 +135,7 @@ engine/GameEngine.o: engine/GameEngine.cpp.o
 
 # target to build an object file
 engine/GameEngine.cpp.o:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o
 .PHONY : engine/GameEngine.cpp.o
 
 engine/GameEngine.i: engine/GameEngine.cpp.i
@@ -143,7 +143,7 @@ engine/GameEngine.i: engine/GameEngine.cpp.i
 
 # target to preprocess a source file
 engine/GameEngine.cpp.i:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.i
 .PHONY : engine/GameEngine.cpp.i
 
 engine/GameEngine.s: engine/GameEngine.cpp.s
@@ -151,15 +151,39 @@ engine/GameEngine.s: engine/GameEngine.cpp.s
 
 # target to generate assembly for a file
 engine/GameEngine.cpp.s:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.s
 .PHONY : engine/GameEngine.cpp.s
+
+engine/MenuState.o: engine/MenuState.cpp.o
+.PHONY : engine/MenuState.o
+
+# target to build an object file
+engine/MenuState.cpp.o:
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o
+.PHONY : engine/MenuState.cpp.o
+
+engine/MenuState.i: engine/MenuState.cpp.i
+.PHONY : engine/MenuState.i
+
+# target to preprocess a source file
+engine/MenuState.cpp.i:
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.i
+.PHONY : engine/MenuState.cpp.i
+
+engine/MenuState.s: engine/MenuState.cpp.s
+.PHONY : engine/MenuState.s
+
+# target to generate assembly for a file
+engine/MenuState.cpp.s:
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.s
+.PHONY : engine/MenuState.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
 
 # target to build an object file
 main.cpp.o:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.o
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -167,7 +191,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.i
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -175,7 +199,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	cd /home/aidymouse/code/EvilPikmin/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.s
+	cd /home/aidymouse/code/LittleGuyGame/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/EvilPikmin.dir/build.make src/CMakeFiles/EvilPikmin.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -190,6 +214,9 @@ help:
 	@echo "... engine/GameEngine.o"
 	@echo "... engine/GameEngine.i"
 	@echo "... engine/GameEngine.s"
+	@echo "... engine/MenuState.o"
+	@echo "... engine/MenuState.i"
+	@echo "... engine/MenuState.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
@@ -204,6 +231,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/aidymouse/code/EvilPikmin/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/aidymouse/code/LittleGuyGame/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

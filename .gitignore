@@ -2,3 +2,4 @@
 /out
 /ninja_out/**/*
 .cache
+/build/**/*
