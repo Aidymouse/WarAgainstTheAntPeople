@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/EvilPikmin.dir/main.cpp.o CMakeFiles/EvilPikmin.dir/engine/GameEngine.cpp.o CMakeFiles/EvilPikmin.dir/engine/MenuState.cpp.o -o EvilPikmin 

@@ -1,5 +1,5 @@
 #pragma once
-#include <GameState.h>
+#include <engine/GameState.h>
 
 class MenuState : public GameState {
 public:

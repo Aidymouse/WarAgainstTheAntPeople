@@ -1,12 +1,12 @@
-#include "GameEngine.h"
+#include <engine/GameEngine.h>
+#include <SFML/Graphics.hpp>
 #include <iostream>
 
 int main() {
 
-	GameEngine engine;
-	engine.update();
+    GameEngine engine;
 
-	std::cout << "Okay" << std::endl;
+    engine.run();
 
-	return 0;
+    return 0;
 }

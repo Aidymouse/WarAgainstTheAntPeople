@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/EvilPikmin.dir/main.cpp.o"
-  "CMakeFiles/EvilPikmin.dir/main.cpp.o.d"
+  "CMakeFiles/EvilPikmin.dir/src/engine/GameEngine.cpp.o"
+  "CMakeFiles/EvilPikmin.dir/src/engine/GameEngine.cpp.o.d"
+  "CMakeFiles/EvilPikmin.dir/src/engine/MenuState.cpp.o"
+  "CMakeFiles/EvilPikmin.dir/src/engine/MenuState.cpp.o.d"
+  "CMakeFiles/EvilPikmin.dir/src/main.cpp.o"
+  "CMakeFiles/EvilPikmin.dir/src/main.cpp.o.d"
   "EvilPikmin"
   "EvilPikmin.pdb"
 )
