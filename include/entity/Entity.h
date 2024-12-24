@@ -1,10 +1,13 @@
 #pragma once
 struct Entity {
-	unsigned int id;
+	unsigned short cells[4]; // Cell indexes
+
 	int x;
 	int y;
-	unsigned int animation_frame;
-	//unsigned int cellId; // First four bits = cell X, last four = cell Y -- Multiple cells ..?
+
+	unsigned short id;
+	unsigned short animation_frame;
+
 };
 
 enum anim_Guy { // First four bytes are x coordinate, last four are y coordinate. Yes, this means the maximum texture image is 32767 frames wide and tall. Sorry.

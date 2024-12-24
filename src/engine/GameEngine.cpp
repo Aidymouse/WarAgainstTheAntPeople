@@ -69,6 +69,7 @@ void GameEngine::run() {
 		/* Draw */
 		window.clear(sf::Color::White);
 
+		// Draw Guys Loop
 		for (int i=0; i<numGuys; i++) {
 			int guy_vertex_idx = i*6;
 			guyArray[guy_vertex_idx].position = sf::Vector2f(guys[i].x, guys[i].y);
@@ -96,6 +97,7 @@ void GameEngine::run() {
 
 		window.draw(guyArray, &guyTexture);
 
+		// Display everythign
 		window.display();
 	}
 
