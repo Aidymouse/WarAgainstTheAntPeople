@@ -16,5 +16,6 @@ public:
 
 	std::shared_ptr<GameState> currentState;
 	sf::RenderWindow window;
-	Entity guys[100];
+
+	CollisionGrid main_grid;
 };

@@ -28,6 +28,18 @@ GameEngine::GameEngine() {
 	window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Evil Pikmin (Working title)");
 	window.setFramerateLimit(144);
 
+	Entity g;
+	g.x = 100;
+	g.y = 100;
+	g.animation_frame = anim_Guy::NORM2;
+
+	main_grid.insert_entity(g);
+
+	g.x = 120;
+	g.y = 100;
+	g.animation_frame = anim_Guy::FIRE1;
+	main_grid.insert_entity(g);
+
 }
 
 void GameEngine::init() {
@@ -39,17 +51,7 @@ void GameEngine::run() {
 
 	sf::Texture guyTexture("../resources/graphics/guy sheet.png");
 
-	sf::VertexArray guyArray(sf::PrimitiveType::Triangles, 6*100);
-	int numGuys = 0;
-
-	for (int i=0; i<100; i++) {
-		guys[i].id = i;
-		guys[i].x = i*2;
-		guys[i].y = i*2;
-		guys[i].animation_frame = anim_Guy::NORM1;
-		numGuys++;
-	}
-	//guys[0] = { 1, 0, 0, anim_Guy::FIRE1};
+	sf::Sprite guy(guyTexture);
 
 
 	while (window.isOpen()) {
@@ -69,33 +71,22 @@ void GameEngine::run() {
 		/* Draw */
 		window.clear(sf::Color::White);
 
-		// Draw Guys Loop
-		for (int i=0; i<numGuys; i++) {
-			int guy_vertex_idx = i*6;
-			guyArray[guy_vertex_idx].position = sf::Vector2f(guys[i].x, guys[i].y);
-			guyArray[guy_vertex_idx+1].position = sf::Vector2f(guys[i].x, guys[i].y+15);
-			guyArray[guy_vertex_idx+2].position = sf::Vector2f(guys[i].x+15, guys[i].y+15);
+		for (cell_id cell_id = 0; cell_id < 192; cell_id++) {
+			Entity* cell_ents = main_grid.get_entities(cell_id);
+			int cell_count = main_grid.get_count(cell_id);
 
-			guyArray[guy_vertex_idx+3].position = sf::Vector2f(guys[i].x+15, guys[i].y+15);
-			guyArray[guy_vertex_idx+4].position = sf::Vector2f(guys[i].x+15, guys[i].y);
-			guyArray[guy_vertex_idx+5].position = sf::Vector2f(guys[i].x, guys[i].y);
+			for (int ent_idx=0; ent_idx<cell_count; ent_idx++) {
+				Entity ent = cell_ents[ent_idx];
 
-			int tex_y = guys[i].animation_frame % 32767; // Unsigned
-			int tex_x = ((guys[i].animation_frame - tex_y) / 32767) * 16;
-			tex_y *= 16;
+				short tex_tile_y = ent.animation_frame % 32767;
+				short tex_tile_x = (ent.animation_frame - tex_tile_y) / 32767;
 
-			//std::cout << "X " << tex_x << ", Y " << tex_y << std::endl;
-
-			guyArray[guy_vertex_idx].texCoords = sf::Vector2f(tex_x, tex_y);
-			guyArray[guy_vertex_idx+1].texCoords = sf::Vector2f(tex_x, tex_y+16);
-			guyArray[guy_vertex_idx+2].texCoords = sf::Vector2f(tex_x+16, tex_y+16);
-
-			guyArray[guy_vertex_idx+3].texCoords = sf::Vector2f(tex_x+16, tex_y+16);
-			guyArray[guy_vertex_idx+4].texCoords = sf::Vector2f(tex_x+16, tex_y);
-			guyArray[guy_vertex_idx+5].texCoords = sf::Vector2f(tex_x, tex_y);
+				guy.setPosition(sf::Vector2f(ent.x, ent.y));
+				guy.setTextureRect(sf::IntRect(sf::Vector2i(tex_tile_x*16, tex_tile_y*16), sf::Vector2i(16, 16)));
+				window.draw(guy);
+			}
 		}
 
-		window.draw(guyArray, &guyTexture);
 
 		// Display everythign
 		window.display();

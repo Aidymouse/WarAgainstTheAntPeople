@@ -1,10 +1,7 @@
 #pragma once
 struct Entity {
-	unsigned short cells[4]; // Cell indexes
-
-	int x;
-	int y;
-
+	short x;
+	short y;
 	unsigned short id;
 	unsigned short animation_frame;
 
