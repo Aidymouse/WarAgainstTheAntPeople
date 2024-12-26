@@ -1,4 +1,4 @@
-#include <engine/GameEngine.h>
+#include <engine/MainState.h>
 #include <SFML/Graphics.hpp>
 
 int main() {

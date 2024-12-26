@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.28)
 
 project(EvilPikmin LANGUAGES CXX VERSION 0.0.1)
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg") # Enable GPROF
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 add_executable(EvilPikmin src/main.cpp)

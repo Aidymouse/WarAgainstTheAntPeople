@@ -12,9 +12,6 @@
 
 #include <SFML/Graphics.hpp>
 
-class MainState;
-
-
 
 MainState::MainState() {
 	std::srand(time(0));
@@ -30,7 +27,6 @@ MainState::MainState() {
 	for (int i=0; i<2500; i++) {
 		g.x = std::rand() % 800;
 		g.y = std::rand() % 600;
-		main_grid.insert_entity(g);
 	}
 
 }
@@ -39,7 +35,9 @@ void MainState::update(float dt) {
 
 	// Tools
 	
-	// Check for Collisions + update some stuff
+	// Other entities
+	
+	// Guys + Check for Collisions + update some stuff
 	
 	// Apply updates to entities
 }

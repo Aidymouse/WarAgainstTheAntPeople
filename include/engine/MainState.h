@@ -12,12 +12,13 @@ class MainState : public GameState {
 
 public:
 	MainState();
+	void load() override;
+	void update() override;
+	void draw() override;
+
 	void init();
 	void update(float delta_time);
 	void run();
-
-	std::unique_ptr<GameState> currentState;
-	sf::RenderWindow window;
 
 	CollisionGrid main_grid;
 };

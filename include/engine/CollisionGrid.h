@@ -15,6 +15,7 @@ class CollisionCell {
 	int guy_count;
 	int entity_count;
 public:
+	CollisionCell();
 	void insert_guy(Guy g);
 	void insert_entity(Entity e);
 };

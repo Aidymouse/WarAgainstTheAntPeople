@@ -1,6 +1,6 @@
 
 target_sources(EvilPikmin PRIVATE
-	GameEngine.cpp
+	MainState.cpp
 	MenuState.cpp
 	CollisionGrid.cpp
 )
