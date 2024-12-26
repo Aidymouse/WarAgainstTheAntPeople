@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <entity/Entity.h>
 
-class MainState {
+class MainState : public GameState {
 
 	std::vector<Entity> entities;
 

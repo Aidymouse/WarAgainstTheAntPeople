@@ -1,14 +1,19 @@
 #pragma once
-struct Entity {
-	short x;
-	short y;
-	unsigned short id;
-	unsigned short animation_frame;
 
+#include <SFML/Graphics/Texture.hpp>
+
+class Entity {
+	int x;
+	int y;
+	unsigned short animation_frame;
+	sf::Texture* texture;
 };
 
-enum anim_Guy { // First four bytes are x coordinate, last four are y coordinate. Yes, this means the maximum texture image is 32767 frames wide and tall. Sorry.
-	NORM1 = 0 + 0,
-	NORM2 = (1 * 32767) + 0,
-	FIRE1 = 0 + 1
+class Tool : public Entity {
+	int grabbed_by; // Guy id
+	
+public:
+	void get_grabbed(int guy_id);
+	void get_put_down();
+	void activate();
 };
