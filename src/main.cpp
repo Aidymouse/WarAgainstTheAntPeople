@@ -1,9 +1,9 @@
-#include <engine/MainState.h>
+#include <engine/GameEngine.h>
 #include <SFML/Graphics.hpp>
 
 int main() {
 
-    MainState engine;
+    GameEngine engine;
 
     engine.run();
 

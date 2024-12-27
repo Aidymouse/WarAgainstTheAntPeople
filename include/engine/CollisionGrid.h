@@ -18,6 +18,9 @@ public:
 	CollisionCell();
 	void insert_guy(Guy g);
 	void insert_entity(Entity e);
+
+	int get_guy_count();
+	int get_entity_count();
 };
 
 class CollisionGrid {
@@ -27,4 +30,7 @@ public:
 	CollisionGrid();
 	void insert_guy(Guy g);
 	void insert_entity(Entity e); 
+
+	int get_cell_count();
+	CollisionCell* get_cell(int cell_idx);
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include "engine/CollisionGrid.h"
+#include <engine/MainState.h>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <engine/GameState.h>
 #include <memory>
@@ -10,8 +11,11 @@ class GameEngine {
 
 
 public:
+	GameEngine();
+	void run();
 
-	std::unique_ptr<GameState> currentState;
+	MainState main_state;
+	GameState* current_state;
 	sf::RenderWindow window;
 
 };
