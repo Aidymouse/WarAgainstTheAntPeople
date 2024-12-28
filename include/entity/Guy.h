@@ -4,6 +4,7 @@
 
 struct Guy {
 	Entity* wielding;
+	sf::Sprite sprite();
 
 	float vel_x;
 	float vel_y;
@@ -13,9 +14,6 @@ struct Guy {
 
 	unsigned short id;
 	unsigned short animation_frame;
-
-	unsigned char anchor_x;
-	unsigned char anchor_y;
 };
 
 enum states_Guy {

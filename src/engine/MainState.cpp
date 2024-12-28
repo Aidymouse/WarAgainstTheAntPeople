@@ -1,33 +1,38 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
-#include <cstdlib>
-#include <ctime>
-#include <engine/MainState.h>
+#include <stdlib.h>
 #include <iostream>
+
+
+#include <engine/MainState.h>
 #include <entity/Entity.h>
 #include <entity/Guy.h>
 #include <engine/MenuState.h>
-#include <memory>
 
+#include <entity/EntityAttributes.h>
 #include <SFML/Graphics.hpp>
 
 
 MainState::MainState() : GameState::GameState() {
-	std::srand(time(0));
+
+	sf::Texture testTex("../resources/graphics/guy sheet.png");
 
 	Guy g;
+	g.sprite();
+	//g.sprite.setOrigin({EntityAttributes::Guy.origin_x})
 	g.animation_frame = anim_Guy::NORM1;
-	g.anchor_x = 8;
-	g.anchor_y = 16;
 
 	for (int i=0; i<2500; i++) {
-		g.x = std::rand() % 800;
-		g.y = std::rand() % 600;
+		
+		g.x = rand() % 800;
+		g.y = rand() % 600;
+		//std::cout << g.x << std::endl;
+		main_grid.insert_guy(g);
 	}
 
-	main_grid.insert_guy(g);
 }
 
 
@@ -44,6 +49,7 @@ void MainState::update(float dt) {
 void MainState::load() {}
 
 void MainState::draw(sf::RenderTarget* target) {
+
 	target->clear(sf::Color::White);
 
 	int cell_count = main_grid.get_cell_count();
@@ -51,7 +57,16 @@ void MainState::draw(sf::RenderTarget* target) {
 	for (int cell_idx = 0; cell_idx<cell_count; cell_idx++) {
 		CollisionCell* cell = main_grid.get_cell(cell_idx);
 
-		
+		int guy_count = cell->get_guy_count();
+		sf::IntRect guy_rect({0, 0}, {16, 16});
+		guy_sprite.setTextureRect(guy_rect);
+
+		for (int guy_idx=0; guy_idx<guy_count; guy_idx++) {
+			Guy* guy = cell->get_guy(guy_idx);
+			//std::cout << "Guy " << guy_idx << ": " << guy->x << ", " << guy->y << std::endl;
+			guy_sprite.setPosition({(float) guy->x, (float) guy->y});
+			target->draw(guy_sprite);
+		}
 		
 	}
 }

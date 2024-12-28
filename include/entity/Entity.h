@@ -1,12 +1,12 @@
 #pragma once
 
-#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 class Entity {
 	int x;
 	int y;
 	unsigned short animation_frame;
-	sf::Texture* texture;
+	sf::Sprite sprite;
 };
 
 class Tool : public Entity {

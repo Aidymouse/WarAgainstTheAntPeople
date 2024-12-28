@@ -21,6 +21,7 @@ public:
 
 	int get_guy_count();
 	int get_entity_count();
+	Guy* get_guy(int guy_idx);
 };
 
 class CollisionGrid {
@@ -33,4 +34,5 @@ public:
 
 	int get_cell_count();
 	CollisionCell* get_cell(int cell_idx);
+	Guy* get_guy(int cell_idx, int guy_idx);
 };

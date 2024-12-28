@@ -18,6 +18,10 @@ void CollisionCell::insert_guy(Guy g) {
 
 int CollisionCell::get_guy_count() { return guy_count; }
 
+Guy* CollisionCell::get_guy(int guy_idx) {
+	return &guys[guy_idx];
+}
+
 
 
 
@@ -39,4 +43,8 @@ void CollisionGrid::insert_guy(Guy g) {
 int CollisionGrid::get_cell_count() { return CELLS_ACROSS*CELLS_DOWN; }
 
 CollisionCell* CollisionGrid::get_cell(int cell_idx) { return &cells[cell_idx]; }
+
+Guy* CollisionGrid::get_guy(int cell_idx, int guy_idx) {
+	return cells[cell_idx].get_guy(guy_idx);
+}
 
