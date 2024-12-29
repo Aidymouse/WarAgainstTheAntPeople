@@ -17,5 +17,6 @@ public:
 	MainState main_state;
 	GameState* current_state;
 	sf::RenderWindow window;
+	sf::Clock clock;
 
 };

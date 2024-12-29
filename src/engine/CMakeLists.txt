@@ -4,6 +4,6 @@ target_sources(EvilPikmin PRIVATE
 
 	CollisionGrid.cpp
 
-	MainState.cpp
-	MenuState.cpp
+	states/MainState.cpp
+	states/MenuState.cpp
 )

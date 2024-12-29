@@ -1,22 +1,27 @@
 #pragma once
 
-#include "engine/CollisionGrid.h"
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <engine/GameState.h>
-#include <memory>
+
 #include <SFML/Graphics.hpp>
+
+#include <engine/GameState.h>
+#include <engine/CollisionGrid.h>
+
 #include <entity/Entity.h>
+#include <entity/Mallet.h>
 
 class MainState : public GameState {
 
-	std::vector<Entity> entities;
+	CollisionGrid main_grid; // TEMP, should be private at some point
+	
+	Mallet mallet;
+	Tool* grabbed_tool;
 
 public:
 	MainState();
 
-	CollisionGrid main_grid; // TEMP
 	
 	void load() override;
+	void handle_event(const std::optional<sf::Event> event) override;
 	void update(float dt) override;
 	void draw(sf::RenderTarget* render_target) override;
 

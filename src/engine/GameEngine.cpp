@@ -11,6 +11,7 @@ GameEngine::GameEngine() {
 	//main_state = MainState();
 
 	current_state = &main_state;
+	clock.start();
 	
 }
 
@@ -18,15 +19,20 @@ void GameEngine::run() {
 
 	while (window.isOpen()) {
 
+		float delta_time = clock.reset().asSeconds();
+		current_state->update(delta_time);
+
 		while (const std::optional event = window.pollEvent())
 		{
-		    if (event->is<sf::Event::Closed>())
-		    {
-			window.close();
-		    }
+
+			current_state->handle_event(event);
+
+			if (event->is<sf::Event::Closed>())
+			{
+				window.close();
+			}
 		}
 
-		current_state->update(0.016);
 		current_state->draw(&window);
 
 		window.display();

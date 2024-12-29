@@ -1,11 +1,13 @@
 #pragma once
 
-#include <entity/Entity.h>
+#include <entity/Tool.h>
 #include <SFML/Graphics.hpp>
+
+class Tool;
 
 struct Guy {
 
-	Entity* wielding;
+	Tool* wielded_tool;
 	float vel_x;
 	float vel_y;
 

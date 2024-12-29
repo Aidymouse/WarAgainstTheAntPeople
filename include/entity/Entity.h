@@ -1,19 +1,19 @@
 #pragma once
 
+#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
 class Entity {
 	int x;
 	int y;
 	unsigned short animation_frame;
+
+protected:
 	sf::Sprite sprite;
+
+public:
+	Entity(const sf::Texture* texture);
+	sf::Sprite get_sprite() { return sprite; };
 };
 
-class Tool : public Entity {
-	int grabbed_by; // Guy id
-	
-public:
-	void get_grabbed(int guy_id);
-	void get_put_down();
-	void activate();
-};

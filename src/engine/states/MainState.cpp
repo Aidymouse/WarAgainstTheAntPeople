@@ -3,24 +3,26 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Window/Event.hpp>
 #include <stdlib.h>
-#include <iostream>
-
-
-#include <engine/MainState.h>
-#include <entity/Entity.h>
-#include <entity/Guy.h>
-#include <engine/MenuState.h>
-
-#include <data/EntityAttributes.h>
-#include <data/TextureBank.h>
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
+#include <data/TextureBank.h>
+#include <data/EntityAttributes.h>
+
+#include <engine/MainState.h>
+#include <engine/MenuState.h>
+
+#include <entity/Entity.h>
+#include <entity/Guy.h>
+#include <entity/Mallet.h>
 
 MainState::MainState() : GameState::GameState() {
 
 	//const sf::Texture testTex("../resources/graphics/guy sheet.png");
+
 
 	Guy g;
 	g.animation_frame = frames_Guy::NORM1;
@@ -48,10 +50,24 @@ void MainState::update(float dt) {
 
 void MainState::load() {}
 
+void MainState::handle_event(const std::optional<sf::Event> event) {
+
+	// Mouse Pressed
+	if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+		std::cout << "Mouse Pressed: " << mouseButtonPressed->position.x << ", " << mouseButtonPressed->position.y << std::endl;
+
+	}
+
+}
+
 void MainState::draw(sf::RenderTarget* target) {
 
 	target->clear(sf::Color::White);
 
+	// Tools
+	target->draw(mallet.get_sprite());
+	
+	// Guys
 	int cell_count = main_grid.get_cell_count();
 	sf::Sprite guy_sprite(TextureBank::guy);
 	guy_sprite.setOrigin({EntityAttributes::Guy.origin_x, EntityAttributes::Guy.origin_y });
