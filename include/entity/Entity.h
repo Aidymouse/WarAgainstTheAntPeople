@@ -5,12 +5,13 @@
 #include <SFML/Graphics/Texture.hpp>
 
 class Entity {
-	int x;
-	int y;
-	unsigned short animation_frame;
 
 protected:
 	sf::Sprite sprite;
+	int x;
+	int y;
+	unsigned short animation_frame;
+	int collision_cell_idx = -1;
 
 public:
 	Entity(const sf::Texture* texture);

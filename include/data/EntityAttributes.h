@@ -7,7 +7,7 @@ namespace EntityAttributes {
 
 	struct {
 		float origin_x = 16;
-		float origin_y = 32;
+		float origin_y = 16;
 	} Mallet;
 
 };

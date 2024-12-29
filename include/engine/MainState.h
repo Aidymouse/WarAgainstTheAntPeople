@@ -14,7 +14,7 @@ class MainState : public GameState {
 	CollisionGrid main_grid; // TEMP, should be private at some point
 	
 	Mallet mallet;
-	Tool* grabbed_tool;
+	Tool* grabbed_tool = NULL;
 
 public:
 	MainState();

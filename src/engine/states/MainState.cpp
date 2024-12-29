@@ -1,9 +1,11 @@
+#include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Window/Event.hpp>
+#include <SFML/Window/Mouse.hpp>
 #include <stdlib.h>
 
 #include <SFML/Graphics.hpp>
@@ -14,6 +16,7 @@
 
 #include <engine/MainState.h>
 #include <engine/MenuState.h>
+#include <engine/Collisions.h>
 
 #include <entity/Entity.h>
 #include <entity/Guy.h>
@@ -44,6 +47,13 @@ void MainState::update(float dt) {
 	// Other entities
 	
 	// Guys + Check for Collisions + update some stuff
+	/*for (int cell_idx = 0; cell_idx<main_grid.get_cell_count(); cell_idx++) {*/
+	/*	CollisionCell* cell = main_grid.get_cell(cell_idx);*/
+	/*	for (int guy_idx = 0; guy_idx < cell->get_guy_count(); guy_idx++) {*/
+	/*		Guy *g = cell->get_guy(guy_idx);*/
+	/**/
+	/*	}*/
+	/*}*/
 	
 	// Apply updates to entities
 }
@@ -54,8 +64,38 @@ void MainState::handle_event(const std::optional<sf::Event> event) {
 
 	// Mouse Pressed
 	if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-		std::cout << "Mouse Pressed: " << mouseButtonPressed->position.x << ", " << mouseButtonPressed->position.y << std::endl;
+		//std::cout << "Mouse Pressed: " << mouseButtonPressed->position.x << ", " << mouseButtonPressed->position.y << std::endl;
+		//
 
+		if (mouseButtonPressed->button == sf::Mouse::Button::Left) {
+			if (grabbed_tool != NULL) {
+
+			} else {
+				CollisionCircle mouse_collision_shape = {
+					CollisionShapeType::CIRCLE,
+					mouseButtonPressed->position.x,
+					mouseButtonPressed->position.y,
+					1
+				};
+
+
+				if (Collisions::circle_circle(mallet.get_collision_shape().circle, mouse_collision_shape)) {
+					grabbed_tool = &mallet;
+				}
+			}
+		} else if (mouseButtonPressed->button == sf::Mouse::Button::Right) {
+			if (grabbed_tool != NULL) {
+				grabbed_tool = NULL;
+			}
+		}
+
+
+	}
+
+	if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
+		if (grabbed_tool != NULL) {
+			grabbed_tool->handle_mousemove(mouseMoved->position);
+		}
 	}
 
 }
@@ -66,6 +106,11 @@ void MainState::draw(sf::RenderTarget* target) {
 
 	// Tools
 	target->draw(mallet.get_sprite());
+	/*sf::CircleShape mallet_circle(16);*/
+	/*mallet_circle.setPosition({100, 100});*/
+	/*mallet_circle.setOrigin({16, 16});*/
+	/*mallet_circle.setFillColor(sf::Color::Red);*/
+	/*target->draw(mallet_circle);*/
 	
 	// Guys
 	int cell_count = main_grid.get_cell_count();
