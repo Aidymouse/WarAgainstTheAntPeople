@@ -22,7 +22,7 @@ void Engine::run() {
 
 		/* Update */
 		std::shared_ptr<GameState> current_state = state_manager.get_current_state();
-		float dt = clock.reset().asSeconds();
+		float dt = clock.restart().asSeconds();
 
 		current_state->update(dt);
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <boost/unordered/unordered_map_fwd.hpp>
 #include <ecs/ComponentArray.hpp>
 #include <memory>
 #include <typeindex>

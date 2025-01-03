@@ -20,7 +20,6 @@ class ComponentArray : public ComponentArrayInterface {
 	T components[MAX_COMPONENTS];
 	int num_components = 0;
 	boost::unordered_map<Entity, int> entity_to_component_idx;
-	//std::unordered_map<Entity, int> entity_to_component_idx;
 	boost::unordered_map<int, Entity> component_idx_to_entity;
 public:
 	void add_entity(Entity id, T data) {

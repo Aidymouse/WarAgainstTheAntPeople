@@ -3,9 +3,15 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
+enum COMP_SIG { // Component Signature Indexes
+	POSITION = 0,
+	TRANSLATE = 1,
+	VISIBLE = 2
+};
+
 struct Position {
-	int x;
-	int y;
+	float x;
+	float y;
 };
 
 struct Translate {
@@ -15,5 +21,4 @@ struct Translate {
 
 struct Visible {
 	std::shared_ptr<sf::Sprite> sprite;
-	//long floob;
 };
