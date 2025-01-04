@@ -59,7 +59,7 @@ MainState::MainState() {
 	main_ecs.add_component_to_entity<Tool>(mallet_id, {0});
 	Visible mallet_visible;
 	float mallet_x = rand()%800;
-	float mallet_y = rand()%800;
+	float mallet_y = rand()%600;
 	mallet_visible.sprite = std::make_shared<sf::Sprite>(TextureStore::MALLET);
 	mallet_visible.sprite->setPosition({mallet_x, mallet_y});
 	mallet_visible.sprite->setTextureRect(sf::IntRect({0, 0}, {32, 32}));

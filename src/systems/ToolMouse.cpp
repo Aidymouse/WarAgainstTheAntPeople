@@ -15,6 +15,11 @@ void ToolMouse::handle_click(const sf::Event::MouseButtonPressed* evt) {
 			// Activate Tool	
 		} else if (evt->button == sf::Mouse::Button::Right) {
 			// Put tool down
+			Collider* tool_collider = component_manager->get_editable_component_data<Collider>(held_tool);
+			tool_collider->shape.circle.x = evt->position.x;
+			tool_collider->shape.circle.y = evt->position.y;
+			held_tool = -1;
+
 		}
 
 	} else {
