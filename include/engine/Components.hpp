@@ -3,6 +3,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <bitset>
+#include <engine/Collisions.h>
 
 enum COMP_SIG { // Component Signature Indexes
 	POSITION = 0,
@@ -23,31 +24,6 @@ struct Tool {
 };
 
 struct Guy { };
-
-/** Collisions */
-struct CollisionSquare {
-	float x;
-	float y;
-	float width;
-	float height;
-};
-
-struct CollisionCircle {
-	float x;
-	float y;
-	float radius;
-};
-
-union CollisionShape {
-	CollisionSquare square;
-	CollisionCircle circle;
-};
-
-enum CollisionShapeType {
-	CIRCLE,
-	RECT
-};
-/** Collisions */
 
 struct Collider {
 	CollisionShapeType type;
