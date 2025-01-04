@@ -1,12 +1,12 @@
 #pragma once
 
 #include "systems/DrawSystem.h"
-#include "systems/ToolClick.h"
+#include "systems/ToolMouse.h"
 #include <engine/GameState.h>
 #include <memory>
 
 class MainState : public GameState {
-	std::shared_ptr<ToolClick> sys_toolclick;
+	std::shared_ptr<ToolMouse> sys_toolclick;
 	std::shared_ptr<DrawSystem> sys_draw;
 public:
 	MainState();
