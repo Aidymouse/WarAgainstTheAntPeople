@@ -66,7 +66,7 @@ MainState::MainState() {
 	mallet_visible.sprite->setOrigin({16, 16});
 	main_ecs.add_component_to_entity<Visible>(mallet_id, mallet_visible);
 	main_ecs.add_component_to_entity<Position>(mallet_id, {mallet_x, mallet_y});
-	main_ecs.add_component_to_entity<Collider>(mallet_id, { CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 8}, 0 });
+	main_ecs.add_component_to_entity<Collider>(mallet_id, { CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 16}, 0 });
 	main_ecs.add_component_to_entity<Clickable>(mallet_id, {});
 
 	
@@ -79,6 +79,10 @@ MainState::MainState() {
 
 void MainState::handle_click(const sf::Event::MouseButtonPressed* evt) {
 	sys_toolmouse->handle_click(evt);
+}
+
+void MainState::handle_mousemove(const sf::Event::MouseMoved* evt) {
+	sys_toolmouse->handle_mousemove(evt);
 }
 
 void MainState::update(float dt) {
@@ -94,5 +98,6 @@ void MainState::draw(sf::RenderTarget* target) {
 	/*target->draw(guy);*/
 
 	sys_draw->draw(target);
+	sys_toolmouse->draw(target);
 }
 

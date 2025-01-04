@@ -29,7 +29,9 @@ void ToolMouse::handle_click(const sf::Event::MouseButtonPressed* evt) {
 					col.shape.circle, 
 					{(float)evt->position.x, (float)evt->position.y, 1}
 				)) {
-					std::cout << "Clicked on " << ent << std::endl;
+					//std::cout << "Clicked on " << ent << std::endl;
+					held_tool = ent;
+					break;
 				}
 
 			}
@@ -46,6 +48,10 @@ void ToolMouse::handle_mousemove(const sf::Event::MouseMoved* evt) {
 
 	if (held_tool != -1) {
 		// Update tool pos
+		Position* tool_pos = component_manager->get_editable_component_data<Position>(held_tool);
+
+		tool_pos->x = evt->position.x;
+		tool_pos->y = evt->position.y;
 	}
 }
 
@@ -53,17 +59,21 @@ void ToolMouse::draw(sf::RenderTarget* target) {
 	
 	sf::CircleShape circle;
 	circle.setOutlineColor(sf::Color::Red);
+	circle.setOutlineThickness(2);
+	circle.setFillColor(sf::Color::Transparent);
 
 	for (auto e=registered_entities.begin(); e != registered_entities.end(); e++) {
 		Entity ent = (Entity) *e;
 		Collider col = component_manager->get_component_data<Collider>(ent);
 
 		circle.setPosition({col.shape.circle.x, col.shape.circle.y});
+		circle.setOrigin({col.shape.circle.radius, col.shape.circle.radius});
 		circle.setRadius(col.shape.circle.radius);
 		target->draw(circle);
 	}
 
 	circle.setPosition({(float)mouseX, (float)mouseY});
+	circle.setOrigin({1, 1});
 	circle.setRadius(1);
 	target->draw(circle);
 

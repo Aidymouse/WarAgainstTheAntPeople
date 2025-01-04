@@ -29,6 +29,10 @@ void Engine::run() {
 				current_state->handle_click(evt);
 			}
 
+			else if (const auto* evt = event->getIf<sf::Event::MouseMoved>()) {
+				current_state->handle_mousemove(evt);
+			}
+
 
 
 		}

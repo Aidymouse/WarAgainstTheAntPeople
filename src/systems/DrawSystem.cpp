@@ -19,7 +19,7 @@ void DrawSystem::draw(sf::RenderTarget* target) {
 		Visible vis = component_manager->get_component_data<Visible>(ent);
 		Position pos = component_manager->get_component_data<Position>(ent);
 
-		vis.sprite->setPosition({(float) pos.x, (float) pos.y});
+		vis.sprite->setPosition({pos.x, pos.y});
 		sf::Vector2f spr_pos = vis.sprite->getPosition();
 		//std::cout << "Drawing " << ent << " at " << spr_pos.x << ", " << spr_pos.y << std::endl;
 		target->draw(*vis.sprite);

@@ -14,6 +14,7 @@ public:
 	void draw(sf::RenderTarget* target) override;
 
 	void handle_click(const sf::Event::MouseButtonPressed* evt) override;
+	void handle_mousemove(const sf::Event::MouseMoved* evt) override;
 
 	void leave_state() override {};
 	void enter_state() override {};
