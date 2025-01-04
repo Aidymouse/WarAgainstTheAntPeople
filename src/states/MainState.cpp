@@ -1,14 +1,16 @@
-#include "systems/ToolClick.h"
-#include <SFML/Graphics/Texture.hpp>
-#include <ecs/ECS.hpp>
 #include <string>
-#include <systems/DrawSystem.h>
-#include <engine/Components.hpp>
 
 #include <states/MainState.h>
-#include <ProjectConfig.h>
+#include <SFML/Graphics/Texture.hpp>
 
+#include <ecs/ECS.hpp>
+#include <systems/DrawSystem.h>
+#include <systems/ToolMouse.h>
+
+#include <engine/Components.hpp>
 #include <data/TextureStore.hpp>
+
+#include <ProjectConfig.h>
 
 void create_guy(ECS* ecs) {
 	Entity e = ecs->add_entity();
@@ -36,10 +38,10 @@ MainState::MainState() {
 	draw_signature[COMP_SIG::VISIBLE] = 1;
 	sys_draw = main_ecs.register_system<DrawSystem>(draw_signature);
 
-	Signature toolclick_signature = 0;
-	draw_signature[COMP_SIG::COLLIDER] = 1;
-	draw_signature[COMP_SIG::CLICKABLE] = 1;
-	sys_toolclick = main_ecs.register_system<ToolClick>(toolclick_signature);
+	Signature toolmouse_signature = 0;
+	toolmouse_signature[COMP_SIG::COLLIDER] = 1;
+	toolmouse_signature[COMP_SIG::CLICKABLE] = 1;
+	sys_toolmouse = main_ecs.register_system<ToolMouse>(toolmouse_signature);
 
 	// Set up components -- needs to be in order of COMP_SIG
 	main_ecs.register_component<Position>();
@@ -64,7 +66,7 @@ MainState::MainState() {
 	mallet_visible.sprite->setOrigin({16, 16});
 	main_ecs.add_component_to_entity<Visible>(mallet_id, mallet_visible);
 	main_ecs.add_component_to_entity<Position>(mallet_id, {mallet_x, mallet_y});
-	main_ecs.add_component_to_entity<Collider>(mallet_id, { CollisionShapeType::CIRCLE, {1, 2, 3}, 0 });
+	main_ecs.add_component_to_entity<Collider>(mallet_id, { CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 8}, 0 });
 	main_ecs.add_component_to_entity<Clickable>(mallet_id, {});
 
 	
@@ -76,7 +78,7 @@ MainState::MainState() {
 }
 
 void MainState::handle_click(const sf::Event::MouseButtonPressed* evt) {
-	sys_toolclick->handle_click(evt);
+	sys_toolmouse->handle_click(evt);
 }
 
 void MainState::update(float dt) {
