@@ -1,11 +1,19 @@
 #include <engine/Engine.h>
 #include <states/MainState.h>
+#include <engine/TextureStore.hpp>
+
+#include <ProjectConfig.h>
 
 Engine::Engine() {
 	window = sf::RenderWindow(sf::VideoMode({800u, 600u}), "Evil Pikmin (a ha ha ha)");
 	clock.start();
 
 	state_manager.set_state(std::make_shared<MainState>());
+	
+	// Load Textures
+	TextureStore::new_texture(std::string(GRAPHICS_PATH).append("guy sheet.png"));
+	TextureStore::new_texture(std::string(GRAPHICS_PATH).append("mallet.png"));
+	
 }
 
 void Engine::run() {

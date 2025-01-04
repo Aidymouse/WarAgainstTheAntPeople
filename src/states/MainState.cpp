@@ -8,9 +8,9 @@
 #include <states/MainState.h>
 #include <ProjectConfig.h>
 
+#include <engine/TextureStore.hpp>
 
-std::string G = std::string(GRAPHICS_PATH);
-const sf::Texture guy_tex(G.append("guy sheet.png"));
+
 
 MainState::MainState() {
 	ECS main_ecs;
@@ -44,7 +44,7 @@ MainState::MainState() {
 		main_ecs.add_component_to_entity<Position>(e, {pos_x, pos_y});
 
 		Visible guy_vis;
-		guy_vis.sprite = std::make_shared<sf::Sprite>(guy_tex);
+		guy_vis.sprite = std::make_shared<sf::Sprite>(TextureStore::texture_store[TEX_IDX::GUY]);
 		guy_vis.sprite->setPosition({pos_x, pos_y});
 		guy_vis.sprite->setTextureRect(sf::IntRect({0, 0}, {16, 16}));
 
