@@ -5,7 +5,6 @@
 #include <memory>
 #include <set>
 
-//#define MAX_ENTITIES_IN_SYSTEM 256
 
 class System {
 public:
@@ -23,5 +22,6 @@ public:
 	void set_component_manager(std::shared_ptr<ComponentManager> manager) {
 		component_manager = manager;
 	}
+
 };
 

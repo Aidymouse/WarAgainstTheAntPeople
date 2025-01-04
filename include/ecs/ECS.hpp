@@ -1,13 +1,14 @@
 #pragma once
 
-#include "ecs/ComponentManager.hpp"
-#include "ecs/SystemManager.hpp"
+#include <ecs/ComponentManager.hpp>
+#include <ecs/SystemManager.hpp>
 #include <boost/unordered/unordered_map_fwd.hpp>
 #include <ecs/Entity.hpp>
 #include <memory>
 #include <queue>
 
 #include <ProjectConfig.h>
+
 
 class ECS {
 	std::queue<Entity> free_ids;
@@ -49,7 +50,7 @@ public:
 
 	template <typename T> void add_component_to_entity(Entity id, T data) {
 		int sig_index = component_manager->get_signature_index_for_type<T>();
-		std::cout << "Adding entity " << id << " to component " << sig_index << std::endl;
+		//std::cout << "Adding entity " << id << " to component " << sig_index << std::endl;
 		if (signatures[id][sig_index]) {
 			std::cout << "Entity " << id << " already has " << typeid(T).name() << std::endl;
 		} else {

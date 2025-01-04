@@ -55,6 +55,18 @@ public:
 		return &components[entity_to_component_idx[id]];
 	}
 
+	T get_data_from_idx(int idx) {
+		return components[idx];
+	}
+
+	int get_num_components() {
+		return num_components;
+	}
+
+	int get_entity_from_idx(int i) {
+		return component_idx_to_entity[i];
+	}
+
 	void print_carray() {
 		std::cout << "Num of components: " << num_components << std::endl;
 		for (int i=0; i<num_components; i++) {

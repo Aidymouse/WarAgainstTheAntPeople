@@ -1,3 +1,4 @@
+#include "systems/PersuingSystem.h"
 #include <string>
 
 #include <states/MainState.h>
@@ -12,7 +13,7 @@
 
 #include <ProjectConfig.h>
 
-void create_guy(ECS* ecs) {
+Entity create_guy(ECS* ecs) {
 	Entity e = ecs->add_entity();
 
 	float pos_x = (float) (rand()%800);
@@ -26,13 +27,35 @@ void create_guy(ECS* ecs) {
 
 	ecs->add_component_to_entity<Visible>(e, guy_vis);
 	ecs->add_component_to_entity<ColliderHandler_mallet>(e, {});
+
+	ecs->add_component_to_entity<ScanningFor>(e, {SCAN_VALUES::SCRAP});
+	
+	return e;
+};
+
+Entity create_scrap(ECS* ecs) {
+	Entity scrap = ecs->add_entity();
+
+	float pos_x = (float) (rand()%800);
+	float pos_y = (float) (rand()%600);
+
+	ecs->add_component_to_entity<Position>(scrap, {pos_x, pos_y});
+
+	Visible scrap_vis;
+	scrap_vis.sprite = std::make_shared<sf::Sprite>(TextureStore::SCRAP);
+	scrap_vis.sprite->setPosition({pos_x, pos_y});
+	scrap_vis.sprite->setTextureRect(sf::IntRect({0, 0}, {16, 16}));
+
+	ecs->add_component_to_entity<Visible>(scrap, scrap_vis);
+	ecs->add_component_to_entity<Scannable>(scrap, { SCAN_VALUES::SCRAP });
+
+	return scrap;
 };
 
 MainState::MainState() {
 	ECS main_ecs;
 
-	// Set up Systems
-
+	/** Set up Systems */
 	Signature draw_signature = 0;
 	draw_signature[COMP_SIG::POSITION] = 1;
 	draw_signature[COMP_SIG::VISIBLE] = 1;
@@ -43,7 +66,16 @@ MainState::MainState() {
 	toolmouse_signature[COMP_SIG::CLICKABLE] = 1;
 	sys_toolmouse = main_ecs.register_system<ToolMouse>(toolmouse_signature);
 
-	// Set up components -- needs to be in order of COMP_SIG
+	Signature sig_scanning;
+	sig_scanning[COMP_SIG::SCANNING_FOR] = 1;
+	sys_scanning = main_ecs.register_system<ScanningSystem>(sig_scanning);
+
+	Signature sig_persuing;
+	sig_persuing[COMP_SIG::PERSUING] = 1;
+	sig_persuing[COMP_SIG::POSITION] = 1;
+	sys_persuing = main_ecs.register_system<PersuingSystem>(sig_persuing);
+
+	/** Set up components -- needs to be in order of COMP_SIG */
 	main_ecs.register_component<Position>();
 	main_ecs.register_component<Visible>(); 
 	main_ecs.register_component<Tool>(); 
@@ -51,6 +83,10 @@ MainState::MainState() {
 
 	main_ecs.register_component<Collider>(); 
 	main_ecs.register_component<ColliderHandler_mallet>(); 
+
+	main_ecs.register_component<ScanningFor>(); 
+	main_ecs.register_component<Scannable>(); 
+	main_ecs.register_component<Persuing>(); 
 
 	/** Initial Entities */
 	
@@ -71,8 +107,12 @@ MainState::MainState() {
 
 	
 	// Guys
-	for (int i=0; i<100; i++) {
+	for (int i=0; i<1; i++) {
 		create_guy(&main_ecs);
+	}
+
+	for (int i=0; i<3; i++) {
+		create_scrap(&main_ecs);
 	}
 
 }
@@ -87,6 +127,8 @@ void MainState::handle_mousemove(const sf::Event::MouseMoved* evt) {
 
 void MainState::update(float dt) {
 
+	sys_scanning->update(dt);
+	sys_persuing->update(dt);
 
 	sys_draw->update(dt);
 }

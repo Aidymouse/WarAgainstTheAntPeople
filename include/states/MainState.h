@@ -1,6 +1,8 @@
 #pragma once
 
 #include "systems/DrawSystem.h"
+#include "systems/PersuingSystem.h"
+#include "systems/ScanningSystem.h"
 #include "systems/ToolMouse.h"
 #include <engine/GameState.h>
 #include <memory>
@@ -8,6 +10,12 @@
 class MainState : public GameState {
 	std::shared_ptr<ToolMouse> sys_toolmouse;
 	std::shared_ptr<DrawSystem> sys_draw;
+	std::shared_ptr<ScanningSystem> sys_scanning;
+	std::shared_ptr<PersuingSystem> sys_persuing;
+
+	float timer_max_scrap_spawns = 5;
+	float timer_scrap_spawns = 5;
+
 public:
 	MainState();
 	void update(float dt) override;

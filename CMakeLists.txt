@@ -15,7 +15,7 @@ add_executable(EvilPikmin src/main.cpp)
 
 target_include_directories(EvilPikmin PUBLIC
     include
-    "${PROJECT_BINARY_DIR}"
+    # "${PROJECT_BINARY_DIR}"
 )
 
 configure_file(include/ProjectConfig.h.in ProjectConfig.h)

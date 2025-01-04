@@ -8,10 +8,13 @@
 
 #include <ProjectConfig.h>
 
+class ECS;
+
 class SystemManager {
 	std::shared_ptr<System> systems[MAX_SYSTEMS] = {NULL};
 	Signature system_signatures[MAX_SYSTEMS] = {0};
 	std::shared_ptr<ComponentManager> component_manager;
+
 
 public:
 	SystemManager(std::shared_ptr<ComponentManager> manager) {
@@ -19,6 +22,7 @@ public:
 	}
 
 	template <typename T> std::shared_ptr<T> add_system(Signature signature) {
+		std::cout << "Registering system " << typeid(T).name() << " with signature " << signature << std::endl;
 		std::shared_ptr<System> sys = std::make_shared<T>();
 		for (int i=0; i<MAX_SYSTEMS; i++) {
 			if (systems[i] == NULL) {
@@ -35,7 +39,6 @@ public:
 		for (int i=0; i<MAX_SYSTEMS; i++) {
 			if (systems[i] != NULL) {
 				if ((system_signatures[i] & sig) == system_signatures[i]) {
-					std::cout << "Registering system " << i << " for entity " << id << std::endl;
 					systems[i]->register_entity(id);
 				} else {
 					systems[i]->remove_entity(id);

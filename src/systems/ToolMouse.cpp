@@ -30,11 +30,7 @@ void ToolMouse::handle_click(const sf::Event::MouseButtonPressed* evt) {
 				Entity ent = (Entity) *e;
 				Collider col = component_manager->get_component_data<Collider>(ent);
 
-				if (Collisions::circle_circle(
-					col.shape.circle, 
-					{(float)evt->position.x, (float)evt->position.y, 1}
-				)) {
-					//std::cout << "Clicked on " << ent << std::endl;
+				if (Collisions::circle_circle(col.shape.circle, {(float)evt->position.x, (float)evt->position.y, 1})) {
 					held_tool = ent;
 					break;
 				}
