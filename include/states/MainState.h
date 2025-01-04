@@ -6,7 +6,7 @@
 #include <memory>
 
 class MainState : public GameState {
-	std::shared_ptr<ToolMouse> sys_toolclick;
+	std::shared_ptr<ToolMouse> sys_toolmouse;
 	std::shared_ptr<DrawSystem> sys_draw;
 public:
 	MainState();
