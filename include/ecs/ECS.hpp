@@ -2,32 +2,43 @@
 
 #include "ecs/ComponentManager.hpp"
 #include "ecs/SystemManager.hpp"
+#include <boost/unordered/unordered_map_fwd.hpp>
 #include <ecs/Entity.hpp>
 #include <memory>
+#include <queue>
 
-#define MAX_ENTITIES 1000
+#include <ProjectConfig.h>
 
 class ECS {
-	Entity num_entities = 0; // Little hacky, but the entity IDs get shuffled around when an entity is removed e.g. if 4 is removed, entity 6 becomes entity 4, all data moved, then this number decrements
-	Signature signatures[MAX_ENTITIES];
+	std::queue<Entity> free_ids;
+	Entity num_entities = 0; 
+	boost::unordered_map<Entity, Signature> signatures;
 	
 	std::shared_ptr<ComponentManager> component_manager = std::make_shared<ComponentManager>();
 	std::shared_ptr<SystemManager> system_manager = std::make_shared<SystemManager>(component_manager);
 
 public:
-	Entity add_entity(Signature signature) {
-		signatures[num_entities] = signature;
-		/*system_manager->entity_changed(num_entities, signature);*/
+	ECS() {
+		for (int e=0; e<MAX_ENTITIES; e++) {
+			free_ids.push(e);
+		}
+	};
 
+	Entity add_entity() {
+		Entity id = free_ids.front();
+		signatures[id] = 0;
+		/*system_manager->entity_changed(num_entities, signature);*/
+		free_ids.pop();
 		num_entities++;
 		return num_entities-1;
 	};
 
 	void remove_entity(Entity id) {
-		signatures[id] = signatures[num_entities-1];
+		signatures[id] = 0;
 		component_manager->entity_removed(id);
 		/*system_manager->entity_changed(id, signatures[id]);*/
 		num_entities--;
+		free_ids.push(id);
 	};
 
 
@@ -38,6 +49,7 @@ public:
 
 	template <typename T> void add_component_to_entity(Entity id, T data) {
 		int sig_index = component_manager->get_signature_index_for_type<T>();
+		std::cout << "Adding entity " << id << " to component " << sig_index << std::endl;
 		if (signatures[id][sig_index]) {
 			std::cout << "Entity " << id << " already has " << typeid(T).name() << std::endl;
 		} else {

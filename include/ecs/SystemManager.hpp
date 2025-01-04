@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ecs/Entity.hpp"
+#include <ecs/Entity.hpp>
 #include <ecs/System.hpp>
 
 #include <iostream>
 #include <memory>
 
-#define MAX_SYSTEMS 8
+#include <ProjectConfig.h>
 
 class SystemManager {
 	std::shared_ptr<System> systems[MAX_SYSTEMS] = {NULL};
@@ -35,7 +35,7 @@ public:
 		for (int i=0; i<MAX_SYSTEMS; i++) {
 			if (systems[i] != NULL) {
 				if ((system_signatures[i] & sig) == system_signatures[i]) {
-					//std::cout << "Registering system " << i << " for entity " << id << std::endl;
+					std::cout << "Registering system " << i << " for entity " << id << std::endl;
 					systems[i]->register_entity(id);
 				} else {
 					systems[i]->remove_entity(id);

@@ -5,7 +5,7 @@
 #include <memory>
 #include <set>
 
-#define MAX_ENTITIES_IN_SYSTEM 256
+//#define MAX_ENTITIES_IN_SYSTEM 256
 
 class System {
 public:

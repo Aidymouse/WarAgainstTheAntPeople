@@ -4,7 +4,6 @@
 #include <iostream>
 #include <boost/unordered_map.hpp>
 
-#define MAX_COMPONENTS 1000
 
 
 class ComponentArrayInterface {
@@ -17,7 +16,7 @@ public:
 
 template <typename T>
 class ComponentArray : public ComponentArrayInterface {
-	T components[MAX_COMPONENTS];
+	T components[MAX_ENTITIES];
 	int num_components = 0;
 	boost::unordered_map<Entity, int> entity_to_component_idx;
 	boost::unordered_map<int, Entity> component_idx_to_entity;

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <ecs/ComponentArray.hpp>
-#include <memory>
 #include <typeindex>
-#include <typeinfo>
 #include <unordered_map>
+
+#include <ProjectConfig.h>
 
 class ComponentManager {
 	std::shared_ptr<ComponentArrayInterface> component_arrays[MAX_COMPONENTS] = {NULL};
