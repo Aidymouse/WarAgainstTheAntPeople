@@ -1,6 +1,5 @@
 #include <engine/Engine.h>
 #include <states/MainState.h>
-#include <engine/TextureStore.hpp>
 
 #include <ProjectConfig.h>
 
@@ -10,9 +9,6 @@ Engine::Engine() {
 
 	state_manager.set_state(std::make_shared<MainState>());
 	
-	// Load Textures
-	TextureStore::new_texture(std::string(GRAPHICS_PATH).append("guy sheet.png"));
-	TextureStore::new_texture(std::string(GRAPHICS_PATH).append("mallet.png"));
 	
 }
 
@@ -20,16 +16,25 @@ void Engine::run() {
 	
 	while (window.isOpen()) {
 
+		std::shared_ptr<GameState> current_state = state_manager.get_current_state();
+
 		while (const std::optional event = window.pollEvent())
 		{
-		    if (event->is<sf::Event::Closed>())
-		    {
-			window.close();
-		    }
+			if (event->is<sf::Event::Closed>())
+			{
+				window.close();
+			}
+			/* Events */
+			else if (const auto* evt = event->getIf<sf::Event::MouseButtonPressed>()) {
+				current_state->handle_click(evt);
+			}
+
+
+
 		}
 
+
 		/* Update */
-		std::shared_ptr<GameState> current_state = state_manager.get_current_state();
 		float dt = clock.restart().asSeconds();
 
 		current_state->update(dt);
