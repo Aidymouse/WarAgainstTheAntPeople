@@ -1,5 +1,6 @@
 #pragma once
 
+#include "engine/Components.hpp"
 #include <ecs/ComponentManager.hpp>
 #include <ecs/Entity.hpp>
 #include <ecs/SystemManager.hpp>
@@ -77,5 +78,15 @@ public:
   template <typename T>
   std::shared_ptr<T> register_system(Signature signature) {
     return system_manager->add_system<T>(signature);
+  }
+
+  template <typename T>
+  std::shared_ptr<T> register_system(COMP_SIG* sigs, short num_sigs) {
+   Signature sig;
+   for (short i=0; i<num_sigs; i++) {
+    sig[sigs[i]] = 1;
+   }
+   return register_system<T>(sig);
+
   }
 };

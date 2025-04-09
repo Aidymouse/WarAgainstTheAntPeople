@@ -11,6 +11,7 @@ void DrawSystem::update(float dt, ECS *ecs) {
   /**/
   /*	Visible vis = component_manager->get_component_data<Visible>(ent);*/
   /*}*/
+  // Sort entities
 }
 
 void DrawSystem::draw(SDL_Renderer *renderer) {

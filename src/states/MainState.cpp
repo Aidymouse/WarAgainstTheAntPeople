@@ -46,8 +46,8 @@ MainState::MainState() {
   // main_ecs.register_component<Tool>();
   // main_ecs.register_component<Clickable>();
 
-  // main_ecs.register_component<Collider>();
-  // main_ecs.register_component<ColliderHandler_mallet>();
+  main_ecs.register_component<Collider>();
+  main_ecs.register_component<Smashable>();
 
   // main_ecs.register_component<ScanningFor>();
   // main_ecs.register_component<Scannable>();
