@@ -3,6 +3,7 @@
 #include <ecs/ComponentArray.hpp>
 #include <typeindex>
 #include <unordered_map>
+#include <memory>
 
 #include <ProjectConfig.h>
 

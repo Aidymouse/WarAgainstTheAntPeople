@@ -35,20 +35,20 @@ FetchContent_MakeAvailable(SFML)
 target_link_libraries(EvilPikmin PRIVATE SFML::Graphics)
 
 # Boost
-set(BOOST_INCLUDE_LIBRARIES unordered )
-set(BOOST_ENABLE_CMAKE ON)
-# set(BOOST_INCLUDE_DIRS "${BOOST_ROOT}/include")
-# set(BOOST_LIBRARY_DIRS "${BOOST_ROOT}/lib")
-include(FetchContent)
-FetchContent_Declare(Boost
-    URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
-    USES_TERMINAL_DOWNLOAD TRUE
-    DOWNLOAD_NO_EXTRACT FALSE
-    EXCLUDE_FROM_ALL
-    SYSTEM
-)
-FetchContent_MakeAvailable(Boost)
-
-target_link_libraries(EvilPikmin PUBLIC
-    Boost::unordered
-)
+# set(BOOST_INCLUDE_LIBRARIES unordered )
+# set(BOOST_ENABLE_CMAKE ON)
+# # set(BOOST_INCLUDE_DIRS "${BOOST_ROOT}/include")
+# # set(BOOST_LIBRARY_DIRS "${BOOST_ROOT}/lib")
+# include(FetchContent)
+# FetchContent_Declare(Boost
+#     URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
+#     USES_TERMINAL_DOWNLOAD TRUE
+#     DOWNLOAD_NO_EXTRACT FALSE
+#     EXCLUDE_FROM_ALL
+#     SYSTEM
+# )
+# FetchContent_MakeAvailable(Boost)
+#
+# target_link_libraries(EvilPikmin PUBLIC
+#     Boost::unordered
+# )

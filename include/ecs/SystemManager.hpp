@@ -21,7 +21,7 @@ public:
   }
 
   template <typename T> std::shared_ptr<T> add_system(Signature signature) {
-    std::cout << "Registering system " << typeid(T).name() << " with signature "
+    std::cout << "Registering system '" << typeid(T).name() << "' with signature "
               << signature << std::endl;
     std::shared_ptr<System> sys = std::make_shared<T>();
     for (int i = 0; i < MAX_SYSTEMS; i++) {

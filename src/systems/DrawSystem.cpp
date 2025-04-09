@@ -10,9 +10,11 @@ void DrawSystem::update(float dt, ECS *ecs) {
   /**/
   /*	Visible vis = component_manager->get_component_data<Visible>(ent);*/
   /*}*/
+  // Sort entities
 }
 
 void DrawSystem::draw(sf::RenderTarget *target) {
+  // Sort targets + draw.
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
     Entity ent = (Entity)*e;

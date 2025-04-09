@@ -22,6 +22,7 @@ enum COMP_SIG { // Component Signature Indexes
 struct Position {
 	float x;
 	float y;
+	float z; // Used for fake 3d. Subtracted from Y to get vertical pos on screen, but sorted with higher Z = higher.
 };
 
 struct Tool {
@@ -64,7 +65,8 @@ struct Collider {
 	// 1: Mallet
 };
 
-struct ColliderHandler_mallet {
+// Can be smashed by big weights (like hammer)
+struct Smashable {
 };
 
 struct Visible {
@@ -76,5 +78,16 @@ struct Clickable {};
 
 
 
+enum RESOURCE_TYPES {
+};
 
+struct Collectable_Resource {
+	RESOURCE_TYPES type;
+	short value;
+};
+
+struct Buildable {
+	unsigned short points_required;
+	unsigned short cur_build_points;
+};
 
