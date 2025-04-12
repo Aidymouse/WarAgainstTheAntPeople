@@ -22,33 +22,16 @@ configure_file(include/ProjectConfig.h.in ProjectConfig.h)
 
 add_subdirectory(src)
 
-#SFML
-include(FetchContent)
-FetchContent_Declare(SFML
-    GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG 3.0.0
-    GIT_SHALLOW ON
-    EXCLUDE_FROM_ALL
-    SYSTEM)
-FetchContent_MakeAvailable(SFML)
+# SDL3
+# set(SDL_X11 OFF)
+# set(SDL_X11_SHARED OFF)
+# set(SDL_X11_XCURSOR OFF)
+# set(SDL_X11_XDBE OFF)
+# set(SDL_X11_XFIXES OFF)
+# set(SDL_X11_XINPUT OFF)
+# set(SDL_X11_XRANDR OFF)
+# set(SDL_X11_XSCRNSAVER OFF)
+# set(SDL_X11_XSHAPE OFF)
+find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+target_link_libraries(EvilPikmin PRIVATE SDL3::SDL3)
 
-target_link_libraries(EvilPikmin PRIVATE SFML::Graphics)
-
-# Boost
-set(BOOST_INCLUDE_LIBRARIES unordered )
-set(BOOST_ENABLE_CMAKE ON)
-# set(BOOST_INCLUDE_DIRS "${BOOST_ROOT}/include")
-# set(BOOST_LIBRARY_DIRS "${BOOST_ROOT}/lib")
-include(FetchContent)
-FetchContent_Declare(Boost
-    URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
-    USES_TERMINAL_DOWNLOAD TRUE
-    DOWNLOAD_NO_EXTRACT FALSE
-    EXCLUDE_FROM_ALL
-    SYSTEM
-)
-FetchContent_MakeAvailable(Boost)
-
-target_link_libraries(EvilPikmin PUBLIC
-    Boost::unordered
-)

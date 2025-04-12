@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <SFML/Graphics.hpp>
 #include <bitset>
 #include <engine/Collisions.h>
 #include <ecs/Entity.hpp>
@@ -68,7 +67,7 @@ struct ColliderHandler_mallet {
 };
 
 struct Visible {
-	std::shared_ptr<sf::Sprite> sprite;
+	// Something like sprite
 };
 
 
