@@ -1,8 +1,9 @@
 #pragma once
 
-#include <boost/unordered_map.hpp>
 #include <ecs/Entity.hpp>
 #include <iostream>
+#include <unordered_map>
+//#include <memory>
 
 class ComponentArrayInterface {
 public:
@@ -13,8 +14,8 @@ public:
 template <typename T> class ComponentArray : public ComponentArrayInterface {
   T components[MAX_ENTITIES];
   int num_components = 0;
-  boost::unordered_map<Entity, int> entity_to_component_idx;
-  boost::unordered_map<int, Entity> component_idx_to_entity;
+  std::unordered_map<Entity, int> entity_to_component_idx;
+  std::unordered_map<int, Entity> component_idx_to_entity;
 
 public:
   void add_entity(Entity id, T data) {
