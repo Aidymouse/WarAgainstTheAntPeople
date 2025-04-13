@@ -1,3 +1,4 @@
+#include <SDL3/SDL.h>
 #include <ecs/ECS.hpp>
 #include <engine/Components.hpp>
 #include <iostream>
@@ -13,8 +14,7 @@ void DrawSystem::update(float dt, ECS *ecs) {
   // Sort entities
 }
 
-void DrawSystem::draw(sf::RenderTarget *target) {
-  // Sort targets + draw.
+void DrawSystem::draw(SDL_Renderer *renderer) {
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
     Entity ent = (Entity)*e;
@@ -24,13 +24,12 @@ void DrawSystem::draw(sf::RenderTarget *target) {
     Position *pos = component_manager->get_component_data<Position>(ent);
 
     // pos->x += 0.01;
+    // std::cout << "Draw Pos [" << ent << "] " << pos->x << ", " << pos->y
+    //<< std::endl;
+    // std::cout << "Drawing Texture " << vis.texture << std::endl;
 
-    // std::cout << "Draw Pos" << pos.x << ", " << pos.y << std::endl;
-
-    vis.sprite->setPosition({pos->x, pos->y});
-    sf::Vector2f spr_pos = vis.sprite->getPosition();
-    // std::cout << "Drawing " << ent << " at " << spr_pos.x << ", " <<
-    // spr_pos.y << std::endl;
-    target->draw(*vis.sprite);
+    SDL_FRect source_rect = vis.frame;
+    SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
+    SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
   }
 }

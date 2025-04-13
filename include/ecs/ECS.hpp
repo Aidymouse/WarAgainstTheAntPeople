@@ -12,7 +12,9 @@
 
 class ECS {
   std::queue<Entity> free_ids;
+
   Entity num_entities = 0;
+
   std::unordered_map<Entity, Signature> signatures;
 
   std::shared_ptr<ComponentManager> component_manager =
@@ -30,17 +32,14 @@ public:
   Entity add_entity() {
     Entity id = free_ids.front();
     signatures[id] = 0;
-    /*system_manager->entity_changed(num_entities, signature);*/
     free_ids.pop();
-    num_entities++;
-    return num_entities - 1;
+    return id;
   };
 
   void remove_entity(Entity id) {
     signatures[id] = 0;
     component_manager->entity_removed(id);
     /*system_manager->entity_changed(id, signatures[id]);*/
-    num_entities--;
     free_ids.push(id);
   };
 

@@ -1,130 +1,84 @@
-#include "systems/PersuingSystem.h"
 #include <string>
 
-#include <SFML/Graphics/Texture.hpp>
 #include <states/MainState.h>
 
 #include <ecs/ECS.hpp>
-#include <systems/DrawSystem.h>
-#include <systems/ToolMouse.h>
 
+#include <SDL3/SDL.h>
 #include <data/TextureStore.hpp>
 #include <engine/Components.hpp>
+#include <systems/DrawSystem.h>
+
+#include <fstream>
+#include <iostream>
 
 #include <ProjectConfig.h>
 
-Entity create_guy(ECS *ecs) {
-  Entity e = ecs->add_entity();
+TextureStore &texture_store = TextureStore::getInstance();
 
-  float pos_x = (float)(rand() % 800);
-  float pos_y = (float)(rand() % 600);
-  ecs->add_component_to_entity<Position>(e, {pos_x, pos_y});
+void add_guy(ECS *ecs) {
 
-  Visible guy_vis;
-  guy_vis.sprite = std::make_shared<sf::Sprite>(TextureStore::GUY);
-  guy_vis.sprite->setPosition({pos_x, pos_y});
-  guy_vis.sprite->setTextureRect(sf::IntRect({0, 0}, {16, 16}));
+  Visible v = {texture_store.get("guy_sheet"), {0, 0, 16, 16}};
+  float x = (float)(rand() % 800);
+  float y = (float)(rand() % 600);
+  Position p = {x, y, 0};
+  Entity g = ecs->add_entity();
+  ecs->add_component_to_entity<Visible>(g, v);
+  ecs->add_component_to_entity<Position>(g, p);
 
-  ecs->add_component_to_entity<Visible>(e, guy_vis);
-  ecs->add_component_to_entity<Smashable>(e, {});
-  ecs->add_component_to_entity<ScanningFor>(e, {SCAN_VALUES::SCRAP});
-
-  return e;
-};
-
-Entity create_scrap(ECS *ecs) {
-  Entity scrap = ecs->add_entity();
-
-  float pos_x = (float)(rand() % 800);
-  float pos_y = (float)(rand() % 600);
-
-  ecs->add_component_to_entity<Position>(scrap, {pos_x, pos_y});
-
-  Visible scrap_vis;
-  scrap_vis.sprite = std::make_shared<sf::Sprite>(TextureStore::SCRAP);
-  scrap_vis.sprite->setPosition({pos_x, pos_y});
-  scrap_vis.sprite->setTextureRect(sf::IntRect({0, 0}, {16, 16}));
-
-  ecs->add_component_to_entity<Visible>(scrap, scrap_vis);
-  ecs->add_component_to_entity<Scannable>(scrap, {SCAN_VALUES::SCRAP});
-
-  return scrap;
-};
+  std::cout << "Added guy [" << g << "] at " << x << ", " << y << std::endl;
+}
 
 MainState::MainState() {
-  // ECS main_ecs;
+  ECS main_ecs;
+
+  TextureStore &texture_store = TextureStore::getInstance();
 
   /** Set up Systems */
-  COMP_SIG sigs[2] = { COMP_SIG::POSITION, COMP_SIG::VISIBLE };
-  sys_draw = main_ecs.register_system<DrawSystem>(sigs, 2);
-
-  COMP_SIG toolmouse_sig[2] = {COMP_SIG::COLLIDER, COMP_SIG::CLICKABLE};
-  sys_toolmouse = main_ecs.register_system<ToolMouse>(toolmouse_sig, 2);
-
-  COMP_SIG sig_scanning[1] = {COMP_SIG::SCANNING_FOR};
-  sys_scanning = main_ecs.register_system<ScanningSystem>(sig_scanning, 1);
+  Signature draw_sig;
+  draw_sig[COMP_SIG::POSITION] = 1;
+  draw_sig[COMP_SIG::VISIBLE] = 1;
+  sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
   main_ecs.register_component<Position>();
   main_ecs.register_component<Visible>();
-  main_ecs.register_component<Tool>();
-  main_ecs.register_component<Clickable>();
+  // main_ecs.register_component<Tool>();
+  // main_ecs.register_component<Clickable>();
 
   main_ecs.register_component<Collider>();
+
   main_ecs.register_component<Smashable>();
 
-  main_ecs.register_component<ScanningFor>();
-  main_ecs.register_component<Scannable>();
-  main_ecs.register_component<Persuing>();
+  // main_ecs.register_component<ScanningFor>();
+  // main_ecs.register_component<Scannable>();
+  // main_ecs.register_component<Persuing>();
+
+  main_ecs.register_component<Carrier>();
+  main_ecs.register_component<Carryable>();
+
+  main_ecs.register_component<Tool>();
 
   /** Initial Entities */
 
-  // Mallet
-  Entity mallet_id = main_ecs.add_entity();
-  main_ecs.add_component_to_entity<Tool>(mallet_id, {0});
-  Visible mallet_visible;
-  float mallet_x = rand() % 800;
-  float mallet_y = rand() % 600;
-  mallet_visible.sprite = std::make_shared<sf::Sprite>(TextureStore::MALLET);
-  mallet_visible.sprite->setPosition({mallet_x, mallet_y});
-  mallet_visible.sprite->setTextureRect(sf::IntRect({0, 0}, {32, 32}));
-  mallet_visible.sprite->setOrigin({16, 16});
-  main_ecs.add_component_to_entity<Visible>(mallet_id, mallet_visible);
-  main_ecs.add_component_to_entity<Position>(mallet_id, {mallet_x, mallet_y});
-  main_ecs.add_component_to_entity<Collider>( mallet_id, {CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 16}, 0});
-  main_ecs.add_component_to_entity<Clickable>(mallet_id, {});
+  // std::ifstream guybmp(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"));
+
+  // guybmp.close();
+  //  guy_surface = SDL_LoadBmp();
+  //   Mallet
 
   // Guys
-  for (int i = 0; i < 10000; i++) {
-    create_guy(&main_ecs);
-  }
-
-  for (int i = 0; i < 10; i++) {
-    create_scrap(&main_ecs);
+  for (int g = 0; g < 1000; g++) {
+    add_guy(&main_ecs);
   }
 }
 
-void MainState::handle_click(const sf::Event::MouseButtonPressed *evt) {
-  sys_toolmouse->handle_click(evt);
-}
+MainState::~MainState() {}
 
-void MainState::handle_mousemove(const sf::Event::MouseMoved *evt) {
-  sys_toolmouse->handle_mousemove(evt);
-}
+void MainState::handle_click() {}
 
-void MainState::update(float dt) {
+void MainState::handle_mousemove() {}
 
-  sys_scanning->update(dt, &main_ecs);
+void MainState::update(float dt) {}
 
-  sys_draw->update(dt, &main_ecs);
-}
-
-void MainState::draw(sf::RenderTarget *target) {
-  // sf::Texture guy_tex("../resources/graphics/guy sheet.png");
-  /*sf::Sprite guy(guy_tex);*/
-  /*guy.setPosition({100, 100});*/
-  /*target->draw(guy);*/
-
-  sys_draw->draw(target);
-  sys_toolmouse->draw(target);
-}
+void MainState::draw(SDL_Renderer *renderer) { sys_draw->draw(renderer); }

@@ -1,15 +1,13 @@
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <engine/StateManager.h>
-#include <SFML/Graphics.hpp>
 
 class Engine {
 
-	StateManager state_manager;
-	sf::RenderWindow window;
-	sf::Clock clock;
+  StateManager state_manager;
 
 public:
-	Engine();
-	void run();
+  Engine();
+  void run();
 };

@@ -1,9 +1,9 @@
 #pragma once
 
-//#include <boost/unordered_map.hpp>
 #include <ecs/Entity.hpp>
 #include <iostream>
 #include <unordered_map>
+//#include <memory>
 
 class ComponentArrayInterface {
 public:

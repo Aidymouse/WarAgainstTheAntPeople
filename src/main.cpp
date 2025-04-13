@@ -2,18 +2,15 @@
 #include <ctime>
 #include <iostream>
 
-#include <engine/Engine.h>
 #include <ProjectConfig.h>
-
+#include <engine/Engine.h>
 
 int main() {
 
-	std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
+  std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
 
-	srand(time(NULL));
+  srand(time(NULL));
 
-	Engine game;
-	game.run();
-
-
+  Engine game;
+  game.run();
 }
