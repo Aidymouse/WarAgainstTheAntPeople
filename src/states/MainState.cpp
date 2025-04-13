@@ -1,10 +1,14 @@
+#include "systems/CollisionHandlerSystem.h"
 #include "systems/PersuingSystem.h"
+#include "systems/TransformSystem.h"
 #include <string>
 
 #include <SFML/Graphics/Texture.hpp>
 #include <states/MainState.h>
 
 #include <ecs/ECS.hpp>
+#include <engine/CollisionGrid.h>
+#include <systems/CollisionHandlerSystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/ToolMouse.h>
 
@@ -15,6 +19,7 @@
 
 Entity create_guy(ECS *ecs) {
   Entity e = ecs->add_entity();
+  //std::cout << "Adding guy with ID " << e << std::endl;
 
   float pos_x = (float)(rand() % 800);
   float pos_y = (float)(rand() % 600);
@@ -28,6 +33,8 @@ Entity create_guy(ECS *ecs) {
   ecs->add_component_to_entity<Visible>(e, guy_vis);
   ecs->add_component_to_entity<Smashable>(e, {});
   ecs->add_component_to_entity<ScanningFor>(e, {SCAN_VALUES::SCRAP});
+  ecs->add_component_to_entity<Carrier>(e, {NULL});
+  ecs->add_component_to_entity<Transform>(e, {0, 0 ,0});
 
   return e;
 };
@@ -47,6 +54,7 @@ Entity create_scrap(ECS *ecs) {
 
   ecs->add_component_to_entity<Visible>(scrap, scrap_vis);
   ecs->add_component_to_entity<Scannable>(scrap, {SCAN_VALUES::SCRAP});
+  ecs->add_component_to_entity<Carryable>(scrap, {NULL});
 
   return scrap;
 };
@@ -55,27 +63,41 @@ MainState::MainState() {
   // ECS main_ecs;
 
   /** Set up Systems */
-  COMP_SIG sigs[2] = { COMP_SIG::POSITION, COMP_SIG::VISIBLE };
+  COMP_SIG sigs[2] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE};
   sys_draw = main_ecs.register_system<DrawSystem>(sigs, 2);
 
   COMP_SIG toolmouse_sig[2] = {COMP_SIG::COLLIDER, COMP_SIG::CLICKABLE};
   sys_toolmouse = main_ecs.register_system<ToolMouse>(toolmouse_sig, 2);
 
-  COMP_SIG sig_scanning[1] = {COMP_SIG::SCANNING_FOR};
-  sys_scanning = main_ecs.register_system<ScanningSystem>(sig_scanning, 1);
+  COMP_SIG sig_scanning[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION,
+                              COMP_SIG::TRANSFORM};
+  sys_scanning = main_ecs.register_system<ScanningSystem>(sig_scanning, 3);
+
+  COMP_SIG sig_collision[1] = {COMP_SIG::COLLIDER};
+  sys_collision_handler =
+      main_ecs.register_system<CollisionHandlerSystem>(sig_collision, 1);
+
+  COMP_SIG sig_transform[1] = {COMP_SIG::TRANSFORM};
+  sys_transform = main_ecs.register_system<TransformSystem>(sig_transform, 1);
 
   /** Set up components -- needs to be in order of COMP_SIG */
   main_ecs.register_component<Position>();
   main_ecs.register_component<Visible>();
-  main_ecs.register_component<Tool>();
+  main_ecs.register_component<Transform>();
   main_ecs.register_component<Clickable>();
 
   main_ecs.register_component<Collider>();
+
   main_ecs.register_component<Smashable>();
 
   main_ecs.register_component<ScanningFor>();
   main_ecs.register_component<Scannable>();
   main_ecs.register_component<Persuing>();
+
+  main_ecs.register_component<Carrier>();
+  main_ecs.register_component<Carryable>();
+
+  main_ecs.register_component<Tool>();
 
   /** Initial Entities */
 
@@ -91,11 +113,12 @@ MainState::MainState() {
   mallet_visible.sprite->setOrigin({16, 16});
   main_ecs.add_component_to_entity<Visible>(mallet_id, mallet_visible);
   main_ecs.add_component_to_entity<Position>(mallet_id, {mallet_x, mallet_y});
-  main_ecs.add_component_to_entity<Collider>( mallet_id, {CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 16}, 0});
+  main_ecs.add_component_to_entity<Collider>(
+      mallet_id, {CollisionShapeType::CIRCLE, {mallet_x, mallet_y, 16}, 0});
   main_ecs.add_component_to_entity<Clickable>(mallet_id, {});
 
   // Guys
-  for (int i = 0; i < 10000; i++) {
+  for (int i = 0; i < 10; i++) {
     create_guy(&main_ecs);
   }
 
@@ -114,9 +137,10 @@ void MainState::handle_mousemove(const sf::Event::MouseMoved *evt) {
 
 void MainState::update(float dt) {
 
-  sys_scanning->update(dt, &main_ecs);
+  sys_transform->update(dt, &main_grid);
 
-  sys_draw->update(dt, &main_ecs);
+  sys_scanning->update(dt, &main_ecs);
+  //sys_draw->update(dt, &main_ecs);
 }
 
 void MainState::draw(sf::RenderTarget *target) {
@@ -127,4 +151,6 @@ void MainState::draw(sf::RenderTarget *target) {
 
   sys_draw->draw(target);
   sys_toolmouse->draw(target);
+
+  main_grid.debug_draw_grid(target);
 }

@@ -18,7 +18,7 @@ target_include_directories(EvilPikmin PUBLIC
     # "${PROJECT_BINARY_DIR}"
 )
 
-configure_file(include/ProjectConfig.h.in ProjectConfig.h)
+configure_file(include/ProjectConfig.h.in ../include/ProjectConfig.h)
 
 add_subdirectory(src)
 
