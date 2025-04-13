@@ -90,14 +90,9 @@ MainState::MainState() {
     add_guy(&main_ecs);
   }
 
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
-  add_scrap(&main_ecs);
+  for (int s = 0; s < 30; s++) {
+    add_scrap(&main_ecs);
+  }
 }
 
 MainState::~MainState() {}
