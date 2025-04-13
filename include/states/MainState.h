@@ -14,7 +14,7 @@ class MainState : public GameState {
   float timer_scrap_spawns = 5;
 
   ECS main_ecs;
-  CollisionGrid main_grid;
+  // CollisionGrid main_grid;
 
 public:
   MainState();
@@ -25,6 +25,6 @@ public:
   void handle_click() override;
   void handle_mousemove() override;
 
-  void leave_state() override{};
-  void enter_state() override{};
+  void leave_state() override {};
+  void enter_state() override {};
 };
