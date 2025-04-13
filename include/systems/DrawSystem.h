@@ -1,7 +1,8 @@
 #pragma once
 
-#include <ECS/System.hpp>
 #include <SDL3/SDL.h>
+#include <ecs/ECS.hpp>
+#include <ecs/System.hpp>
 
 class DrawSystem : public System {
 public:
