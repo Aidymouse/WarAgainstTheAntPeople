@@ -1,14 +1,15 @@
 #include <cmath>
+#include <ecs/ECS.hpp>
 #include <engine/Components.hpp>
 #include <iostream>
 #include <set>
 #include <systems/ScanningSystem.h>
-#include <set>
-#include <cmath>
+#include <util/Vec2.hpp>
 
 void ScanningSystem::update(float dt, ECS *ecs) {
 
-  ComponentArray<Scannable> scannable = *(component_manager->get_component_array<Scannable>());
+  ComponentArray<Scannable> scannable =
+      *(component_manager->get_component_array<Scannable>());
   int num_scannable = scannable.get_num_components();
 
   std::set<Entity> ents_to_erase;
@@ -21,7 +22,7 @@ void ScanningSystem::update(float dt, ECS *ecs) {
         component_manager->get_component_data<ScanningFor>(ent);
 
     float shortest_dist = 1000000000;
-    sf::Vector2f closest_pos;
+    Vec2 closest_pos;
     Position *pos = component_manager->get_component_data<Position>(ent);
 
     for (int i = 0; i < num_scannable; i++) {
@@ -29,7 +30,8 @@ void ScanningSystem::update(float dt, ECS *ecs) {
 
       if (s.scan_value == scanning_for->sought_scan_value) {
         Entity scanned_ent = scannable.get_entity_from_idx(i);
-        Position p = *component_manager->get_component_data<Position>(scanned_ent);
+        Position p =
+            *component_manager->get_component_data<Position>(scanned_ent);
 
         // float dist = sqrt(pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2));
         float dist = pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2);
@@ -62,12 +64,12 @@ void ScanningSystem::update(float dt, ECS *ecs) {
       trans->vel_x = 0;
       trans->vel_y = 0;
     } else {
-      sf::Vector2f vecPos = sf::Vector2f(pos->x, pos->y);
-      sf::Vector2f desiredPos = sf::Vector2f(closest_pos.x, closest_pos.y);
-      sf::Vector2f diff = vecPos - desiredPos;
-      sf::Vector2f dir = diff.normalized();
+      Vec2 vecPos = Vec2(pos->x, pos->y);
+      Vec2 desiredPos = Vec2(closest_pos.x, closest_pos.y);
+      Vec2 diff = vecPos - desiredPos;
+      Vec2 dir = diff.normalized();
 
-      sf::Vector2f newPos = vecPos + dir;
+      Vec2 newPos = vecPos + dir;
       // ecs->add_component_to_entity<Persuing>(ent, pe);
 
       Transform *trans = component_manager->get_component_data<Transform>(ent);

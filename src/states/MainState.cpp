@@ -26,7 +26,17 @@ void add_guy(ECS *ecs) {
   ecs->add_component_to_entity<Visible>(g, v);
   ecs->add_component_to_entity<Position>(g, p);
 
-  std::cout << "Added guy [" << g << "] at " << x << ", " << y << std::endl;
+  // std::cout << "Added guy [" << g << "] at " << x << ", " << y << std::endl;
+}
+
+void add_scrap(ECS *ecs) {
+  Visible v = {texture_store.get("scrap_sheet"), {0, 0, 16, 16}};
+  float x = (float)(rand() % 800);
+  float y = (float)(rand() % 600);
+  Position p = {x, y, 0};
+  Entity s = ecs->add_entity();
+  ecs->add_component_to_entity<Visible>(s, v);
+  ecs->add_component_to_entity<Position>(s, p);
 }
 
 MainState::MainState() {
@@ -39,6 +49,8 @@ MainState::MainState() {
   draw_sig[COMP_SIG::POSITION] = 1;
   draw_sig[COMP_SIG::VISIBLE] = 1;
   sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
+
+  // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
   main_ecs.register_component<Position>();
@@ -71,6 +83,8 @@ MainState::MainState() {
   for (int g = 0; g < 1000; g++) {
     add_guy(&main_ecs);
   }
+
+  add_scrap(&main_ecs);
 }
 
 MainState::~MainState() {}

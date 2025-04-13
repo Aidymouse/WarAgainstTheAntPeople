@@ -21,8 +21,11 @@ void Engine::run() {
 
   TextureStore &texture_store = TextureStore::getInstance();
   // store.p();
+  /** Load Textures */
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"),
                              "guy_sheet", main_renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("scrap.bmp"),
+                             "scrap_sheet", main_renderer);
 
   // Load Main State
   state_manager.set_state(std::make_shared<MainState>());

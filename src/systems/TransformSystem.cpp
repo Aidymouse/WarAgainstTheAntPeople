@@ -1,7 +1,7 @@
 #include "engine/Components.hpp"
 #include <systems/TransformSystem.h>
 
-void TransformSystem::update(float dt, CollisionGrid *grid) {
+void TransformSystem::update(float dt) {
 
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
@@ -13,8 +13,8 @@ void TransformSystem::update(float dt, CollisionGrid *grid) {
     pos->y += trans->vel_y;
     pos->z += trans->vel_z;
 
-    grid->update_entity(ent, *pos);
-    
+    // grid->update_entity(ent, *pos);
+
     // If we were gonna do acceleration or anything we do it here
   }
 };
