@@ -1,4 +1,5 @@
 #include <SDL3/SDL.h>
+#include <cmath>
 #include <ecs/ECS.hpp>
 #include <engine/Components.hpp>
 #include <iostream>
@@ -29,7 +30,7 @@ void DrawSystem::draw(SDL_Renderer *renderer) {
     // std::cout << "Drawing Texture " << vis.texture << std::endl;
 
     SDL_FRect source_rect = vis.frame;
-    SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
+    SDL_FRect target_rect = {std::floor(pos->x), std::floor(pos->y), 16, 16};
     SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
   }
 }

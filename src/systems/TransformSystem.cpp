@@ -9,9 +9,9 @@ void TransformSystem::update(float dt) {
     Position *pos = component_manager->get_component_data<Position>(ent);
     Transform *trans = component_manager->get_component_data<Transform>(ent);
 
-    pos->x += trans->vel_x;
-    pos->y += trans->vel_y;
-    pos->z += trans->vel_z;
+    pos->x += trans->vel_x * dt;
+    pos->y += trans->vel_y * dt;
+    pos->z += trans->vel_z * dt;
 
     // grid->update_entity(ent, *pos);
 

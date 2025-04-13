@@ -1,3 +1,4 @@
+#include "systems/TransformSystem.h"
 #include <string>
 
 #include <states/MainState.h>
@@ -8,6 +9,7 @@
 #include <data/TextureStore.hpp>
 #include <engine/Components.hpp>
 #include <systems/DrawSystem.h>
+#include <systems/ScanningSystem.h>
 
 #include <fstream>
 #include <iostream>
@@ -25,6 +27,8 @@ void add_guy(ECS *ecs) {
   Entity g = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(g, v);
   ecs->add_component_to_entity<Position>(g, p);
+  ecs->add_component_to_entity<Transform>(g, {0, 0, 0});
+  ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SCRAP});
 
   // std::cout << "Added guy [" << g << "] at " << x << ", " << y << std::endl;
 }
@@ -37,53 +41,62 @@ void add_scrap(ECS *ecs) {
   Entity s = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
+  ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SCRAP});
 }
 
 MainState::MainState() {
-  ECS main_ecs;
 
   TextureStore &texture_store = TextureStore::getInstance();
 
   /** Set up Systems */
-  Signature draw_sig;
-  draw_sig[COMP_SIG::POSITION] = 1;
-  draw_sig[COMP_SIG::VISIBLE] = 1;
-  sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
+  COMP_SIG draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE};
+  sys_draw = main_ecs.register_system<DrawSystem>(draw_sigs, 2);
+
+  COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
+  sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);
+
+  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION,
+                               COMP_SIG::TRANSFORM};
+  sys_scanning = main_ecs.register_system<ScanningSystem>(scanning_sigs, 3);
 
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
-  main_ecs.register_component<Position>();
-  main_ecs.register_component<Visible>();
+  main_ecs.register_component<Position>(COMP_SIG::POSITION);
+  main_ecs.register_component<Visible>(COMP_SIG::VISIBLE);
+  main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
   // main_ecs.register_component<Tool>();
   // main_ecs.register_component<Clickable>();
 
-  main_ecs.register_component<Collider>();
-
-  main_ecs.register_component<Smashable>();
-
-  // main_ecs.register_component<ScanningFor>();
-  // main_ecs.register_component<Scannable>();
-  // main_ecs.register_component<Persuing>();
-
-  main_ecs.register_component<Carrier>();
-  main_ecs.register_component<Carryable>();
-
-  main_ecs.register_component<Tool>();
+  // main_ecs.register_component<Collider>();
+  //
+  // main_ecs.register_component<Smashable>();
+  //
+  main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
+  main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
+  // // main_ecs.register_component<Persuing>();
+  //
+  // main_ecs.register_component<Carrier>();
+  // main_ecs.register_component<Carryable>();
+  //
+  // main_ecs.register_component<Tool>();
 
   /** Initial Entities */
 
-  // std::ifstream guybmp(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"));
-
-  // guybmp.close();
-  //  guy_surface = SDL_LoadBmp();
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 1000; g++) {
+  for (int g = 0; g < 10000; g++) {
     add_guy(&main_ecs);
   }
 
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
+  add_scrap(&main_ecs);
   add_scrap(&main_ecs);
 }
 
@@ -93,6 +106,9 @@ void MainState::handle_click() {}
 
 void MainState::handle_mousemove() {}
 
-void MainState::update(float dt) {}
+void MainState::update(float dt) {
+  sys_transform->update(dt);
+  sys_scanning->update(dt, &main_ecs);
+}
 
 void MainState::draw(SDL_Renderer *renderer) { sys_draw->draw(renderer); }

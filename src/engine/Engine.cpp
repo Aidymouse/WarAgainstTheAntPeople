@@ -48,7 +48,7 @@ void Engine::run() {
     // Update DeltaTime
     last = now;
     now = SDL_GetPerformanceCounter();
-    dt = (now - last * 1000) / SDL_GetPerformanceFrequency();
+    dt = ((now - last)) / SDL_GetPerformanceFrequency();
 
     cur_state->update(dt);
 

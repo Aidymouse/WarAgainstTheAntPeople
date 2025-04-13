@@ -14,10 +14,14 @@ void ScanningSystem::update(float dt, ECS *ecs) {
 
   std::set<Entity> ents_to_erase;
 
+  // std::cout << ents_to_erase << std::endl;
+
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
     Entity ent = (Entity)*e;
-    // std::cout << "Drawing " << ent << std::endl;
+
+    // std::cout << "Scanning " << ent << " ("
+    //           << ecs->get_signature_for_entity(ent) << ")" << std::endl;
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
 
@@ -73,8 +77,8 @@ void ScanningSystem::update(float dt, ECS *ecs) {
       // ecs->add_component_to_entity<Persuing>(ent, pe);
 
       Transform *trans = component_manager->get_component_data<Transform>(ent);
-      trans->vel_x = -dir.x * 0.1;
-      trans->vel_y = -dir.y * 0.1;
+      trans->vel_x = -dir.x * 50;
+      trans->vel_y = -dir.y * 50;
     }
   }
 
