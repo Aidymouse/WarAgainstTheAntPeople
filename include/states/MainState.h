@@ -14,6 +14,7 @@ class MainState : public GameState {
   float timer_scrap_spawns = 5;
 
   ECS main_ecs;
+  CollisionGrid main_grid;
 
 public:
   MainState();

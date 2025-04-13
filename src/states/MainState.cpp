@@ -47,11 +47,17 @@ MainState::MainState() {
   // main_ecs.register_component<Clickable>();
 
   main_ecs.register_component<Collider>();
+
   main_ecs.register_component<Smashable>();
 
   // main_ecs.register_component<ScanningFor>();
   // main_ecs.register_component<Scannable>();
   // main_ecs.register_component<Persuing>();
+
+  main_ecs.register_component<Carrier>();
+  main_ecs.register_component<Carryable>();
+
+  main_ecs.register_component<Tool>();
 
   /** Initial Entities */
 

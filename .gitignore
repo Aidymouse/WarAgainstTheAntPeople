@@ -3,6 +3,7 @@
 /ninja_out/**/*
 .cache
 /build/**/*
+/build/**
 build
 Debug
 .cache

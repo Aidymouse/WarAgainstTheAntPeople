@@ -20,9 +20,16 @@ enum COMP_SIG { // Component Signature Indexes
 };
 
 struct Position {
-	float x;
-	float y;
-	float z; // Used for fake 3d. Subtracted from Y to get vertical pos on screen, but sorted with higher Z = higher.
+  float x;
+  float y;
+  float z; // Used for fake 3d. Subtracted from Y to get vertical pos on screen,
+           // but sorted with higher Z = higher.
+};
+
+struct Transform {
+  float vel_x;
+  float vel_y;
+  float vel_z;
 };
 
 struct Tool {
@@ -66,8 +73,7 @@ struct Collider {
 };
 
 // Can be smashed by big weights (like hammer)
-struct Smashable {
-};
+struct Smashable {};
 
 struct Visible {
   // Something like sprite
@@ -77,18 +83,22 @@ struct Visible {
 
 struct Clickable {};
 
-
-
-enum RESOURCE_TYPES {
-};
+enum RESOURCE_TYPES { SCRAP_METAL };
 
 struct Collectable_Resource {
-	RESOURCE_TYPES type;
-	short value;
+  RESOURCE_TYPES type;
+  short value;
 };
 
 struct Buildable {
-	unsigned short points_required;
-	unsigned short cur_build_points;
+  unsigned short points_required;
+  unsigned short cur_build_points;
 };
 
+struct Carrier {
+  std::optional<Entity> carried_entity;
+};
+
+struct Carryable {
+  std::optional<Entity> carried_by;
+};
