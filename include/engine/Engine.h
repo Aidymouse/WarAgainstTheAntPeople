@@ -1,14 +1,13 @@
 #pragma once
 
-#include <engine/StateManager.h>
 #include <SDL3/SDL.h>
+#include <engine/StateManager.h>
 
 class Engine {
 
-	SDL_Window *window;
-	StateManager state_manager;
+  StateManager state_manager;
 
 public:
-	Engine();
-	void run();
+  Engine();
+  void run();
 };

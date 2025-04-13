@@ -5,10 +5,18 @@ project(EvilPikmin LANGUAGES CXX VERSION 0.0.1)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
+# Something to do with sdl ?
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 set(GRAPHICS_PATH "\"../resources/graphics/\"")
+if(WINDOWS)
+	message("Windows")
+	set(GRAPHICS_PATH "\"../../resources/graphics/\"")
+endif()
+
 if(ABSOLUTE_GRAPHICS)
-    set(GRAPHICS_PATH "\"resources/graphics/\"")
+	set(GRAPHICS_PATH "\"resources/graphics/\"")
 endif()
 
 add_executable(EvilPikmin src/main.cpp)
@@ -18,20 +26,19 @@ target_include_directories(EvilPikmin PUBLIC
     # "${PROJECT_BINARY_DIR}"
 )
 
-configure_file(include/ProjectConfig.h.in ProjectConfig.h)
+configure_file(include/ProjectConfig.h.in ../include/ProjectConfig.h)
 
 add_subdirectory(src)
+#add_subdirectory(lib)
 
-# SDL3
-# set(SDL_X11 OFF)
-# set(SDL_X11_SHARED OFF)
-# set(SDL_X11_XCURSOR OFF)
-# set(SDL_X11_XDBE OFF)
-# set(SDL_X11_XFIXES OFF)
-# set(SDL_X11_XINPUT OFF)
-# set(SDL_X11_XRANDR OFF)
-# set(SDL_X11_XSCRNSAVER OFF)
-# set(SDL_X11_XSHAPE OFF)
-find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+
+### SDL3
+
+# Linux
+# find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
+
+# Window
+add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
+# add_subdirectory(lib/SDL_Image EXCLUDE_FROM_ALL)
 target_link_libraries(EvilPikmin PRIVATE SDL3::SDL3)
 
