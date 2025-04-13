@@ -1,5 +1,7 @@
 #pragma once
 
+#include "systems/ScanningSystem.h"
+#include "systems/TransformSystem.h"
 #include <SDL3/SDL.h>
 #include <ecs/ECS.hpp>
 #include <engine/GameState.h>
@@ -9,6 +11,8 @@
 class MainState : public GameState {
 
   std::shared_ptr<DrawSystem> sys_draw;
+  std::shared_ptr<TransformSystem> sys_transform;
+  std::shared_ptr<ScanningSystem> sys_scanning;
 
   float timer_max_scrap_spawns = 5;
   float timer_scrap_spawns = 5;

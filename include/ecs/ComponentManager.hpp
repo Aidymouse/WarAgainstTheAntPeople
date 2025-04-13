@@ -1,9 +1,10 @@
 #pragma once
 
 #include <ecs/ComponentArray.hpp>
+#include <engine/Components.hpp>
+#include <memory>
 #include <typeindex>
 #include <unordered_map>
-#include <memory>
 
 #include <ProjectConfig.h>
 
@@ -14,14 +15,24 @@ class ComponentManager {
   // std::unordered_map<int, std::type_index> signature_index_to_component_type;
 
 public:
-  template <typename T> void add_component() {
-    for (int i = 0; i < MAX_COMPONENTS; i++) {
-      if (component_arrays[i] == NULL) {
-        component_arrays[i] = std::make_shared<ComponentArray<T>>();
-        type_to_component_array[typeid(T)] = i;
-        // signature_index_to_component_type[i] = typeid(T);
-        break;
-      }
+  template <typename T> void add_component(COMP_SIG signature_index) {
+    if (signature_index > MAX_COMPONENTS) {
+      std::cout << "Trying to add component with sig (" << signature_index
+                << ") above max (" << MAX_COMPONENTS << "). Not adding."
+                << std::endl;
+      return;
+    }
+
+    if (component_arrays[signature_index] != NULL) {
+      std::cout << "Trying to add component with sig (" << signature_index
+                << ") but one already exists. Not adding." << std::endl;
+      return;
+    } else {
+      component_arrays[signature_index] = std::make_shared<ComponentArray<T>>();
+      type_to_component_array[typeid(T)] = signature_index;
+      // signature_index_to_component_type[i] = typeid(T);
+      std::cout << "Added component " << typeid(T).name() << " at index "
+                << signature_index << std::endl;
     }
   }
 

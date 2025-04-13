@@ -10,14 +10,17 @@
 enum COMP_SIG { // Component Signature Indexes
   POSITION = 0,
   VISIBLE = 1,
-  TOOL = 2,
-  CLICKABLE = 3,
-  COLLIDER = 4,
-  COL_MALLET = 5,
+  TRANSFORM = 2,
+  SCANNING_FOR = 3,
+  SCANNABLE = 4,
 
-  SCANNING_FOR = 6,
-  SCANNABLE = 7,
-  PERSUING = 8,
+  // TOOL = 3,
+  // CLICKABLE = 4,
+  // COLLIDER = 5,
+  // COL_MALLET = 7,
+  //
+  // SCANNABLE = 8,
+  // PERSUING = 9,
 };
 
 struct Position {

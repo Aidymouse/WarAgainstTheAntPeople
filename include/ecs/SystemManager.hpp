@@ -21,8 +21,8 @@ public:
   }
 
   template <typename T> std::shared_ptr<T> add_system(Signature signature) {
-    std::cout << "Registering system '" << typeid(T).name() << "' with signature "
-              << signature << std::endl;
+    std::cout << "Registering system '" << typeid(T).name()
+              << "' with signature " << signature << std::endl;
     std::shared_ptr<System> sys = std::make_shared<T>();
     for (int i = 0; i < MAX_SYSTEMS; i++) {
       if (systems[i] == NULL) {
@@ -36,6 +36,7 @@ public:
   }
 
   void entity_changed(Entity id, Signature sig) {
+    // std::cout << "Entity " << id << " has changed " << sig << std::endl;
     for (int i = 0; i < MAX_SYSTEMS; i++) {
       if (systems[i] != NULL) {
         if ((system_signatures[i] & sig) == system_signatures[i]) {

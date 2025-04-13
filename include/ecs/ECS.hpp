@@ -43,9 +43,11 @@ public:
     free_ids.push(id);
   };
 
+  Signature get_signature_for_entity(Entity id) { return signatures[id]; }
+
   // Components
-  template <typename T> void register_component() {
-    component_manager->add_component<T>();
+  template <typename T> void register_component(COMP_SIG idx) {
+    component_manager->add_component<T>(idx);
   }
 
   template <typename T> void add_component_to_entity(Entity id, T data) {
@@ -60,12 +62,18 @@ public:
       signatures[id][sig_index] = 1;
       system_manager->entity_changed(id, signatures[id]);
     }
+
+    // std::cout << "Added component " << typeid(T).name() << " to entity " <<
+    // id
+    //           << " (" << signatures[id] << ")" << std::endl;
   }
 
   template <typename T> void remove_component_from_entity(Entity id) {
     int sig_index = component_manager->get_signature_index_for_type<T>();
+
     if (not signatures[id][sig_index]) {
-      std::cout << "Entity " << id << " does not have " << typeid(T).name()
+      std::cout << "Entity " << id << "(" << signatures[id] << ")"
+                << " does not have " << typeid(T).name()
                 << ", so it will not be removed" << std::endl;
     } else {
       component_manager->get_component_array<T>()->remove_entity(id);
@@ -81,12 +89,11 @@ public:
   }
 
   template <typename T>
-  std::shared_ptr<T> register_system(COMP_SIG* sigs, short num_sigs) {
-   Signature sig;
-   for (short i=0; i<num_sigs; i++) {
-    sig[sigs[i]] = 1;
-   }
-   return register_system<T>(sig);
-
+  std::shared_ptr<T> register_system(COMP_SIG *sigs, short num_sigs) {
+    Signature sig;
+    for (short i = 0; i < num_sigs; i++) {
+      sig[sigs[i]] = 1;
+    }
+    return register_system<T>(sig);
   }
 };
