@@ -20,7 +20,7 @@ void Engine::run() {
   float dt = 0;
 
   TextureStore &texture_store = TextureStore::getInstance();
-  // store.p();
+
   /** Load Textures */
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"),
                              "guy_sheet", main_renderer);

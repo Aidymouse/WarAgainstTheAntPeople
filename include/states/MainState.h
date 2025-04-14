@@ -5,6 +5,7 @@
 #include "systems/TransformSystem.h"
 #include <SDL3/SDL.h>
 #include <ecs/ECS.hpp>
+#include <engine/CollisionGrid.h>
 #include <engine/GameState.h>
 #include <memory>
 #include <systems/DrawSystem.h>
@@ -20,7 +21,7 @@ class MainState : public GameState {
   float timer_scrap_spawns = 5;
 
   ECS main_ecs;
-  // CollisionGrid main_grid;
+  CollisionGrid main_grid;
 
 public:
   MainState();

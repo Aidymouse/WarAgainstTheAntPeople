@@ -14,5 +14,8 @@ void FollowsMouseSystem::update(float dt) {
        e++) {
     Entity ent = (Entity)*e;
     Position *pos = component_manager->get_component_data<Position>(ent);
+
+    pos->x = mX;
+    pos->y = mY;
   }
 };

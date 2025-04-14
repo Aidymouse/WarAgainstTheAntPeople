@@ -1,7 +1,9 @@
 #include "anim/ToolAnim.hpp"
+#include "engine/Collisions.h"
 #include "systems/TransformSystem.h"
 #include <string>
 
+#include <engine/CollisionGrid.h>
 #include <states/MainState.h>
 
 #include <ecs/ECS.hpp>
@@ -20,17 +22,21 @@
 
 TextureStore &texture_store = TextureStore::getInstance();
 
-void add_guy(ECS *ecs) {
+void add_guy(ECS *ecs, CollisionGrid *grid) {
 
   Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
+  Collider c = {CollisionShapeType::CIRCLE, {x, y, 4}, 0};
   Entity g = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(g, v);
   ecs->add_component_to_entity<Position>(g, p);
   ecs->add_component_to_entity<Transform>(g, {0, 0, 0});
   ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SCRAP});
+  ecs->add_component_to_entity<Collider>(g, c);
+
+  grid->update_entity(g, p, c);
 
   // std::cout << "Added guy [" << g << "] at " << x << ", " << y << std::endl;
 }
@@ -80,6 +86,7 @@ MainState::MainState() {
   main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
   main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
   main_ecs.register_component<FollowsMouse>(COMP_SIG::FOLLOWS_MOUSE);
+  main_ecs.register_component<Collider>(COMP_SIG::COLLIDER);
   // // main_ecs.register_component<Persuing>();
   //
   // main_ecs.register_component<Carrier>();
@@ -98,8 +105,8 @@ MainState::MainState() {
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 10; g++) {
-    add_guy(&main_ecs);
+  for (int g = 0; g < 100; g++) {
+    add_guy(&main_ecs, &main_grid);
   }
 
   for (int s = 0; s < 3; s++) {
@@ -114,11 +121,18 @@ void MainState::handle_click() {}
 void MainState::handle_mousemove() {}
 
 void MainState::update(float dt) {
-  sys_transform->update(dt);
+  sys_transform->update(dt, &main_grid, &main_ecs);
   sys_scanning->update(dt, &main_ecs);
   sys_follows_mouse->update(dt);
 
   sys_draw->update(dt, &main_ecs);
+
+  std::cout << "Grid After Update" << std::endl;
+  main_grid.debug_display();
 }
 
-void MainState::draw(SDL_Renderer *renderer) { sys_draw->draw(renderer); }
+void MainState::draw(SDL_Renderer *renderer) {
+  sys_draw->draw(renderer);
+
+  main_grid.debug_draw_grid(renderer);
+}

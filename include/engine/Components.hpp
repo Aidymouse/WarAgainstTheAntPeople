@@ -19,7 +19,7 @@ enum COMP_SIG { // Component Signature Indexes
 
   // TOOL = 3,
   // CLICKABLE = 4,
-  // COLLIDER = 5,
+  COLLIDER = 6,
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
