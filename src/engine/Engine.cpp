@@ -26,6 +26,10 @@ void Engine::run() {
                              "guy_sheet", main_renderer);
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("scrap.bmp"),
                              "scrap_sheet", main_renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("squish.bmp"),
+                             "squish_sheet", main_renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("hand.bmp"),
+                             "tool_hand", main_renderer);
 
   // Load Main State
   state_manager.set_state(std::make_shared<MainState>());

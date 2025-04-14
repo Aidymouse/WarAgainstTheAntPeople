@@ -1,5 +1,6 @@
 #pragma once
 
+#include "systems/FollowsMouseSystem.h"
 #include "systems/ScanningSystem.h"
 #include "systems/TransformSystem.h"
 #include <SDL3/SDL.h>
@@ -13,6 +14,7 @@ class MainState : public GameState {
   std::shared_ptr<DrawSystem> sys_draw;
   std::shared_ptr<TransformSystem> sys_transform;
   std::shared_ptr<ScanningSystem> sys_scanning;
+  std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
 
   float timer_max_scrap_spawns = 5;
   float timer_scrap_spawns = 5;

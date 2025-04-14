@@ -26,7 +26,10 @@ void DrawSystem::update(float dt, ECS *ecs) {
       vis->anim_timer += dt;
 
       if (vis->anim_timer > vis->frame.duration) {
-        vis->anim_timer = 0;
+
+        vis->anim_timer -= vis->frame.duration;
+        // TODO: more robustness with skipping frames
+
         if (vis->frame.next_frame != nullptr) {
           AnimFrame a = *vis->frame.next_frame;
           vis->frame = *(vis->frame.next_frame);

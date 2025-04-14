@@ -15,6 +15,8 @@ enum COMP_SIG { // Component Signature Indexes
   SCANNING_FOR = 3,
   SCANNABLE = 4,
 
+  FOLLOWS_MOUSE = 5,
+
   // TOOL = 3,
   // CLICKABLE = 4,
   // COLLIDER = 5,
@@ -23,6 +25,8 @@ enum COMP_SIG { // Component Signature Indexes
   // SCANNABLE = 8,
   // PERSUING = 9,
 };
+
+struct FollowsMouse {};
 
 struct Position {
   float x;

@@ -10,14 +10,16 @@ struct {
   // NORM2 = {{16, 0, 16, 16}, -1, &NORM};
   AnimFrame NORM2 = {{16, 0, 16, 16}, 0.3, &NORM};
 
-  /** Blow Up! */
+  /** Squish */
   // squish.bmp
-  AnimFrame EXPLODE1 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE2 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE3 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE4 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE5 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE6 = {{0, 0, 16, 16}, 2, &NORM2};
-  AnimFrame EXPLODE7 = {{0, 0, 16, 16}, 2, &NORM2};
+  AnimFrame SQUISH0 = {{0, 0, 16, 16}, 2, &SQUISH1};
+  AnimFrame SQUISH1 = {{1 * 16, 0, 16, 16}, 0.035, &SQUISH2};
+  AnimFrame SQUISH2 = {{2 * 16, 0, 16, 16}, 0.035, &SQUISH3};
+  AnimFrame SQUISH3 = {{3 * 16, 0, 16, 16}, 0.035, &SQUISH4};
+  AnimFrame SQUISH4 = {{4 * 16, 0, 16, 16}, 0.035, &SQUISH5};
+  AnimFrame SQUISH5 = {{5 * 16, 0, 16, 16}, 0.035, &SQUISH6};
+  AnimFrame SQUISH6 = {{6 * 16, 0, 16, 16}, -1, nullptr};
+
+  /** Blow Up! */
 
 } GuyAnim; // namespace GuyAnim

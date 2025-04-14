@@ -1,3 +1,4 @@
+#include "anim/ToolAnim.hpp"
 #include "systems/TransformSystem.h"
 #include <string>
 
@@ -9,10 +10,8 @@
 #include <data/TextureStore.hpp>
 #include <engine/Components.hpp>
 #include <systems/DrawSystem.h>
+#include <systems/FollowsMouseSystem.h>
 #include <systems/ScanningSystem.h>
-
-#include <fstream>
-#include <iostream>
 
 #include <anim/GuyAnim.hpp>
 #include <anim/NotMovingAnim.hpp>
@@ -62,6 +61,9 @@ MainState::MainState() {
                                COMP_SIG::TRANSFORM};
   sys_scanning = main_ecs.register_system<ScanningSystem>(scanning_sigs, 3);
 
+  COMP_SIG follows_mouse[2] = {COMP_SIG::FOLLOWS_MOUSE, COMP_SIG::POSITION};
+  sys_follows_mouse =
+      main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
@@ -77,6 +79,7 @@ MainState::MainState() {
   //
   main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
   main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
+  main_ecs.register_component<FollowsMouse>(COMP_SIG::FOLLOWS_MOUSE);
   // // main_ecs.register_component<Persuing>();
   //
   // main_ecs.register_component<Carrier>();
@@ -86,6 +89,12 @@ MainState::MainState() {
 
   /** Initial Entities */
 
+  //   Hand
+  Entity hand = main_ecs.add_entity();
+  main_ecs.add_component_to_entity<Position>(hand, {0, 0});
+  main_ecs.add_component_to_entity<Visible>(
+      hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM});
+  main_ecs.add_component_to_entity<FollowsMouse>(hand, {});
   //   Mallet
 
   // Guys
@@ -107,6 +116,8 @@ void MainState::handle_mousemove() {}
 void MainState::update(float dt) {
   sys_transform->update(dt);
   sys_scanning->update(dt, &main_ecs);
+  sys_follows_mouse->update(dt);
+
   sys_draw->update(dt, &main_ecs);
 }
 
