@@ -14,13 +14,16 @@
 #include <fstream>
 #include <iostream>
 
+#include <anim/GuyAnim.hpp>
+#include <anim/NotMovingAnim.hpp>
+
 #include <ProjectConfig.h>
 
 TextureStore &texture_store = TextureStore::getInstance();
 
 void add_guy(ECS *ecs) {
 
-  Visible v = {texture_store.get("guy_sheet"), {0, 0, 16, 16}};
+  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
@@ -34,7 +37,7 @@ void add_guy(ECS *ecs) {
 }
 
 void add_scrap(ECS *ecs) {
-  Visible v = {texture_store.get("scrap_sheet"), {0, 0, 16, 16}};
+  Visible v = {texture_store.get("scrap_sheet"), NotMovingAnim.SCRAP};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
@@ -86,11 +89,11 @@ MainState::MainState() {
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 10000; g++) {
+  for (int g = 0; g < 10; g++) {
     add_guy(&main_ecs);
   }
 
-  for (int s = 0; s < 30; s++) {
+  for (int s = 0; s < 3; s++) {
     add_scrap(&main_ecs);
   }
 }
@@ -104,6 +107,7 @@ void MainState::handle_mousemove() {}
 void MainState::update(float dt) {
   sys_transform->update(dt);
   sys_scanning->update(dt, &main_ecs);
+  sys_draw->update(dt, &main_ecs);
 }
 
 void MainState::draw(SDL_Renderer *renderer) { sys_draw->draw(renderer); }

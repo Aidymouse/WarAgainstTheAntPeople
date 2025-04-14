@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <anim/Anim.hpp>
 #include <bitset>
 #include <ecs/Entity.hpp>
 #include <engine/Collisions.h>
@@ -80,9 +81,9 @@ struct Collider {
 struct Smashable {};
 
 struct Visible {
-  // Something like sprite
   SDL_Texture *texture;
-  SDL_FRect frame;
+  AnimFrame frame;
+  float anim_timer;
 };
 
 struct Clickable {};

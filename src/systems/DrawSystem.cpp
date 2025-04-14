@@ -1,3 +1,4 @@
+#include "anim/Anim.hpp"
 #include <SDL3/SDL.h>
 #include <cmath>
 #include <ecs/ECS.hpp>
@@ -13,6 +14,30 @@ void DrawSystem::update(float dt, ECS *ecs) {
   /*	Visible vis = component_manager->get_component_data<Visible>(ent);*/
   /*}*/
   // Sort entities
+  //
+
+  // Update animation timer
+  for (auto e = registered_entities.begin(); e != registered_entities.end();
+       e++) {
+    Entity ent = (Entity)*e;
+    Visible *vis = component_manager->get_component_data<Visible>(ent);
+    if (vis->anim_timer != -1 && vis->frame.duration != -1) {
+
+      vis->anim_timer += dt;
+
+      if (vis->anim_timer > vis->frame.duration) {
+        vis->anim_timer = 0;
+        if (vis->frame.next_frame != nullptr) {
+          AnimFrame a = *vis->frame.next_frame;
+          vis->frame = *(vis->frame.next_frame);
+        } else {
+          std::cout << "Animation timer ran out but no next frame! Locking."
+                    << std::endl;
+          vis->anim_timer = -1;
+        }
+      }
+    }
+  }
 }
 
 void DrawSystem::draw(SDL_Renderer *renderer) {
@@ -21,7 +46,7 @@ void DrawSystem::draw(SDL_Renderer *renderer) {
     Entity ent = (Entity)*e;
     // std::cout << "Drawing " << ent << std::endl;
 
-    Visible vis = *component_manager->get_component_data<Visible>(ent);
+    Visible *vis = component_manager->get_component_data<Visible>(ent);
     Position *pos = component_manager->get_component_data<Position>(ent);
 
     // pos->x += 0.01;
@@ -29,8 +54,9 @@ void DrawSystem::draw(SDL_Renderer *renderer) {
     //<< std::endl;
     // std::cout << "Drawing Texture " << vis.texture << std::endl;
 
-    SDL_FRect source_rect = vis.frame;
+    SDL_FRect source_rect = vis->frame.rect;
     SDL_FRect target_rect = {std::floor(pos->x), std::floor(pos->y), 16, 16};
-    SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
+    // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
+    SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);
   }
 }
