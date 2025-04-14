@@ -23,6 +23,7 @@ union CollisionShape {
 };
 
 namespace Collisions {
+void update_collider_position(Collider *col, float x, float y);
 bool collision(Collider col1, Collider col2);
 bool circle_rect(CollisionCircle circle, CollisionRect rect);
 bool rect_rect(CollisionRect rect1, CollisionRect rect2);

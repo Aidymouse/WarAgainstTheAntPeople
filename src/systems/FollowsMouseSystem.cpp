@@ -1,7 +1,7 @@
 
 #include <systems/FollowsMouseSystem.h>
 
-void FollowsMouseSystem::update(float dt) {
+void FollowsMouseSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
   float mX = -1;
   float mY = -1;
@@ -17,5 +17,15 @@ void FollowsMouseSystem::update(float dt) {
 
     pos->x = mX;
     pos->y = mY;
+
+    if (ecs->get_signature_for_entity(ent)[COMP_SIG::COLLIDER] == 1) {
+      Collider *c = component_manager->get_component_data<Collider>(ent);
+      // std::cout << "Collider for " << ent << ", " << c << std::endl;
+
+      Collisions::update_collider_position(c, pos->x, pos->y);
+
+      grid->update_entity(ent, *pos, *c);
+    }
+
   }
 };

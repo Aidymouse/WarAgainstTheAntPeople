@@ -18,6 +18,8 @@ void TransformSystem::update(float dt, CollisionGrid *grid, ECS *ecs) {
       Collider *c = component_manager->get_component_data<Collider>(ent);
       // std::cout << "Collider for " << ent << ", " << c << std::endl;
 
+      Collisions::update_collider_position(c, pos->x, pos->y);
+
       grid->update_entity(ent, *pos, *c);
     }
     // grid->update_entity(ent, *pos);

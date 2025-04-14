@@ -3,6 +3,16 @@
 #include <engine/Collisions.h>
 #include <engine/Components.hpp>
 
+void Collisions::update_collider_position(Collider* col, float x, float y) {
+  if (col->type == CollisionShapeType::CIRCLE) {
+    col->shape.circle.x = x;
+    col->shape.circle.x = y;
+  } else if (col->type == CollisionShapeType::RECT) {
+    col->shape.rect.x = x;
+    col->shape.rect.x = y;
+  }
+}
+
 bool Collisions::collision(Collider col1, Collider col2) {
   if (col1.type == CollisionShapeType::CIRCLE &&
       col2.type == CollisionShapeType::CIRCLE) {

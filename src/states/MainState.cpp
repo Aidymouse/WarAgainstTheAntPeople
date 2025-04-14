@@ -123,7 +123,7 @@ void MainState::handle_mousemove() {}
 void MainState::update(float dt) {
   sys_transform->update(dt, &main_grid, &main_ecs);
   sys_scanning->update(dt, &main_ecs);
-  sys_follows_mouse->update(dt);
+  sys_follows_mouse->update(dt, &main_ecs, &main_grid);
 
   sys_draw->update(dt, &main_ecs);
 
