@@ -132,7 +132,7 @@ void MainState::update(float dt) {
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
-  sys_draw->draw(renderer);
+  sys_draw->draw(renderer, &main_ecs);
 
   main_grid.debug_draw_grid(renderer);
 }

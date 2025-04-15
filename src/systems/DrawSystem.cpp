@@ -43,7 +43,7 @@ void DrawSystem::update(float dt, ECS *ecs) {
   }
 }
 
-void DrawSystem::draw(SDL_Renderer *renderer) {
+void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
     Entity ent = (Entity)*e;
@@ -56,6 +56,16 @@ void DrawSystem::draw(SDL_Renderer *renderer) {
     // std::cout << "Draw Pos [" << ent << "] " << pos->x << ", " << pos->y
     //<< std::endl;
     // std::cout << "Drawing Texture " << vis.texture << std::endl;
+
+    if (ecs->get_signature_for_entity(ent)[COMP_SIG::COLLIDER] == 1) {
+      Collider c = *component_manager->get_component_data<Collider>(ent);
+
+      if (c.type == CollisionShapeType::CIRCLE) {
+        //SDL_Render
+      }
+    }
+
+    
 
     SDL_FRect source_rect = vis->frame.rect;
     SDL_FRect target_rect = {std::floor(pos->x), std::floor(pos->y), 16, 16};
