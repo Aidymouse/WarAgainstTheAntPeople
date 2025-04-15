@@ -2,10 +2,10 @@
 #include "engine/Collisions.h"
 #include "engine/Components.hpp"
 #include <ProjectConfig.h>
+#include <ecs/ECS.hpp>
 #include <engine/CollisionGrid.h>
 #include <iostream>
 #include <util/Vec2.hpp>
-#include <ecs/ECS.hpp>
 
 collision_cell_id get_cell_id(int row, int col) { return (row << 4) + col; }
 Vec2 get_cell_row_col(collision_cell_id id) {
@@ -101,12 +101,14 @@ std::set<Entity> CollisionGrid::test_for_collisions(Entity ent, ECS *ecs) {
 
   std::set<collision_cell_id> ent_cell_ids = get_cells_for_entity(ent);
 
-  for (auto id_iter = ent_cell_ids.begin(); id_iter != ent_cell_ids.end(); id_iter++) {
-    collision_cell_id cell_id = (collision_cell_id) *id_iter;
+  for (auto id_iter = ent_cell_ids.begin(); id_iter != ent_cell_ids.end();
+       id_iter++) {
+    collision_cell_id cell_id = (collision_cell_id)*id_iter;
 
     std::set<Entity> cell_entity_ids = cells[cell_id];
 
-    for (auto entity_iter = cell_entity_ids.begin(); entity_iter != cell_entity_ids.end(); entity_iter++) {
+    for (auto entity_iter = cell_entity_ids.begin();
+         entity_iter != cell_entity_ids.end(); entity_iter++) {
       Entity col_ent = (Entity)*entity_iter;
 
       /** This could theoretically fail but I don't think it will... */
@@ -121,7 +123,6 @@ std::set<Entity> CollisionGrid::test_for_collisions(Entity ent, ECS *ecs) {
 
   return collided_entities;
 }
-
 
 void CollisionGrid::debug_draw_grid(SDL_Renderer *renderer) {
 

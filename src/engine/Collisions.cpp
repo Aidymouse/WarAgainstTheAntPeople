@@ -3,10 +3,10 @@
 #include <engine/Collisions.h>
 #include <engine/Components.hpp>
 
-void Collisions::update_collider_position(Collider* col, float x, float y) {
+void Collisions::update_collider_position(Collider *col, float x, float y) {
   if (col->type == CollisionShapeType::CIRCLE) {
     col->shape.circle.x = x;
-    col->shape.circle.x = y;
+    col->shape.circle.y = y;
   } else if (col->type == CollisionShapeType::RECT) {
     col->shape.rect.x = x;
     col->shape.rect.x = y;

@@ -5,6 +5,7 @@
 #include <engine/Components.hpp>
 #include <iostream>
 #include <systems/DrawSystem.h>
+#include <util/DrawFns.h>
 
 void DrawSystem::update(float dt, ECS *ecs) {
   /*for (auto e=registered_entities.begin(); e != registered_entities.end();
@@ -61,14 +62,18 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
       Collider c = *component_manager->get_component_data<Collider>(ent);
 
       if (c.type == CollisionShapeType::CIRCLE) {
-        //SDL_Render
+        // SDL_Render
+        std::cout << "Circle on " << ent << std::endl;
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        DrawFns::RenderCircle(renderer, c.shape.circle.x, c.shape.circle.y,
+                              c.shape.circle.radius);
       }
     }
 
-    
-
     SDL_FRect source_rect = vis->frame.rect;
-    SDL_FRect target_rect = {std::floor(pos->x), std::floor(pos->y), 16, 16};
+    SDL_FRect target_rect = {std::floor(pos->x + vis->offset.x),
+                             std::floor(pos->y + vis->offset.y),
+                             vis->frame.rect.w, vis->frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);
   }

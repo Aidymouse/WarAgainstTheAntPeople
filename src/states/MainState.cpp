@@ -2,6 +2,7 @@
 #include "engine/Collisions.h"
 #include "systems/TransformSystem.h"
 #include <string>
+#include <util/DrawFns.h>
 
 #include <engine/CollisionGrid.h>
 #include <states/MainState.h>
@@ -24,7 +25,7 @@ TextureStore &texture_store = TextureStore::getInstance();
 
 void add_guy(ECS *ecs, CollisionGrid *grid) {
 
-  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0};
+  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-8, -16}};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
@@ -127,12 +128,14 @@ void MainState::update(float dt) {
 
   sys_draw->update(dt, &main_ecs);
 
-  std::cout << "Grid After Update" << std::endl;
-  main_grid.debug_display();
+  // std::cout << "Grid After Update" << std::endl;
+  // main_grid.debug_display();
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
   sys_draw->draw(renderer, &main_ecs);
 
-  main_grid.debug_draw_grid(renderer);
+  DrawFns::RenderCircle(renderer, 0, 0, 15);
+
+  // main_grid.debug_draw_grid(renderer);
 }

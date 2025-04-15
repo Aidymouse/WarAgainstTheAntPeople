@@ -84,10 +84,16 @@ struct Collider {
 // Can be smashed by big weights (like hammer)
 struct Smashable {};
 
+struct xy {
+  int x;
+  int y;
+};
+
 struct Visible {
   SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
+  xy offset; // For texture shifting
 };
 
 struct Clickable {};

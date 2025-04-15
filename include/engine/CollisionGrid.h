@@ -3,14 +3,14 @@
 #include "engine/Collisions.h"
 #include "engine/Components.hpp"
 #include <bitset>
-#include <ecs/Entity.hpp>
 #include <ecs/ECS.hpp>
+#include <ecs/Entity.hpp>
 #include <set>
 #include <unordered_map>
 
 typedef int collision_cell_id; // First 4 bits = row, second 4 = col
 typedef std::set<Entity> collision_cell;
-#define COLLISION_CELL_SIZE 300
+#define COLLISION_CELL_SIZE 50
 
 class CollisionGrid {
   std::unordered_map<collision_cell_id, collision_cell> cells;
