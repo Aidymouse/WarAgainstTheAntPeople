@@ -25,11 +25,11 @@ TextureStore &texture_store = TextureStore::getInstance();
 
 void add_guy(ECS *ecs, CollisionGrid *grid) {
 
-  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-8, -16}};
+  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-7, -16}};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
-  Collider c = {CollisionShapeType::CIRCLE, {x, y, 4}, 0};
+  Collider c = {CollisionShapeType::CIRCLE, {x, y, 6}, 0};
   Entity g = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(g, v);
   ecs->add_component_to_entity<Position>(g, p);
