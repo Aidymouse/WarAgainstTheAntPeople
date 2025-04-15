@@ -63,10 +63,9 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 
       if (c.type == CollisionShapeType::CIRCLE) {
         // SDL_Render
-        std::cout << "Circle on " << ent << std::endl;
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-        DrawFns::RenderCircle(renderer, c.shape.circle.x, c.shape.circle.y,
-                              c.shape.circle.radius);
+        // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        // DrawFns::RenderCircle(renderer, c.shape.circle.x, c.shape.circle.y,
+        //                       c.shape.circle.radius);
       }
     }
 

@@ -1,3 +1,4 @@
+#include "SDL3/SDL_events.h"
 #include <engine/Engine.h>
 #include <states/MainState.h>
 
@@ -44,6 +45,8 @@ void Engine::run() {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_EVENT_QUIT) {
         window_is_open = false;
+      } else if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+        cur_state->handle_click(&event);
       }
     }
 

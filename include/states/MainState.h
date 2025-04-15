@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SDL3/SDL_events.h"
 #include "systems/FollowsMouseSystem.h"
 #include "systems/ScanningSystem.h"
 #include "systems/TransformSystem.h"
@@ -29,7 +30,7 @@ public:
   void update(float dt) override;
   void draw(SDL_Renderer *renderer) override;
 
-  void handle_click() override;
+  void handle_click(SDL_Event *event) override;
   void handle_mousemove() override;
 
   void leave_state() override {};

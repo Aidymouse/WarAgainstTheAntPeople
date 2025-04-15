@@ -1,4 +1,6 @@
+#include "SDL3/SDL_events.h"
 #include "anim/ToolAnim.hpp"
+#include "ecs/Entity.hpp"
 #include "engine/Collisions.h"
 #include "systems/TransformSystem.h"
 #include <string>
@@ -6,6 +8,7 @@
 
 #include <engine/CollisionGrid.h>
 #include <states/MainState.h>
+#include <util/Helper.h>
 
 #include <ecs/ECS.hpp>
 
@@ -25,7 +28,7 @@ TextureStore &texture_store = TextureStore::getInstance();
 
 void add_guy(ECS *ecs, CollisionGrid *grid) {
 
-  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-7, -16}};
+  Visible v = {texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-7, -11}};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
   Position p = {x, y, 0};
@@ -101,15 +104,17 @@ MainState::MainState() {
   Entity hand = main_ecs.add_entity();
   main_ecs.add_component_to_entity<Position>(hand, {0, 0});
   main_ecs.add_component_to_entity<Visible>(
-      hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM});
+      hand,
+      {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
   main_ecs.add_component_to_entity<FollowsMouse>(hand, {});
+
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 100; g++) {
+  for (int g = 0; g < 3; g++) {
     add_guy(&main_ecs, &main_grid);
   }
-
+  //
   for (int s = 0; s < 3; s++) {
     add_scrap(&main_ecs);
   }
@@ -117,9 +122,38 @@ MainState::MainState() {
 
 MainState::~MainState() {}
 
-void MainState::handle_click() {}
-
 void MainState::handle_mousemove() {}
+
+void MainState::handle_click(
+    SDL_Event
+        *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
+  int btn = event->button.button;
+  std::cout << btn << std::endl;
+
+  Collider mouse = {
+      CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, 0};
+  // std::set<int> ids = main_grid.get_overlapping_cells(mouse);
+  // Helper::cout_cell_ids(&ids);
+
+  std::set<Entity> collided_ids = main_grid.get_collisions(mouse, &main_ecs);
+  Helper::cout_set(&collided_ids);
+
+  for (auto e = collided_ids.begin(); e != collided_ids.end(); e++) {
+    Entity ent = (Entity)*e;
+
+    Visible *vis = main_ecs.get_component_for_entity<Visible>(ent);
+
+    vis->frame = GuyAnim.SQUISH0;
+    vis->anim_timer = 0;
+    vis->texture = texture_store.get("squish_sheet");
+
+    // main_ecs.remove_component_from_entity<Transform>(ent);
+    main_ecs.remove_component_from_entity<ScanningFor>(ent);
+    main_ecs.remove_component_from_entity<Transform>(ent);
+  }
+}
+
+// void MainState::handle_mousemove() {}
 
 void MainState::update(float dt) {
   sys_transform->update(dt, &main_grid, &main_ecs);
@@ -135,7 +169,8 @@ void MainState::update(float dt) {
 void MainState::draw(SDL_Renderer *renderer) {
   sys_draw->draw(renderer, &main_ecs);
 
-  DrawFns::RenderCircle(renderer, 0, 0, 15);
-
+  float mX, mY;
+  SDL_GetMouseState(&mX, &mY);
+  // DrawFns::RenderCircle(renderer, mX, mY, 16);
   // main_grid.debug_draw_grid(renderer);
 }

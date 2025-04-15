@@ -93,8 +93,43 @@ std::set<collision_cell_id> CollisionGrid::get_cells_for_entity(Entity ent) {
   return inhabited_cells[ent];
 }
 
+std::set<collision_cell_id> CollisionGrid::get_overlapping_cells(Collider col) {
+
+  std::set<collision_cell_id> ids;
+  SDL_Rect effective_dims = {0, 0, 0, 0};
+
+  // Convert all shapes to a upper right hand corner bounding box
+  if (col.type == CollisionShapeType::CIRCLE) {
+    effective_dims.x = col.shape.circle.x - col.shape.circle.radius;
+    effective_dims.y = col.shape.circle.y - col.shape.circle.radius;
+    effective_dims.w = col.shape.circle.radius * 2;
+    effective_dims.h = col.shape.circle.radius * 2;
+  }
+
+  int init_col = effective_dims.x / COLLISION_CELL_SIZE;
+  int init_row = effective_dims.y / COLLISION_CELL_SIZE;
+  // std::cout << "Init: " << init_row << ", " << init_col << std::endl;
+
+  int additional_cells_right = effective_dims.w / COLLISION_CELL_SIZE + 1;
+  int additional_cells_down = effective_dims.h / COLLISION_CELL_SIZE + 1;
+
+  // std::cout << "Additional cells ->: " << additional_cells_right
+  //           << " v: " << additional_cells_down << std::endl;
+
+  for (int col = init_col; col <= init_col + additional_cells_right; col++) {
+    for (int row = init_row; row <= init_row + additional_cells_down; row++) {
+      // std::cout << "Testing " << row << ", " << col << std::endl;
+      collision_cell_id id = get_cell_id(row, col);
+      ids.insert(id);
+    }
+  }
+
+  return ids;
+}
+
 /* Is this a chance for move semantices (new toy) ? */
-std::set<Entity> CollisionGrid::test_for_collisions(Entity ent, ECS *ecs) {
+std::set<Entity> CollisionGrid::test_entity_for_collisions(Entity ent,
+                                                           ECS *ecs) {
   std::set<Entity> collided_entities;
 
   Collider *ent_collider = ecs->get_component_for_entity<Collider>(ent);
@@ -111,10 +146,47 @@ std::set<Entity> CollisionGrid::test_for_collisions(Entity ent, ECS *ecs) {
          entity_iter != cell_entity_ids.end(); entity_iter++) {
       Entity col_ent = (Entity)*entity_iter;
 
-      /** This could theoretically fail but I don't think it will... */
+      /** This could theoretically fail but I don't think it will since you need
+       * to give a collider for the entity to be put into the grid... Wait... it
+       * doesn't need to be their own collider... WARN: this could be a bug
+       * */
       Collider *c = ecs->get_component_for_entity<Collider>(col_ent);
 
       if (Collisions::collision(*c, *ent_collider)) {
+        // Need to dedupe?
+        collided_entities.insert(col_ent);
+      };
+    }
+  }
+
+  return collided_entities;
+}
+
+std::set<Entity> CollisionGrid::get_collisions(Collider col, ECS *ecs) {
+  std::set<Entity> collided_entities;
+
+  std::set<collision_cell_id> relevant_cell_ids = get_overlapping_cells(col);
+  // std::set < Cel
+
+  for (auto id_iter = relevant_cell_ids.begin();
+       id_iter != relevant_cell_ids.end(); id_iter++) {
+    collision_cell_id cell_id = (collision_cell_id)*id_iter;
+
+    std::set<Entity> cell_entity_ids = cells[cell_id];
+
+    for (auto entity_iter = cell_entity_ids.begin();
+         entity_iter != cell_entity_ids.end(); entity_iter++) {
+      Entity col_ent = (Entity)*entity_iter;
+
+      /** This could theoretically fail but I don't think it will since you
+      need
+       * to give a collider for the entity to be put into the grid... Wait...
+       it
+       * doesn't need to be their own collider... WARN: this could be a bug
+       * */
+      Collider *c = ecs->get_component_for_entity<Collider>(col_ent);
+
+      if (Collisions::collision(*c, col)) {
         // Need to dedupe?
         collided_entities.insert(col_ent);
       };

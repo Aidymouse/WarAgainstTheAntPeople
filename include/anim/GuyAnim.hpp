@@ -12,7 +12,7 @@ struct {
 
   /** Squish */
   // squish.bmp
-  AnimFrame SQUISH0 = {{0, 0, 16, 16}, 2, &SQUISH1};
+  AnimFrame SQUISH0 = {{0, 0, 16, 16}, 0.035, &SQUISH1};
   AnimFrame SQUISH1 = {{1 * 16, 0, 16, 16}, 0.035, &SQUISH2};
   AnimFrame SQUISH2 = {{2 * 16, 0, 16, 16}, 0.035, &SQUISH3};
   AnimFrame SQUISH3 = {{3 * 16, 0, 16, 16}, 0.035, &SQUISH4};
