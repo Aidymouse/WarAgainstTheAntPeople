@@ -5,6 +5,7 @@
 #include <engine/CollisionGrid.h>
 #include <iostream>
 #include <util/Vec2.hpp>
+#include <ecs/ECS.hpp>
 
 collision_cell_id get_cell_id(int row, int col) { return (row << 4) + col; }
 Vec2 get_cell_row_col(collision_cell_id id) {
@@ -88,20 +89,39 @@ void CollisionGrid::update_entity(Entity ent, Position pos, Collider col) {
   // }
 }
 
-std::set<collision_cell_id> get_cells_overlapping(Collider col) {
-  std::set<collision_cell_id> ids;
+std::set<collision_cell_id> CollisionGrid::get_cells_for_entity(Entity ent) {
+  return inhabited_cells[ent];
+}
 
-  if (col.type == CollisionShapeType::CIRCLE) {
-    // TODO
-  } else if (col.type == CollisionShapeType::RECT) {
-    // TODO
-  } else {
-    std::cout << "Invalid collider in get_cells_overlapping: " << col.type
-              << std::endl;
+/* Is this a chance for move semantices (new toy) ? */
+std::set<Entity> CollisionGrid::test_for_collisions(Entity ent, ECS *ecs) {
+  std::set<Entity> collided_entities;
+
+  Collider *ent_collider = ecs->get_component_for_entity<Collider>(ent);
+
+  std::set<collision_cell_id> ent_cell_ids = get_cells_for_entity(ent);
+
+  for (auto id_iter = ent_cell_ids.begin(); id_iter != ent_cell_ids.end(); id_iter++) {
+    collision_cell_id cell_id = (collision_cell_id) *id_iter;
+
+    std::set<Entity> cell_entity_ids = cells[cell_id];
+
+    for (auto entity_iter = cell_entity_ids.begin(); entity_iter != cell_entity_ids.end(); entity_iter++) {
+      Entity col_ent = (Entity)*entity_iter;
+
+      /** This could theoretically fail but I don't think it will... */
+      Collider *c = ecs->get_component_for_entity<Collider>(col_ent);
+
+      if (Collisions::collision(*c, *ent_collider)) {
+        // Need to dedupe?
+        collided_entities.insert(col_ent);
+      };
+    }
   }
 
-  return ids;
+  return collided_entities;
 }
+
 
 void CollisionGrid::debug_draw_grid(SDL_Renderer *renderer) {
 

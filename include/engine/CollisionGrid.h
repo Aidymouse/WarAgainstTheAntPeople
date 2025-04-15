@@ -4,6 +4,7 @@
 #include "engine/Components.hpp"
 #include <bitset>
 #include <ecs/Entity.hpp>
+#include <ecs/ECS.hpp>
 #include <set>
 #include <unordered_map>
 
@@ -25,4 +26,6 @@ public:
 
   void update_entity(Entity ent, Position pos, Collider col);
   std::set<collision_cell_id> get_cells_overlapping(Collider col);
+  std::set<collision_cell_id> get_cells_for_entity(Entity ent);
+  std::set<Entity> test_for_collisions(Entity ent, ECS *ecs);
 };

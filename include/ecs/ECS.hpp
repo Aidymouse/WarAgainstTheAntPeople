@@ -82,6 +82,10 @@ public:
     }
   }
 
+  template <typename T> T* get_component_for_entity(Entity id) {
+    return component_manager->get_component_data<T>(id);
+  };
+
   // System
   template <typename T>
   std::shared_ptr<T> register_system(Signature signature) {
