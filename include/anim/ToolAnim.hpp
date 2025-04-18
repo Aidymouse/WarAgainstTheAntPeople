@@ -4,6 +4,6 @@
 
 struct {
   // hand.bmp
-  AnimFrame HAND_NORM = {{0, 0, 32, 32}, -1, nullptr};
-  AnimFrame HAND_SPLAT = {{32, 0, 32, 32}, -1, nullptr};
+  AnimFrame HAND_NORM = {{32, 0, 32, 32}, -1, nullptr};
+  AnimFrame HAND_SPLAT = {{0, 32, 32, 32}, 1, &HAND_NORM};
 } ToolAnim;

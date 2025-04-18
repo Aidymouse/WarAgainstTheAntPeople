@@ -67,13 +67,11 @@ MainState::MainState() {
   COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
   sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);
 
-  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION,
-                               COMP_SIG::TRANSFORM};
+  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION, COMP_SIG::TRANSFORM};
   sys_scanning = main_ecs.register_system<ScanningSystem>(scanning_sigs, 3);
 
   COMP_SIG follows_mouse[2] = {COMP_SIG::FOLLOWS_MOUSE, COMP_SIG::POSITION};
-  sys_follows_mouse =
-      main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
+  sys_follows_mouse = main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
@@ -111,7 +109,7 @@ MainState::MainState() {
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 3; g++) {
+  for (int g = 0; g < 10000; g++) {
     add_guy(&main_ecs, &main_grid);
   }
   //
