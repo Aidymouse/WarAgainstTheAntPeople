@@ -35,7 +35,7 @@ add_subdirectory(src)
 ### SDL3
 if(WINDOWS)
 	add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
-else
+else()
 	find_package(SDL3 REQUIRED) # I love nix!!!!
 endif()
 
