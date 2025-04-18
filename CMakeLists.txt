@@ -33,12 +33,11 @@ add_subdirectory(src)
 
 
 ### SDL3
+if(WINDOWS)
+	add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
+else
+	find_package(SDL3 REQUIRED) # I love nix!!!!
+endif()
 
-# Linux
-# find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3-shared)
-
-# Window
-add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
-# add_subdirectory(lib/SDL_Image EXCLUDE_FROM_ALL)
 target_link_libraries(EvilPikmin PRIVATE SDL3::SDL3)
 
