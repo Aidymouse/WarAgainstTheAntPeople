@@ -5,12 +5,23 @@
 #include <ProjectConfig.h>
 #include <engine/Engine.h>
 
+#include <util/Helper.h>
+
+
 int main() {
 
-  std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
+	int len = 9;
+ int arr[len] = {2, 5, 5, 5, 5, 3, 4, 1, 6};
 
-  srand(time(NULL));
+  Helper::quicksort(arr, 0, len-1);
 
-  Engine game;
-  game.run();
+  for (int i=0; i<len; i++) {
+   std::cout << arr[i] << ", ";
+  }
+  // std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
+  //
+  // srand(time(NULL));
+  //
+  // Engine game;
+  // game.run();
 }

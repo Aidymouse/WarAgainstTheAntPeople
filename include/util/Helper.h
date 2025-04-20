@@ -6,4 +6,5 @@
 namespace Helper {
 void cout_set(std::set<int> *s);
 void cout_cell_ids(std::set<collision_cell_id> *s);
+void quicksort(int* a, int start, int end);
 } // namespace Helper
