@@ -8,16 +8,26 @@
 #include <util/Helper.h>
 
 
+
 int main() {
 
-	int len = 9;
- int arr[len] = {2, 5, 5, 5, 5, 3, 4, 1, 6};
+	// int len = 6;
+	// int arr[len] = {10, 2, 4, 6, 4, 1};
+	int len = 7;
+	int arr[len] = {2, 4, 6, 3, 5, 1, 5};
+//arr[7] = 42;
 
-  Helper::quicksort(arr, 0, len-1);
+ int start = 0;
+ int end = len-1;
 
+	Helper::quicksort(arr, start, end);	
+	
   for (int i=0; i<len; i++) {
    std::cout << arr[i] << ", ";
   }
+
+
+
   // std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
   //
   // srand(time(NULL));

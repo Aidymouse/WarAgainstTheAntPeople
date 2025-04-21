@@ -30,41 +30,68 @@ void swap(int* arr, int i1, int i2) {
 	arr[i2] = t;
 }
 void Helper::quicksort(int* arr, int start, int end) {
-	std::cout << "=== Sorting " << start << " to " << end << std::endl;
+	std::cout << "=== Sorting " << start << " to " << end << ": ";
+	for (int i =start; i<=end; i++) {
+		std::cout << arr[i] << ", ";
+	}
+	std::cout << std::endl;
+
 	if (start >= end || start < 0) return;
-	int len = end - start;
+	int len = (end - start)+1;
 	if (len < 2) { return; }
+	// if (len == 2) {
+	// 	if (arr[start] > arr[end]) swap(arr, start, end);
+	// 	return;
+	// }
 
 	// Partition
-	int pivot_idx = start + (end - start) / 2;
+	int pivot_idx = start + len / 2;
 	int pivot_value = arr[pivot_idx];
 	int pivot_will_go = pivot_idx;
 	std::cout << "Pivot idx " << pivot_idx << " value " << pivot_value << std::endl;
 
-	// Doesn't handle duplicate values... damn
+	// Some funny fnagling to get this to be in place
 	for (int idx=start; idx <= end; idx++) {
 		// std::cout << arr[idx] << " bigger than " << pivot_value << "?" << std::endl;
-		if (arr[idx] > pivot_value && idx <= pivot_idx) {
-			swap(arr, idx, pivot_idx);
+
+		if (arr[idx] > pivot_value && idx < pivot_will_go) {
+			swap(arr, idx, pivot_will_go);
+			if (pivot_will_go == pivot_idx) {
+				pivot_idx = idx;
+			}
 			pivot_will_go--;
-			pivot_idx = idx;
-		}
-		if (arr[idx] < pivot_value && idx > pivot_idx) {
-			swap(arr, idx, pivot_idx);
+
+		} else if (arr[idx] <= pivot_value && idx > pivot_will_go) {
+			swap(arr, idx, pivot_will_go);
+			if (pivot_will_go == pivot_idx) {
+				pivot_idx = idx;
+			}
 			pivot_will_go++;
-			pivot_idx = idx;
+
 		}
 	}
 
-	swap(arr, pivot_will_go, pivot_idx);
-	//arr[pivot_will_go], arr[pivot_idx] = arr[pivot_idx], arr[pivot_will_go];
+	if (arr[pivot_will_go] > pivot_value) {
+		pivot_will_go--;
+	}
 
-  for (int i=0; i<10; i++) {
-	  std::cout << arr[i] << ", ";
+	if (pivot_will_go >= start) {
+		swap(arr, pivot_will_go, pivot_idx);
+	}
+
+	std::cout << "Done partitioning: ";
+  	bool validate = true;
+  for (int i=start; i<=end; i++) {
+   std::cout << arr[i] << ", ";
+   if (i < pivot_will_go && arr[i] > pivot_value) validate = false;
+   if (i > pivot_will_go && arr[i] < pivot_value) validate = false;
   }
+  if (validate) std::cout << " PASS";
+  if (!validate) std::cout << " FAIL";
   std::cout << std::endl;
+
 	// Do rest of sort
-	Helper::quicksort(arr, start, start+len/2);
-	Helper::quicksort(arr, start+len/2+1, end);
+	Helper::quicksort(arr, start, pivot_will_go-1);
+	Helper::quicksort(arr, pivot_will_go+1, end);
 	return;
 }
