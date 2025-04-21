@@ -29,16 +29,17 @@ void swap(int* arr, int i1, int i2) {
 	arr[i1] = arr[i2];
 	arr[i2] = t;
 }
-void Helper::quicksort(int* arr, int start, int end) {
-	std::cout << "=== Sorting " << start << " to " << end << ": ";
-	for (int i =start; i<=end; i++) {
-		std::cout << arr[i] << ", ";
-	}
-	std::cout << std::endl;
+// TODO: time complexity of this
+bool Helper::quicksort(int* arr, int start, int end) {
+	// std::cout << "=== Sorting " << start << " to " << end << ": ";
+	// for (int i =start; i<=end; i++) {
+	// 	std::cout << arr[i] << ", ";
+	// }
+	// std::cout << std::endl;
 
-	if (start >= end || start < 0) return;
+	if (start >= end || start < 0) return true;
 	int len = (end - start)+1;
-	if (len < 2) { return; }
+	if (len < 2) { return true; }
 	// if (len == 2) {
 	// 	if (arr[start] > arr[end]) swap(arr, start, end);
 	// 	return;
@@ -50,9 +51,12 @@ void Helper::quicksort(int* arr, int start, int end) {
 	int pivot_will_go = pivot_idx;
 	std::cout << "Pivot idx " << pivot_idx << " value " << pivot_value << std::endl;
 
-	// Some funny fnagling to get this to be in place
 	for (int idx=start; idx <= end; idx++) {
 		// std::cout << arr[idx] << " bigger than " << pivot_value << "?" << std::endl;
+
+		if (idx == pivot_idx || idx == pivot_will_go) {
+			continue;
+		}
 
 		if (arr[idx] > pivot_value && idx < pivot_will_go) {
 			swap(arr, idx, pivot_will_go);
@@ -60,6 +64,8 @@ void Helper::quicksort(int* arr, int start, int end) {
 				pivot_idx = idx;
 			}
 			pivot_will_go--;
+			idx--;
+
 
 		} else if (arr[idx] <= pivot_value && idx > pivot_will_go) {
 			swap(arr, idx, pivot_will_go);
@@ -67,31 +73,41 @@ void Helper::quicksort(int* arr, int start, int end) {
 				pivot_idx = idx;
 			}
 			pivot_will_go++;
-
+			idx--;
 		}
 	}
 
-	if (arr[pivot_will_go] > pivot_value) {
+
+	// You have to do this because...
+	// I think it's something to do with the fact we go up from the bottom and how we adjust the pivot_will_go. Forgor
+	if (pivot_value < arr[pivot_will_go] && pivot_idx < pivot_will_go) {
+		std::cout << "Adjusting Pivot" << std::endl;
 		pivot_will_go--;
 	}
 
-	if (pivot_will_go >= start) {
-		swap(arr, pivot_will_go, pivot_idx);
-	}
+	// std::cout << "Swapping " << pivot_idx << " with " << pivot_will_go << std::endl;
+	//
+	swap(arr, pivot_will_go, pivot_idx);
 
-	std::cout << "Done partitioning: ";
-  	bool validate = true;
-  for (int i=start; i<=end; i++) {
-   std::cout << arr[i] << ", ";
-   if (i < pivot_will_go && arr[i] > pivot_value) validate = false;
-   if (i > pivot_will_go && arr[i] < pivot_value) validate = false;
-  }
-  if (validate) std::cout << " PASS";
-  if (!validate) std::cout << " FAIL";
-  std::cout << std::endl;
+
+	// std::cout << "Done partitioning: ";
+	 // 	bool validate = true;
+	 // for (int i=start; i<=end; i++) {
+	  // std::cout << arr[i] << ", ";
+	 //  if (i < pivot_will_go && arr[i] > pivot_value) validate = false;
+	 //  if (i > pivot_will_go && arr[i] < pivot_value) validate = false;
+	 // }
+	//  if (validate) std::cout << " PASS";
+	//  if (!validate) std::cout << " FAIL";
+	//  std::cout << std::endl;
+	//  	if (validate == false) {
+	// 	return false;
+	// }
+  	
+	// return validate;
 
 	// Do rest of sort
 	Helper::quicksort(arr, start, pivot_will_go-1);
 	Helper::quicksort(arr, pivot_will_go+1, end);
-	return;
+	return true;
 }
