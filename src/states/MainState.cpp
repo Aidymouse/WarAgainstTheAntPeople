@@ -67,11 +67,13 @@ MainState::MainState() {
   COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
   sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);
 
-  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION, COMP_SIG::TRANSFORM};
+  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION,
+                               COMP_SIG::TRANSFORM};
   sys_scanning = main_ecs.register_system<ScanningSystem>(scanning_sigs, 3);
 
   COMP_SIG follows_mouse[2] = {COMP_SIG::FOLLOWS_MOUSE, COMP_SIG::POSITION};
-  sys_follows_mouse = main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
+  sys_follows_mouse =
+      main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
   /** Set up components -- needs to be in order of COMP_SIG */
@@ -100,7 +102,7 @@ MainState::MainState() {
 
   //   Hand
   Entity hand = main_ecs.add_entity();
-  main_ecs.add_component_to_entity<Position>(hand, {0, 0});
+  main_ecs.add_component_to_entity<Position>(hand, {0, 0, 1});
   main_ecs.add_component_to_entity<Visible>(
       hand,
       {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
@@ -154,6 +156,8 @@ void MainState::handle_click(
 // void MainState::handle_mousemove() {}
 
 void MainState::update(float dt) {
+  // std::cout << dt << std::endl;
+
   sys_transform->update(dt, &main_grid, &main_ecs);
   sys_scanning->update(dt, &main_ecs);
   sys_follows_mouse->update(dt, &main_ecs, &main_grid);
