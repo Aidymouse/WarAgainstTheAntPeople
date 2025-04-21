@@ -10,10 +10,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 set(GRAPHICS_PATH "\"../resources/graphics/\"")
-if(WINDOWS)
-	message("Windows")
-	set(GRAPHICS_PATH "\"../../resources/graphics/\"")
-endif()
+# if(BUILD_SDL)
+# 	message("Windows")
+# 	set(GRAPHICS_PATH "\"../../resources/graphics/\"")
+# endif()
 
 if(ABSOLUTE_GRAPHICS)
 	set(GRAPHICS_PATH "\"resources/graphics/\"")
@@ -33,7 +33,7 @@ add_subdirectory(src)
 
 
 ### SDL3
-if(WINDOWS)
+if(BUILD_SDL)
 	add_subdirectory(lib/SDL EXCLUDE_FROM_ALL)
 else()
 	find_package(SDL3 REQUIRED) # I love nix!!!!
