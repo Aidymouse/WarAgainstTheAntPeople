@@ -1,9 +1,10 @@
 #pragma once
 
 #include <ecs/Entity.hpp>
+#include <functional>
 #include <iostream>
 #include <unordered_map>
-//#include <memory>
+// #include <memory>
 
 class ComponentArrayInterface {
 public:
@@ -73,4 +74,71 @@ public:
   }
 
   void entity_destroyed(Entity id) override { remove_entity(id); }
+
+  /** Quick Sort */
+  void swap_components(int idx_1, int idx_2) {
+    T comp_1 = components[idx_1];
+    T comp_2 = components[idx_2];
+    Entity holder_1 = component_idx_to_entity[idx_1];
+    Entity holder_2 = component_idx_to_entity[idx_2];
+
+    components[idx_1] = components[idx_2];
+    components[idx_2] = comp_1;
+    component_idx_to_entity[idx_1] = holder_2;
+    component_idx_to_entity[idx_2] = holder_1;
+    entity_to_component_idx[holder_1] = idx_2;
+    entity_to_component_idx[holder_2] = idx_1;
+  }
+
+  void sort(int start, int end, std::function<int(T, T)> compare_fn) {
+
+    if (start >= end || start < 0)
+      return;
+    int len = (end - start) + 1;
+    if (len < 2) {
+      return;
+    }
+
+    // Partition
+    int pivot_idx = start + len / 2;
+    T pivot_value = components[pivot_idx];
+    int pivot_will_go = pivot_idx;
+
+    for (int idx = start; idx <= end; idx++) {
+
+      if (idx == pivot_idx || idx == pivot_will_go) {
+        continue;
+      }
+
+      if (compare_fn(components[idx], pivot_value) > 0 && idx < pivot_will_go) {
+        swap_components(idx, pivot_will_go);
+        if (pivot_will_go == pivot_idx) {
+          pivot_idx = idx;
+        }
+        pivot_will_go--;
+        idx--;
+
+      } else if (compare_fn(components[idx], pivot_value) <= 0 &&
+                 idx > pivot_will_go) {
+        swap_components(idx, pivot_will_go);
+        if (pivot_will_go == pivot_idx) {
+          pivot_idx = idx;
+        }
+        pivot_will_go++;
+        idx--;
+      }
+    }
+
+    if (compare_fn(pivot_value, components[pivot_will_go]) == -1 &&
+        pivot_idx < pivot_will_go) {
+      pivot_will_go--;
+    }
+
+    swap_components(pivot_will_go, pivot_idx);
+
+    // Do the rest of the sort
+    sort(start, pivot_will_go - 1, compare_fn);
+    sort(pivot_will_go + 1, end, compare_fn);
+    return;
+  }
 };
