@@ -11,6 +11,7 @@
 #include <ProjectConfig.h>
 
 class ECS {
+  std::queue<Entity> free_reserved_ids;
   std::queue<Entity> free_ids;
 
   Entity num_entities = 0;
@@ -24,9 +25,19 @@ class ECS {
 
 public:
   ECS() {
-    for (int e = 0; e < MAX_ENTITIES; e++) {
+    for (int e = 0; e < RESERVED_ENTITIES; e++) {
+      free_reserved_ids.push(e);
+    }
+    for (int e = RESERVED_ENTITIES; e < MAX_ENTITIES; e++) {
       free_ids.push(e);
     }
+  };
+
+  Entity add_reserved_entity() {
+    Entity id = free_reserved_ids.front();
+    signatures[id] = 0;
+    free_reserved_ids.pop();
+    return id;
   };
 
   Entity add_entity() {
@@ -40,7 +51,11 @@ public:
     signatures[id] = 0;
     component_manager->entity_removed(id);
     /*system_manager->entity_changed(id, signatures[id]);*/
-    free_ids.push(id);
+    if (id < RESERVED_ENTITIES) {
+      free_reserved_ids.push(id);
+    } else {
+      free_ids.push(id);
+    }
   };
 
   Signature get_signature_for_entity(Entity id) { return signatures[id]; }
@@ -82,7 +97,7 @@ public:
     }
   }
 
-  template <typename T> T* get_component_for_entity(Entity id) {
+  template <typename T> T *get_component_for_entity(Entity id) {
     return component_manager->get_component_data<T>(id);
   };
 

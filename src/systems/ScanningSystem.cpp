@@ -15,6 +15,10 @@ void ScanningSystem::update(float dt, ECS *ecs) {
   std::set<Entity> ents_to_erase;
 
   // std::cout << ents_to_erase << std::endl;
+  //
+  // Eureka!
+  // We need to scan for entities in rings of collision cells. That'll be way
+  // faster than scanning each of them.
 
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDL3/SDL_events.h"
+#include "ecs/Entity.hpp"
 #include "systems/FollowsMouseSystem.h"
 #include "systems/ScanningSystem.h"
 #include "systems/TransformSystem.h"
@@ -17,6 +18,7 @@ class MainState : public GameState {
   std::shared_ptr<TransformSystem> sys_transform;
   std::shared_ptr<ScanningSystem> sys_scanning;
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
+  std::queue<Entity> reserved_ids;
 
   float timer_max_scrap_spawns = 5;
   float timer_scrap_spawns = 5;

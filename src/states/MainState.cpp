@@ -76,7 +76,9 @@ MainState::MainState() {
       main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
-  /** Set up components -- needs to be in order of COMP_SIG */
+  /** Set up components */
+  main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);
+
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
   main_ecs.register_component<Visible>(COMP_SIG::VISIBLE);
   main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
@@ -99,9 +101,14 @@ MainState::MainState() {
   // main_ecs.register_component<Tool>();
 
   /** Initial Entities */
+  // for (int i = 0; i < RESERVED_ENTITIES; i++) {
+  //   Entity e = main_ecs.add_reserved_entity();
+  //   reserved_ids.push(e);
+  //   main_ecs.add_component_to_entity<Reserved>(e, {e});
+  // }
 
   //   Hand
-  Entity hand = main_ecs.add_entity();
+  Entity hand = main_ecs.add_reserved_entity();
   main_ecs.add_component_to_entity<Position>(hand, {0, 0, 1});
   main_ecs.add_component_to_entity<Visible>(
       hand,
@@ -111,7 +118,7 @@ MainState::MainState() {
   //   Mallet
 
   // Guys
-  for (int g = 0; g < 10000; g++) {
+  for (int g = 0; g < 1000; g++) {
     add_guy(&main_ecs, &main_grid);
   }
   //
@@ -169,7 +176,7 @@ void MainState::update(float dt) {
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
-  sys_draw->draw(renderer, &main_ecs);
+  sys_draw->draw(renderer, &main_ecs, 1);
 
   float mX, mY;
   SDL_GetMouseState(&mX, &mY);

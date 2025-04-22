@@ -1,4 +1,5 @@
 #include "anim/Anim.hpp"
+#include "ecs/ComponentArray.hpp"
 #include <SDL3/SDL.h>
 #include <cmath>
 #include <ecs/ECS.hpp>
@@ -57,19 +58,59 @@ void DrawSystem::update(float dt, ECS *ecs) {
   }
 }
 
-void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
+int compare_reserved_ents(Reserved r1, Reserved r2, ECS *ecs) { return 1; }
+
+void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs, int num_reserved) {
   ComponentArray<Position> positions =
       *component_manager->get_component_array<Position>();
 
   // TOO SLOW!!!
   // But it does work.
-  positions.sort(0, positions.get_num_components() - 1, &compare_positions);
+  // positions.sort(0, positions.get_num_components() - 1, &compare_positions);
+  //
+  // To keep rendering fast, we're going to assume that all
 
   // I think, for the sake of gameplay, guys should probably go beneath
-  // everything else. Then we can just sort the other stuff.
+  // everything else. Then we can just sort the other stuff. To keep this from
+  // being stupid we'll need to make sure guys avoid non-guys as they walk
+  // around. Or maybe the bottom half of some sprites can be a background tile.
+  //
+  // Sort the resered entities by their positions
+  std::shared_ptr<ComponentArray<Reserved>> res =
+      component_manager->get_component_array<Reserved>();
 
+  // Custom quick sort right here?
+  res->sort(0, num_reserved, &compare_reserved_ents, ecs);
+
+  Entity eLimit = 0;
+  for (Entity e = 0; e < RESERVED_ENTITIES; e++) {
+    // Draw if z < 0
+    if (ecs->get_signature_for_entity(e)[COMP_SIG::POSITION] == 0)
+      continue;
+
+    Position *pos = component_manager->get_component_data<Position>(e);
+    if (pos->z >= 0) {
+      eLimit = e + 1;
+      break; // Entities are pre-sorted
+    }
+
+    Visible *vis = component_manager->get_component_data<Visible>(e);
+
+    // Draw the entity
+    SDL_FRect source_rect = vis->frame.rect;
+    SDL_FRect target_rect = {std::floor(pos->x + vis->offset.x),
+                             std::floor(pos->y + vis->offset.y),
+                             vis->frame.rect.w, vis->frame.rect.h};
+    // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
+    SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);
+  }
+
+  // Draw all guys on lowest level
   for (int i = 0; i < positions.get_num_components(); i++) {
     Entity ent = positions.get_entity_from_idx(i);
+
+    if (ent < RESERVED_ENTITIES)
+      continue;
 
     // Position *pos = component_manager->get_component_data<Position>(ent);
     Position pos = positions.get_data_from_idx(i);
@@ -93,6 +134,23 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
     SDL_FRect source_rect = vis->frame.rect;
     SDL_FRect target_rect = {std::floor(pos.x + vis->offset.x),
                              std::floor(pos.y + vis->offset.y),
+                             vis->frame.rect.w, vis->frame.rect.h};
+    // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
+    SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);
+  }
+
+  for (Entity e = eLimit; e < RESERVED_ENTITIES; e++) {
+    // Draw if z >= 1
+    if (ecs->get_signature_for_entity(e)[COMP_SIG::POSITION] == 0)
+      break;
+
+    Position *pos = component_manager->get_component_data<Position>(e);
+    Visible *vis = component_manager->get_component_data<Visible>(e);
+
+    // Draw the entity
+    SDL_FRect source_rect = vis->frame.rect;
+    SDL_FRect target_rect = {std::floor(pos->x + vis->offset.x),
+                             std::floor(pos->y + vis->offset.y),
                              vis->frame.rect.w, vis->frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);

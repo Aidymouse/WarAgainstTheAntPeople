@@ -6,6 +6,8 @@
 #include <unordered_map>
 // #include <memory>
 
+class ECS;
+
 class ComponentArrayInterface {
 public:
   virtual ~ComponentArrayInterface() = default;
@@ -90,7 +92,8 @@ public:
     entity_to_component_idx[holder_2] = idx_1;
   }
 
-  void sort(int start, int end, std::function<int(T, T)> compare_fn) {
+  void sort(int start, int end, std::function<int(T, T, ECS *)> compare_fn,
+            ECS *ecs) {
 
     if (start >= end || start < 0)
       return;
@@ -110,7 +113,8 @@ public:
         continue;
       }
 
-      if (compare_fn(components[idx], pivot_value) > 0 && idx < pivot_will_go) {
+      if (compare_fn(components[idx], pivot_value, ecs) > 0 &&
+          idx < pivot_will_go) {
         swap_components(idx, pivot_will_go);
         if (pivot_will_go == pivot_idx) {
           pivot_idx = idx;
@@ -118,7 +122,7 @@ public:
         pivot_will_go--;
         idx--;
 
-      } else if (compare_fn(components[idx], pivot_value) <= 0 &&
+      } else if (compare_fn(components[idx], pivot_value, ecs) <= 0 &&
                  idx > pivot_will_go) {
         swap_components(idx, pivot_will_go);
         if (pivot_will_go == pivot_idx) {
@@ -129,7 +133,7 @@ public:
       }
     }
 
-    if (compare_fn(pivot_value, components[pivot_will_go]) == -1 &&
+    if (compare_fn(pivot_value, components[pivot_will_go], ecs) == -1 &&
         pivot_idx < pivot_will_go) {
       pivot_will_go--;
     }
@@ -137,8 +141,8 @@ public:
     swap_components(pivot_will_go, pivot_idx);
 
     // Do the rest of the sort
-    sort(start, pivot_will_go - 1, compare_fn);
-    sort(pivot_will_go + 1, end, compare_fn);
+    sort(start, pivot_will_go - 1, compare_fn, ecs);
+    sort(pivot_will_go + 1, end, compare_fn, ecs);
     return;
   }
 };

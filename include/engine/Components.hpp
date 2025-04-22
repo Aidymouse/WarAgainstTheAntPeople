@@ -9,17 +9,18 @@
 #include <optional>
 
 enum COMP_SIG { // Component Signature Indexes
-  POSITION = 0,
-  VISIBLE = 1,
-  TRANSFORM = 2,
-  SCANNING_FOR = 3,
-  SCANNABLE = 4,
+  RESERVED = 0,
+  POSITION = 1,
+  VISIBLE = 2,
+  TRANSFORM = 3,
+  SCANNING_FOR = 4,
+  SCANNABLE = 5,
 
-  FOLLOWS_MOUSE = 5,
+  FOLLOWS_MOUSE = 6,
 
   // TOOL = 3,
   // CLICKABLE = 4,
-  COLLIDER = 6,
+  COLLIDER = 7,
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
@@ -28,11 +29,16 @@ enum COMP_SIG { // Component Signature Indexes
 
 struct FollowsMouse {};
 
+struct Reserved {
+  Entity ent;
+};
+
 struct Position {
   float x;
   float y;
   float z; // Used for fake 3d. Subtracted from Y to get vertical pos on screen,
-           // but sorted with higher Z = higher.
+           // but sorted with higher Z = higher. Z < 0 is ignored, so can be
+           // used to order stuff on the ground.
 };
 
 struct Transform {
