@@ -49,7 +49,7 @@ void add_scrap(ECS *ecs) {
   Visible v = {texture_store.get("scrap_sheet"), NotMovingAnim.SCRAP};
   float x = (float)(rand() % 800);
   float y = (float)(rand() % 600);
-  Position p = {x, y, 0};
+  Position p = {x, y};
   Entity s = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
@@ -80,6 +80,8 @@ MainState::MainState() {
   main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);
 
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
+  main_ecs.register_component<ZEnabled>(COMP_SIG::ZENABLED);
+
   main_ecs.register_component<Visible>(COMP_SIG::VISIBLE);
   main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
   // main_ecs.register_component<Tool>();
@@ -108,21 +110,21 @@ MainState::MainState() {
   // }
 
   //   Hand
-  Entity hand = main_ecs.add_reserved_entity();
-  main_ecs.add_component_to_entity<Position>(hand, {0, 0, 1});
+  Entity hand = main_ecs.add_entity();
+  main_ecs.add_component_to_entity<Position>(hand, {0, 0, 5});
   main_ecs.add_component_to_entity<Visible>(
       hand,
       {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
   main_ecs.add_component_to_entity<FollowsMouse>(hand, {});
 
-  //   Mallet
-
   // Guys
-  for (int g = 0; g < 1000; g++) {
+  // The benchmark is 3000
+  // If we want to hit 10,000 then I'll need to bust out Vulkan I think
+  for (int g = 0; g < 3000; g++) {
     add_guy(&main_ecs, &main_grid);
   }
   //
-  for (int s = 0; s < 3; s++) {
+  for (int s = 0; s < 6; s++) {
     add_scrap(&main_ecs);
   }
 }
@@ -154,6 +156,8 @@ void MainState::handle_click(
     vis->anim_timer = 0;
     vis->texture = texture_store.get("squish_sheet");
 
+    Position *pos = main_ecs.get_component_for_entity<Position>(ent);
+    pos->z = -1;
     // main_ecs.remove_component_from_entity<Transform>(ent);
     main_ecs.remove_component_from_entity<ScanningFor>(ent);
     main_ecs.remove_component_from_entity<Transform>(ent);
@@ -171,12 +175,18 @@ void MainState::update(float dt) {
 
   sys_draw->update(dt, &main_ecs);
 
+  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
+
+  if (m & SDL_BUTTON_MASK(3)) {
+    std::cout << main_ecs.num_entities << std::endl;
+    add_guy(&main_ecs, &main_grid);
+  }
   // std::cout << "Grid After Update" << std::endl;
   // main_grid.debug_display();
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
-  sys_draw->draw(renderer, &main_ecs, 1);
+  sys_draw->draw(renderer, &main_ecs);
 
   float mX, mY;
   SDL_GetMouseState(&mX, &mY);

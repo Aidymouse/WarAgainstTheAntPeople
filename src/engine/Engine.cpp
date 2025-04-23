@@ -1,4 +1,5 @@
 #include "SDL3/SDL_events.h"
+#include "SDL3/SDL_stdinc.h"
 #include <engine/Engine.h>
 #include <states/MainState.h>
 
@@ -29,14 +30,17 @@ void Engine::run() {
                              "scrap_sheet", main_renderer);
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("squish.bmp"),
                              "squish_sheet", main_renderer);
-  texture_store.load_texture(std::string(GRAPHICS_PATH).append("hand_sheet.bmp"),
-                             "tool_hand", main_renderer);
+  texture_store.load_texture(
+      std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand",
+      main_renderer);
 
   // Load Main State
   state_manager.set_state(std::make_shared<MainState>());
   std::shared_ptr<GameState> cur_state = state_manager.get_current_state();
 
   bool window_is_open = true;
+  float fps_timer = 0;
+  float frames = 0;
   while (window_is_open) {
 
     /** Event based */
@@ -56,6 +60,13 @@ void Engine::run() {
     last = now;
     now = SDL_GetPerformanceCounter();
     dt = ((now - last)) / SDL_GetPerformanceFrequency();
+    frames++;
+    fps_timer += dt;
+    if (fps_timer > 1) {
+      std::cout << "FPS: " << frames << std::endl;
+      fps_timer -= 1;
+      frames = 0;
+    }
 
     cur_state->update(dt);
 

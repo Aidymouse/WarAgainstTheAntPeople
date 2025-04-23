@@ -7,5 +7,5 @@
 class DrawSystem : public System {
 public:
   void update(float dt, ECS *ecs);
-  void draw(SDL_Renderer *renderer, ECS *ecs, int num_reserved);
+  void draw(SDL_Renderer *renderer, ECS *ecs);
 };

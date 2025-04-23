@@ -11,10 +11,7 @@
 #include <ProjectConfig.h>
 
 class ECS {
-  std::queue<Entity> free_reserved_ids;
   std::queue<Entity> free_ids;
-
-  Entity num_entities = 0;
 
   std::unordered_map<Entity, Signature> signatures;
 
@@ -24,20 +21,12 @@ class ECS {
       std::make_shared<SystemManager>(component_manager);
 
 public:
+  Entity num_entities = 0;
+
   ECS() {
-    for (int e = 0; e < RESERVED_ENTITIES; e++) {
-      free_reserved_ids.push(e);
-    }
-    for (int e = RESERVED_ENTITIES; e < MAX_ENTITIES; e++) {
+    for (int e = 0; e < MAX_ENTITIES; e++) {
       free_ids.push(e);
     }
-  };
-
-  Entity add_reserved_entity() {
-    Entity id = free_reserved_ids.front();
-    signatures[id] = 0;
-    free_reserved_ids.pop();
-    return id;
   };
 
   Entity add_entity() {
@@ -51,11 +40,7 @@ public:
     signatures[id] = 0;
     component_manager->entity_removed(id);
     /*system_manager->entity_changed(id, signatures[id]);*/
-    if (id < RESERVED_ENTITIES) {
-      free_reserved_ids.push(id);
-    } else {
-      free_ids.push(id);
-    }
+    free_ids.push(id);
   };
 
   Signature get_signature_for_entity(Entity id) { return signatures[id]; }
@@ -87,9 +72,9 @@ public:
     int sig_index = component_manager->get_signature_index_for_type<T>();
 
     if (not signatures[id][sig_index]) {
-      std::cout << "Entity " << id << "(" << signatures[id] << ")"
-                << " does not have " << typeid(T).name()
-                << ", so it will not be removed" << std::endl;
+      // std::cout << "Entity " << id << "(" << signatures[id] << ")"
+      //           << " does not have " << typeid(T).name()
+      //           << ", so it will not be removed" << std::endl;
     } else {
       component_manager->get_component_array<T>()->remove_entity(id);
       signatures[id][sig_index] = 0;
