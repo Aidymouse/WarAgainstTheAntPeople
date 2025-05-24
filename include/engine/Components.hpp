@@ -13,15 +13,16 @@ enum COMP_SIG { // Component Signature Indexes
   POSITION = 1,
   ZENABLED = 2,
   VISIBLE = 3,
-  TRANSFORM = 4,
-  SCANNING_FOR = 5,
-  SCANNABLE = 6,
+  SORTEDVISIBLE = 4,
+  TRANSFORM = 5,
+  SCANNING_FOR = 6,
+  SCANNABLE = 7,
 
-  FOLLOWS_MOUSE = 7,
+  FOLLOWS_MOUSE = 8,
 
   // TOOL = 3,
   // CLICKABLE = 4,
-  COLLIDER = 8,
+  COLLIDER = 9,
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
@@ -45,6 +46,7 @@ struct ZEnabled {
            // but sorted with higher Z = higher. Z < 0 is ignored, so can be
            // used to order stuff on the ground.
 };
+
 
 struct Transform {
   float vel_x;
@@ -101,6 +103,14 @@ struct xy {
 };
 
 struct Visible {
+  SDL_Texture *texture;
+  AnimFrame frame;
+  float anim_timer;
+  xy offset; // For texture shifting
+};
+
+// Same as visible except drawn seperately
+struct SortedVisible {
   SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;

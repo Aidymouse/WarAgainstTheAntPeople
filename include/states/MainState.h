@@ -11,10 +11,12 @@
 #include <engine/GameState.h>
 #include <memory>
 #include <systems/DrawSystem.h>
+#include <systems/SortedDrawSystem.h>
 
 class MainState : public GameState {
 
   std::shared_ptr<DrawSystem> sys_draw;
+  std::shared_ptr<SortedDrawSystem> sys_sorted_draw;
   std::shared_ptr<TransformSystem> sys_transform;
   std::shared_ptr<ScanningSystem> sys_scanning;
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;

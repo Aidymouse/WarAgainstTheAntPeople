@@ -18,6 +18,7 @@
 #include <systems/DrawSystem.h>
 #include <systems/FollowsMouseSystem.h>
 #include <systems/ScanningSystem.h>
+#include <systems/SortedDrawSystem.h>
 
 #include <anim/GuyAnim.hpp>
 #include <anim/NotMovingAnim.hpp>
@@ -63,6 +64,9 @@ MainState::MainState() {
   /** Set up Systems */
   COMP_SIG draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE};
   sys_draw = main_ecs.register_system<DrawSystem>(draw_sigs, 2);
+  COMP_SIG sorted_draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::SORTEDVISIBLE};
+  sys_sorted_draw =
+      main_ecs.register_system<SortedDrawSystem>(sorted_draw_sigs, 2);
 
   COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
   sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);
@@ -83,6 +87,7 @@ MainState::MainState() {
   main_ecs.register_component<ZEnabled>(COMP_SIG::ZENABLED);
 
   main_ecs.register_component<Visible>(COMP_SIG::VISIBLE);
+  main_ecs.register_component<SortedVisible>(COMP_SIG::SORTEDVISIBLE);
   main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
   // main_ecs.register_component<Tool>();
   // main_ecs.register_component<Clickable>();
@@ -112,7 +117,7 @@ MainState::MainState() {
   //   Hand
   Entity hand = main_ecs.add_entity();
   main_ecs.add_component_to_entity<Position>(hand, {0, 0, 5});
-  main_ecs.add_component_to_entity<Visible>(
+  main_ecs.add_component_to_entity<SortedVisible>(
       hand,
       {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
   main_ecs.add_component_to_entity<FollowsMouse>(hand, {});

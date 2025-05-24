@@ -69,12 +69,6 @@ void mergesort(int *arr, int start_idx, int end_idx) {
 }
 
 int main() {
-  // int LEN = 5;
-  // int a[LEN] = {3, 2, 7, 4, 55};
-  //
-  // mergesort(a, 0, LEN - 1);
-  //
-  // cout_arr(a, 0, LEN - 1);
 
   srand(time(NULL));
 
