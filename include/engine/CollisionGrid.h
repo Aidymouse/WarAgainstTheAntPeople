@@ -10,7 +10,7 @@
 
 typedef int collision_cell_id; // First 4 bits = row, second 4 = col
 typedef std::set<Entity> collision_cell;
-#define COLLISION_CELL_SIZE 50
+#define COLLISION_CELL_SIZE 100
 
 class CollisionGrid {
   std::unordered_map<collision_cell_id, collision_cell> cells;
