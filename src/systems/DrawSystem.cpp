@@ -39,6 +39,7 @@ void DrawSystem::update(float dt, ECS *ecs) {
 
 // This simplistic draw system just draws everything visible.
 // There is a counterpart, the sorted draw system, that sorts before it draws
+// Typically, this is used to draw guys.
 void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 
   // To keep rendering fast, we're going to assume that all
@@ -51,17 +52,17 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
   // Draw all visibles
   for (int i = 0; i < visibles->get_num_components(); i++) {
 
-    Entity ent = positions->get_entity_from_idx(i);
+    Entity ent = visibles->get_entity_from_idx(i);
     Visible vis = visibles->get_data_from_idx(i);
 
     // Position *pos = component_manager->get_component_data<Position>(ent);
-    Position pos = positions->get_data_from_idx(i);
+    Position *pos = positions->get_data(ent);
     // Visible *vis = component_manager->get_component_data<Visible>(ent);
 
     SDL_FRect source_rect = vis.frame.rect;
-    SDL_FRect target_rect = {std::floor(pos.x + vis.offset.x),
-                             std::floor(pos.y + vis.offset.y), vis.frame.rect.w,
-                             vis.frame.rect.h};
+    SDL_FRect target_rect = {std::floor(pos->x + vis.offset.x),
+                             std::floor(pos->y + vis.offset.y),
+                             vis.frame.rect.w, vis.frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
   }
