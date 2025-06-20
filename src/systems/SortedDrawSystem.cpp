@@ -2,8 +2,8 @@
 #include "ecs/ComponentArray.hpp"
 #include <SDL3/SDL.h>
 #include <cmath>
+#include <components/Components.hpp>
 #include <ecs/ECS.hpp>
-#include <engine/Components.hpp>
 #include <iostream>
 #include <systems/SortedDrawSystem.h>
 #include <util/DrawFns.h>
@@ -89,6 +89,9 @@ void SortedDrawSystem::update(float dt, ECS *ecs) {
 }
 
 int compare_reserved_ents(Reserved r1, Reserved r2, ECS *ecs) { return 1; }
+
+// void SortedDrawSystem::draw_beneath_0() {
+// }
 
 void SortedDrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
   std::shared_ptr<ComponentArray<Position>> positions =

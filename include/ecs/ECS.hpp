@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/Components.hpp"
+#include "components/Components.hpp"
 #include <ecs/ComponentManager.hpp>
 #include <ecs/Entity.hpp>
 #include <ecs/SystemManager.hpp>

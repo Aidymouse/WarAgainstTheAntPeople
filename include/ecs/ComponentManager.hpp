@@ -1,7 +1,7 @@
 #pragma once
 
+#include <components/Components.hpp>
 #include <ecs/ComponentArray.hpp>
-#include <engine/Components.hpp>
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
@@ -24,7 +24,7 @@ public:
     }
 
     if (component_arrays[signature_index] != NULL) {
-      std::cout << "Trying to add component with sig (" << signature_index
+      std::cout << "Tried to add component with sig (" << signature_index
                 << ") but one already exists. Not adding." << std::endl;
       return;
     } else {

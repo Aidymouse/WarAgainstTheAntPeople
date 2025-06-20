@@ -1,6 +1,6 @@
 #include <cmath>
+#include <components/Components.hpp>
 #include <ecs/ECS.hpp>
-#include <engine/Components.hpp>
 #include <iostream>
 #include <set>
 #include <systems/ScanningSystem.h>

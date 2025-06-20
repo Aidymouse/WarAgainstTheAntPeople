@@ -14,7 +14,7 @@ Engine::Engine() { SDL_Init(SDL_INIT_VIDEO); }
 
 void Engine::run() {
 
-  SDL_Window *window = SDL_CreateWindow("This Window", 800, 600, 0);
+  SDL_Window *window = SDL_CreateWindow("The Evil Pikmin...", 800, 600, 0);
   SDL_Renderer *main_renderer = SDL_CreateRenderer(window, NULL);
 
   float now = SDL_GetPerformanceCounter();

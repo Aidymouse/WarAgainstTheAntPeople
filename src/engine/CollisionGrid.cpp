@@ -1,6 +1,6 @@
 #include "SDL3/SDL_render.h"
+#include "components/Components.hpp"
 #include "engine/Collisions.h"
-#include "engine/Components.hpp"
 #include <ProjectConfig.h>
 #include <ecs/ECS.hpp>
 #include <engine/CollisionGrid.h>

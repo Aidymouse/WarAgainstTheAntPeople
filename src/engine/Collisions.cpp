@@ -1,7 +1,7 @@
 
 #include <cmath>
+#include <components/Components.hpp>
 #include <engine/Collisions.h>
-#include <engine/Components.hpp>
 
 void Collisions::update_collider_position(Collider *col, float x, float y) {
   if (col->type == CollisionShapeType::CIRCLE) {

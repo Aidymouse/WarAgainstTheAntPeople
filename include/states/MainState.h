@@ -3,6 +3,7 @@
 #include "SDL3/SDL_events.h"
 #include "ecs/Entity.hpp"
 #include "systems/FollowsMouseSystem.h"
+#include "systems/GuyBrainSystem.h"
 #include "systems/ScanningSystem.h"
 #include "systems/TransformSystem.h"
 #include <SDL3/SDL.h>
@@ -20,7 +21,7 @@ class MainState : public GameState {
   std::shared_ptr<TransformSystem> sys_transform;
   std::shared_ptr<ScanningSystem> sys_scanning;
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
-  std::queue<Entity> reserved_ids;
+  std::shared_ptr<GuyBrainSystem> sys_guy_brain;
 
   float timer_max_scrap_spawns = 5;
   float timer_scrap_spawns = 5;
@@ -31,6 +32,9 @@ class MainState : public GameState {
 public:
   MainState();
   ~MainState();
+
+  void load_ecs();
+
   void update(float dt) override;
   void draw(SDL_Renderer *renderer) override;
 

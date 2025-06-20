@@ -23,6 +23,10 @@ enum COMP_SIG { // Component Signature Indexes
   // TOOL = 3,
   // CLICKABLE = 4,
   COLLIDER = 9,
+  GUY_BRAIN = 10,
+
+  GUY_WANDERING = 11,
+
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
@@ -46,7 +50,6 @@ struct ZEnabled {
            // but sorted with higher Z = higher. Z < 0 is ignored, so can be
            // used to order stuff on the ground.
 };
-
 
 struct Transform {
   float vel_x;
@@ -85,6 +88,10 @@ struct Scannable {
 struct Persuing {
   float desiredX;
   float desiredY;
+};
+
+struct Collision {
+  Entity collided_entity;
 };
 
 struct Collider {
@@ -138,3 +145,16 @@ struct Carrier {
 struct Carryable {
   std::optional<Entity> carried_by;
 };
+
+// Guy States
+enum GuyState { SEEKING, WANDERING, CARRYING };
+
+// Keeps the meta-information regarding a guys current state, for decision
+// making purposes
+struct GuyBrain {
+  GuyState cur_state;
+};
+
+// struct HP {
+//   int hp;
+// };

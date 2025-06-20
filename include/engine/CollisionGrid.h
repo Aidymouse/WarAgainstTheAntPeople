@@ -1,8 +1,7 @@
 #pragma once
 
+#include "components/Components.hpp"
 #include "engine/Collisions.h"
-#include "engine/Components.hpp"
-#include <bitset>
 #include <ecs/ECS.hpp>
 #include <ecs/Entity.hpp>
 #include <set>

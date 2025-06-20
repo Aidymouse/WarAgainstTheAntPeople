@@ -5,4 +5,5 @@ target_sources(EvilPikmin PRIVATE
 	TransformSystem.cpp
 	ScanningSystem.cpp
 	FollowsMouseSystem.cpp
+	GuyBrainSystem.cpp
 )

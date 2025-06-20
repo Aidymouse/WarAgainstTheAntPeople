@@ -2,8 +2,8 @@
 #include "ecs/ComponentArray.hpp"
 #include <SDL3/SDL.h>
 #include <cmath>
+#include <components/Components.hpp>
 #include <ecs/ECS.hpp>
-#include <engine/Components.hpp>
 #include <iostream>
 #include <systems/DrawSystem.h>
 #include <util/DrawFns.h>
