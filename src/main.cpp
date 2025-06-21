@@ -4,6 +4,7 @@
 
 #include <ProjectConfig.h>
 #include <engine/Engine.h>
+#include <util/Random.h>
 
 #include <util/Helper.h>
 
