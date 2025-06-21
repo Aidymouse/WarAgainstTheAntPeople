@@ -45,7 +45,7 @@ MainState::MainState() {
   main_ecs.add_component_to_entity<SortedVisible>(
       hand,
       {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
-  main_ecs.add_component_to_entity<FollowsMouse>(hand, {});
+  main_ecs.add_component_to_entity<FollowsMouse>(hand, {-1});
 
   // Guys
   // The benchmark is 3000
@@ -168,6 +168,10 @@ void MainState::load_ecs() {
   main_ecs.register_component<FollowsMouse>(COMP_SIG::FOLLOWS_MOUSE);
   main_ecs.register_component<Collider>(COMP_SIG::COLLIDER);
 
+  main_ecs.register_component<Carrier>(COMP_SIG::CARRIER);
+  main_ecs.register_component<Carryable>(COMP_SIG::CARRYABLE);
+
+  // Guy components
   main_ecs.register_component<GuyBrain>(COMP_SIG::GUY_BRAIN);
   main_ecs.register_component<g_Wandering>(COMP_SIG::GUY_WANDERING);
 }
