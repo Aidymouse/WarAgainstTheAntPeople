@@ -15,6 +15,7 @@
 
 #include <SDL3/SDL.h>
 #include <components/Components.hpp>
+#include <components/GuyComponents.hpp>
 #include <data/TextureStore.hpp>
 #include <systems/DrawSystem.h>
 #include <systems/FollowsMouseSystem.h>
@@ -148,8 +149,9 @@ void MainState::load_ecs() {
       main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
-  COMP_SIG guy_brain_sig[1] = {COMP_SIG::GUY_BRAIN};
-  sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 1);
+  COMP_SIG guy_brain_sig[3] = {COMP_SIG::GUY_BRAIN, COMP_SIG::POSITION,
+                               COMP_SIG::VISIBLE};
+  sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 3);
 
   /** Set up components */
   main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);
@@ -167,4 +169,5 @@ void MainState::load_ecs() {
   main_ecs.register_component<Collider>(COMP_SIG::COLLIDER);
 
   main_ecs.register_component<GuyBrain>(COMP_SIG::GUY_BRAIN);
+  main_ecs.register_component<g_Wandering>(COMP_SIG::GUY_WANDERING);
 }
