@@ -2,8 +2,8 @@
 // sure is that we have a guy present. This is, like, probably against ECS ethos
 // or some shit.
 //
-#include "ai/GuyAI.h"
 #include "components/Components.hpp"
+#include "state_machines/GuySM.h"
 #include "util/Random.h"
 #include <ProjectConfig.h>
 #include <components/GuyComponents.hpp>

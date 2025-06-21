@@ -1,4 +1,5 @@
 
 target_sources(EvilPikmin PRIVATE
-	GuyAI.cpp
+	GuySM.cpp
+	HandSM.cpp
 )

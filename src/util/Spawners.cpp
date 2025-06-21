@@ -1,13 +1,12 @@
 #include <data/TextureStore.hpp>
 
-#include <ai/GuyAI.h>
+#include <state_machines/GuySM.h>
 #include <util/Spawners.h>
 
 #include <components/GuyComponents.hpp>
 #include <ecs/ECS.hpp>
 #include <engine/CollisionGrid.h>
 
-#include "ai/GuyAI.h"
 #include "anim/GuyAnim.hpp"
 #include "anim/NotMovingAnim.hpp"
 
@@ -31,7 +30,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   if (rand() % 100 < 10) {
     ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SCRAP});
   } else {
-    GuyAI::enter_wandering(g, ecs);
+    GuySM::enter_wandering(g, ecs);
   }
 
   grid->update_entity(g, p, c);

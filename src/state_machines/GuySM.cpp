@@ -1,9 +1,9 @@
 #include "components/Components.hpp"
-#include <ai/GuyAI.h>
+#include <state_machines/GuySM.h>
 
 #include <components/GuyComponents.hpp>
 
-void GuyAI::enter_wandering(Entity guy_id, ECS *main_ecs) {
+void GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 
   int angle = rand() % 360;
   int speed = 20 + rand() % 30; // 20 - 50
