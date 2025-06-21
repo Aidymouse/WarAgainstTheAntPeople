@@ -5,7 +5,7 @@
 
 void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
-  const bool debug = true;
+  const bool debug = false;
 
   std::shared_ptr comp_colliders = ecs->get_component_array<Collider>();
 
@@ -15,6 +15,8 @@ void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       continue; // TODO optimization with passive/active colliders here
     std::set<Entity> collides_with = grid->get_collisions(c, ecs);
 
+    // TODO: every so often I splat someone way further away from me than I
+    // should be...?
     for (auto e = collides_with.begin(); e != collides_with.end(); e++) {
       Collided *cd;
       Entity collided_ent = (Entity)*e;
@@ -31,8 +33,8 @@ void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       // logic later
       if (cd->num_collisions >= MAX_COLLISIONS_PER_ENTITY) {
         if (debug) {
-          std::cout << "Entity (" << collided_ent
-                    << ") already has 4 collisions" << std::endl;
+          std::cout << "Entity (" << collided_ent << ") already has "
+                    << MAX_COLLISIONS_PER_ENTITY << " collisions" << std::endl;
         }
       } else {
         if (debug) {
@@ -48,4 +50,14 @@ void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   }
 }
 
-void CollisionSystem::strip_collided(float dt, ECS *ecs) {}
+void CollisionSystem::strip_collided(float dt, ECS *ecs) {
+
+  for (auto e = registered_entities.begin(); e != registered_entities.end();
+       e++) {
+    Entity ent = (Entity)*e;
+    if (ecs->entity_has_component<Collided>(ent)) {
+      Collided *c = ecs->get_component_for_entity<Collided>(ent);
+      c->num_collisions = 0;
+    }
+  }
+}

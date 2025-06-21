@@ -1,8 +1,19 @@
 #pragma once
 
 #include <ecs/Entity.hpp>
+#include <util/Vec2.hpp>
 
-enum CollisionType { SQUISH, EXPLOSION, FOUND_SOUGHT, NO_OP };
+enum CollisionType {
+  SQUISH,
+  EXPLOSION,
+
+  // Guy specific
+  FOUND_SOUGHT,
+  GO_SOMEWHERE_ELSE, // Used to make guys walk somewhere else when bumping into
+                     // something
+
+  NO_OP
+};
 
 struct c_Squish {
   // CollisionType type = CollisionType::SQUISH;
@@ -19,9 +30,16 @@ struct c_Found_Sought {
   Entity sought_id;
 };
 
+struct c_Go_Somewhere_Else {
+  // CollisionType type = CollisionType::FOUND_SOUGHT;
+  int pos_away_from_x;
+  int pos_away_from_y;
+};
+
 struct c_no_op {};
 
 union CollisionData {
+  c_Go_Somewhere_Else go_somewhere_else;
   c_Squish squish;
   c_Explosion explosion;
   c_Found_Sought found_sought;

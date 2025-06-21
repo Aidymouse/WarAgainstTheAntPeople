@@ -7,7 +7,7 @@
 
 TextureStore &guy_sm_texture_store = TextureStore::getInstance();
 
-void GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
+g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 
   int angle = rand() % 360;
   int speed = 20 + rand() % 30; // 20 - 50
@@ -21,6 +21,8 @@ void GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 
   GuyBrain *g_Brain = main_ecs->get_component_for_entity<GuyBrain>(guy_id);
   g_Brain->cur_state = GuyState::WANDERING;
+
+  return main_ecs->get_component_for_entity<g_Wandering>(guy_id);
 }
 
 void GuySM::die(Entity guy_id, ECS *ecs) {

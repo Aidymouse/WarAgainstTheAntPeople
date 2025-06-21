@@ -25,6 +25,7 @@ class MainState : public GameState {
   std::shared_ptr<GuyBrainSystem> sys_guy_brain;
   std::shared_ptr<CollisionSystem> sys_collision;
 
+  Entity main_base = -1;
   Entity tool_hand = -1;
 
   float timer_max_scrap_spawns = 5;

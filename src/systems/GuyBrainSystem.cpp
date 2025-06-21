@@ -32,23 +32,44 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs) {
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
 
-    Entity ent = (Entity)*e;
+    Entity guy_id = (Entity)*e;
 
-    if (!ecs->entity_has_component<Collided>(ent))
+    if (!ecs->entity_has_component<Collided>(guy_id))
       continue;
 
     if (guy_brain_debug) {
-      std::cout << "Guy (" << ent << ") has collisions" << std::endl;
+      std::cout << "Guy (" << guy_id << ") has collisions" << std::endl;
     }
 
-    Collided *co = ecs->get_component_for_entity<Collided>(ent);
+    Collided *co = ecs->get_component_for_entity<Collided>(guy_id);
 
     for (int c = 0; c < co->num_collisions; c++) {
       Collision col = co->collisions[c];
       // Switch through collisions
       switch (col.type) {
       case CollisionType::SQUISH: {
-        GuySM::die(ent, ecs);
+        GuySM::die(guy_id, ecs);
+        break;
+      }
+
+      case CollisionType::GO_SOMEWHERE_ELSE: {
+        if (co->num_collisions > 1)
+          break;
+        g_Wandering *w = GuySM::enter_wandering(guy_id, ecs);
+        Position *p = ecs->get_component_for_entity<Position>(guy_id);
+
+        Vec2 pos_away_from = Vec2(col.data.go_somewhere_else.pos_away_from_x,
+                                  col.data.go_somewhere_else.pos_away_from_y);
+
+        Vec2 away_from = Vec2(p->x, p->y) - pos_away_from;
+        float angle_away = away_from.get_angle_facing();
+
+        std::cout << "Anggle away " << angle_away << std::endl;
+
+        int new_angle = Random::rand_range(angle_away - 60, angle_away + 60);
+        Vec2 dir = Vec2(1, 0);
+        dir.face_angle(new_angle);
+        w->dir = dir;
       }
       default: {
         break;

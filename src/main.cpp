@@ -14,6 +14,9 @@ int main() {
 
   std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
 
+  Vec2 up(0, -1);
+  std::cout << "Up: " << up << std::endl;
+
   Engine game;
   game.run();
 }

@@ -21,6 +21,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
   float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y, 0};
+  // Position p = {WINDOW_WIDTH / 2, 400, 0};
   Collision w = {CollisionType::NO_OP, {}};
   Collider c = {CollisionShapeType::CIRCLE, {x, y, 6}, w};
   Entity g = ecs->add_entity();
@@ -33,7 +34,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   if (rand() % 100 < 10) {
     ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SV_SCRAP_METAL});
   } else {
-    GuySM::enter_wandering(g, ecs);
+    g_Wandering *w = GuySM::enter_wandering(g, ecs);
   }
 
   grid->update_entity(g, p, c);

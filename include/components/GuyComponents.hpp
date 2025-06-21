@@ -1,3 +1,4 @@
+#pragma once
 // Components related to guys specifically
 #include <util/Vec2.hpp>
 

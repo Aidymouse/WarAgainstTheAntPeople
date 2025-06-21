@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
+
+const float ε = 0.0001;
 
 class Vec2 {
 
@@ -19,11 +22,27 @@ public:
   // Assume 0 is upwards (0, -1)
   void face_angle(float degrees) {
     float mag = this->get_magnitude();
-    float dir_x = sin(degrees);
-    float dir_y = -cos(degrees);
+    float dir_x = sin(degrees * 0.01745329);
+    float dir_y = -cos(degrees * 0.01745329);
     x = dir_x * mag;
     y = dir_y * mag;
+
+    if (std::abs(x) < ε)
+      x = 0;
+    if (std::abs(y) < ε)
+      y = 0;
   };
+
+  float get_angle_facing() { return tanh(y / x) / 0.01745329; }
+
+  operator std::string() const {
+    return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";
+  }
+
+  friend std::ostream &operator<<(std::ostream &, Vec2 &a) {
+    std::cout << "(" + std::to_string(a.x) + ", " + std::to_string(a.y) + ")";
+    return std::cout;
+  }
 
   void operator=(Vec2 a) {
     x = a.x;
@@ -84,4 +103,7 @@ public:
   }
 
   // TODO: dot product or smn. DONT CARE!
+
+  /** Helper */
+  void cout() { std::cout << x << ", " << y; }
 };

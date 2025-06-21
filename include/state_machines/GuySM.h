@@ -1,11 +1,12 @@
 #pragma once
 
+#include <components/GuyComponents.hpp>
 #include <ecs/ECS.hpp>
 
 namespace GuySM {
 //
 // Helpers to enter / exit states by manipulating components
-void enter_wandering(Entity guy_id, ECS *main_ecs);
+g_Wandering *enter_wandering(Entity guy_id, ECS *main_ecs);
 void enter_seeking(Entity guy_id, ECS *main_ecs);
 void die(Entity guy_id, ECS *main_ecs);
 } // namespace GuySM

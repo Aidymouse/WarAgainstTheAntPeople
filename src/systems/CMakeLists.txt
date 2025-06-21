@@ -7,4 +7,5 @@ target_sources(EvilPikmin PRIVATE
 	FollowsMouseSystem.cpp
 	GuyBrainSystem.cpp
 	CollisionSystem.cpp
+	GeneralCollisionHandlerSystem.cpp
 )

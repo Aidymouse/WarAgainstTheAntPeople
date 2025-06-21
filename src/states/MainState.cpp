@@ -40,6 +40,20 @@ MainState::MainState() {
 
   load_ecs();
 
+  // Main Base
+  main_base = main_ecs.add_entity();
+  float base_x = WINDOW_WIDTH / 2.f;
+  float base_y = WINDOW_HEIGHT / 2.f;
+  main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
+  CollisionShape base_circle;
+  base_circle.circle = {base_x, base_y, 50};
+  Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE,
+                              {(int)base_x, (int)base_y}};
+  // base_collision.type = CollisionType::GO_SOMEWHERE_ELSE;
+  // base_collision.data.go_somewhere_else = {Vec2(base_x, base_y)};
+  Collider base_c = {CollisionShapeType::CIRCLE, base_circle, base_collision};
+  main_ecs.add_component_to_entity<Collider>(main_base, base_c);
+
   //   Hand
   tool_hand = main_ecs.add_entity();
   main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 5});
