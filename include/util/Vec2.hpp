@@ -16,6 +16,15 @@ public:
 
   Vec2() { Vec2(0, 0); };
 
+  // Assume 0 is upwards (0, -1)
+  void face_angle(float degrees) {
+    float mag = this->get_magnitude();
+    float dir_x = sin(degrees);
+    float dir_y = -cos(degrees);
+    x = dir_x * mag;
+    y = dir_y * mag;
+  };
+
   void operator=(Vec2 a) {
     x = a.x;
     y = a.y;
