@@ -24,3 +24,14 @@ void Helper::cout_cell_ids(std::set<collision_cell_id> *s) {
   }
   std::cout << std::endl;
 }
+
+void Helper::cout_arr(int *a, int len) {
+  std::cout << "[";
+  for (int i = 0; i < len; i++) {
+    std::cout << a[i];
+    if (i != len - 1) {
+      std::cout << ", ";
+    }
+  }
+  std::cout << "]" << std::endl;
+}
