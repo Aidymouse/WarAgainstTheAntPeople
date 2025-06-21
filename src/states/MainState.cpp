@@ -1,5 +1,6 @@
 #include "SDL3/SDL_events.h"
 #include "anim/ToolAnim.hpp"
+#include "components/Collisions.hpp"
 #include "ecs/Entity.hpp"
 #include "engine/Collisions.h"
 #include "systems/GuyBrainSystem.h"
@@ -62,6 +63,8 @@ MainState::~MainState() {}
 
 void MainState::handle_mousemove() {}
 
+void register_collision(Entity ent, ECS *ecs) {}
+
 void MainState::handle_click(
     SDL_Event
         *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
@@ -69,8 +72,14 @@ void MainState::handle_click(
   if (mainstate_debug)
     std::cout << "Clicked: " << btn << std::endl;
 
-  Collider mouse = {
-      CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, 0};
+  Collision mallet_hit = {
+      CollisionType::SQUISH,
+      {10},
+  };
+
+  Collider mouse = {CollisionShapeType::CIRCLE,
+                    {event->button.x, event->button.y, 16},
+                    mallet_hit};
   // std::set<int> ids = main_grid.get_overlapping_cells(mouse);
   // Helper::cout_cell_ids(&ids);
 
@@ -166,7 +175,10 @@ void MainState::load_ecs() {
   main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
   main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
   main_ecs.register_component<FollowsMouse>(COMP_SIG::FOLLOWS_MOUSE);
+
+  // Collisions
   main_ecs.register_component<Collider>(COMP_SIG::COLLIDER);
+  main_ecs.register_component<Collided>(COMP_SIG::COLLIDED);
 
   main_ecs.register_component<Carrier>(COMP_SIG::CARRIER);
   main_ecs.register_component<Carryable>(COMP_SIG::CARRYABLE);

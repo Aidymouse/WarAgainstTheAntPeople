@@ -29,7 +29,7 @@ void ScanningSystem::update(float dt, ECS *ecs) {
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
 
-    float shortest_dist = 1000000000;
+    float shortest_dist = INFINITY;
     Vec2 closest_pos;
     Position *pos = component_manager->get_component_data<Position>(ent);
 

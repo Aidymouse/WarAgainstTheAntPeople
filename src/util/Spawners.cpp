@@ -9,6 +9,7 @@
 
 #include "anim/GuyAnim.hpp"
 #include "anim/NotMovingAnim.hpp"
+#include "util/Random.h"
 
 TextureStore &spawners_texture_store = TextureStore::getInstance();
 
@@ -16,8 +17,8 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
   Visible v = {
       spawners_texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-7, -11}};
-  float x = (float)(rand() % 800);
-  float y = (float)(rand() % 600);
+  float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
+  float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y, 0};
   Collider c = {CollisionShapeType::CIRCLE, {x, y, 6}, 0};
   Entity g = ecs->add_entity();
@@ -28,7 +29,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   ecs->add_component_to_entity<GuyBrain>(g, {});
 
   if (rand() % 100 < 10) {
-    ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SCRAP});
+    ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SV_SCRAP_METAL});
   } else {
     GuySM::enter_wandering(g, ecs);
   }
@@ -40,11 +41,13 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
 void Spawners::add_scrap(ECS *ecs) {
   Visible v = {spawners_texture_store.get("scrap_sheet"), NotMovingAnim.SCRAP};
-  float x = (float)(rand() % 800);
-  float y = (float)(rand() % 600);
+  float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
+  float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y};
+  Carryable carry_data = {0, 0, 10}; // TODO should come from somewhere dynamic
   Entity s = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
-  ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SCRAP});
+  ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SV_SCRAP_METAL});
+  ecs->add_component_to_entity<Carryable>(s, carry_data);
 }

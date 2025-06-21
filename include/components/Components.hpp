@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include <anim/Anim.hpp>
 #include <bitset>
+#include <components/Collisions.hpp>
 #include <ecs/Entity.hpp>
 #include <engine/Collisions.h>
 #include <memory>
@@ -28,6 +29,7 @@ enum COMP_SIG { // Component Signature Indexes
   GUY_WANDERING = 11,
   CARRIER = 12,
   CARRYABLE = 13,
+  COLLIDED = 14,
 
   // COL_MALLET = 7,
   //
@@ -79,12 +81,14 @@ struct Tool {
 /*};*/
 
 enum SCAN_VALUES {
-  SCRAP = 0,
-  CARRIED_SCRAP = 1,
+  SV_SCRAP_METAL = 0,
+  SV_BUILD_SITE = 1,
+  // CARRIED_SCRAP = 1,
 };
 
 struct ScanningFor {
   int sought_scan_value;
+  float max_range;
 };
 
 struct Scannable {
@@ -96,15 +100,18 @@ struct Persuing {
   float desiredY;
 };
 
-struct Collision {
-  Entity collided_entity;
+// struct Collision {
+//   Entity collided_entity;
+// };
+
+struct Collided {
+  Collision collisions[4]; // You can collide with up to four things on a frame
 };
 
 struct Collider {
   CollisionShapeType type;
   CollisionShape shape;
-  std::bitset<4> collided_with; // Index of object collided with
-                                // 1: Mallet
+  Collision collision_data;
 };
 
 // Can be smashed by big weights (like hammer)
@@ -132,7 +139,7 @@ struct SortedVisible {
 
 struct Clickable {};
 
-enum RESOURCE_TYPES { SCRAP_METAL };
+enum RESOURCE_TYPES { RT_SCRAP_METAL };
 
 struct Collectable_Resource {
   RESOURCE_TYPES type;
@@ -146,12 +153,19 @@ struct Buildable {
 
 struct Carrier {
   std::optional<Entity> carried_entity;
+  int contributing_effort;
 };
 
 struct Carryable {
   int carriers_count; // How many guys carrying currently
   int carrier_effort; // total effort of carriers - higher number = move faster
   int carrier_limit;
+};
+
+struct Hivemind {};
+
+struct PartOfHivemind {
+  Entity hivemind_id;
 };
 
 // Guy States

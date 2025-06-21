@@ -10,24 +10,23 @@
 #include <ecs/ECS.hpp>
 #include <systems/GuyBrainSystem.h>
 
-void gb_wander(float dt, ECS *ecs);
+void gs_wander(float dt, ECS *ecs);
 
 void GuyBrainSystem::update(float dt, ECS *ecs) {
-  /** Decision Making */
-  for (auto e = registered_entities.begin(); e != registered_entities.end();
-       e++) {
+  /** Decision Making - aka switch between states */
+  // for (auto e = registered_entities.begin(); e != registered_entities.end();
+  //      e++) {
+  //
+  //   Entity ent = (Entity)*e;
+  // }
 
-    Entity ent = (Entity)*e;
-    // Basically just like... subsystems ??
-  }
-
-  gb_wander(dt, ecs);
+  gs_wander(dt, ecs);
 }
 
 /** The guy wanders around aimlessly until they get in range of something cooler
  * Thusly, they should probably be looking around as well...
  */
-void gb_wander(float dt, ECS *ecs) {
+void gs_wander(float dt, ECS *ecs) {
   /** Wandering */
   std::shared_ptr<ComponentArray<g_Wandering>> comp_wandering =
       ecs->get_component_array<g_Wandering>();
@@ -56,24 +55,24 @@ void gb_wander(float dt, ECS *ecs) {
     }
 
     // Make guy decide to turn around if they're about to walk off the edge
+    int angle_min = 0;
+    int angle_max = 0;
     if (p->y < 5 && wander_data->dir.y < 0) {
-      int angle = Random::rand_range(90, 270);
-      Vec2 dir = Vec2(0, -1);
-      dir.face_angle(angle);
-      wander_data->dir = dir;
+      angle_min = 90;
+      angle_max = 270;
     } else if (p->y > WINDOW_HEIGHT - 5 && wander_data->dir.y > 0) {
-      int angle = Random::rand_range(-90, 90);
-      Vec2 dir = Vec2(0, -1);
-      dir.face_angle(angle);
-      wander_data->dir = dir;
+      angle_min = -90;
+      angle_max = 90;
     }
     if (p->x < 5 && wander_data->dir.x < 0) {
-      int angle = Random::rand_range(0, 180);
-      Vec2 dir = Vec2(0, -1);
-      dir.face_angle(angle);
-      wander_data->dir = dir;
+      angle_min = 0;
+      angle_max = 180;
     } else if (p->x > WINDOW_WIDTH - 5 && wander_data->dir.x > 0) {
-      int angle = Random::rand_range(180, 360);
+      angle_min = 180;
+      angle_max = 360;
+    }
+    if (angle_min + angle_max != 0) {
+      int angle = Random::rand_range(angle_min, angle_max);
       Vec2 dir = Vec2(0, -1);
       dir.face_angle(angle);
       wander_data->dir = dir;
