@@ -4,9 +4,13 @@
 //
 #include "ai/GuyAI.h"
 #include "components/Components.hpp"
+#include "util/Random.h"
+#include <ProjectConfig.h>
 #include <components/GuyComponents.hpp>
 #include <ecs/ECS.hpp>
 #include <systems/GuyBrainSystem.h>
+
+void gb_wander(float dt, ECS *ecs);
 
 void GuyBrainSystem::update(float dt, ECS *ecs) {
   /** Decision Making */
@@ -17,6 +21,13 @@ void GuyBrainSystem::update(float dt, ECS *ecs) {
     // Basically just like... subsystems ??
   }
 
+  gb_wander(dt, ecs);
+}
+
+/** The guy wanders around aimlessly until they get in range of something cooler
+ * Thusly, they should probably be looking around as well...
+ */
+void gb_wander(float dt, ECS *ecs) {
   /** Wandering */
   std::shared_ptr<ComponentArray<g_Wandering>> comp_wandering =
       ecs->get_component_array<g_Wandering>();
@@ -26,21 +37,46 @@ void GuyBrainSystem::update(float dt, ECS *ecs) {
 
     g_Wandering *wander_data = comp_wandering->get_editable_data(e);
     Transform *t = ecs->get_component_for_entity<Transform>(e);
+    Position *p = ecs->get_component_for_entity<Position>(e);
 
     wander_data->timer -= dt;
     t->vel_x = wander_data->dir.x * wander_data->speed;
     t->vel_y = wander_data->dir.y * wander_data->speed;
 
     if (wander_data->timer < 0) {
-      int angle = rand() % 360;
-      int speed = 20 + rand() % 30; // 20 - 50
+      int angle = Random::rand_range(0, 360);
+      int speed = Random::rand_range(20, 50);
       Vec2 dir = Vec2(1, 0);
       dir.face_angle(angle);
-      float timer = (2 + rand() % 10) / 2.f;
+      float timer = Random::rand_range(2, 6) / 2.f;
 
       wander_data->dir = dir;
       wander_data->speed = speed;
       wander_data->timer = timer;
+    }
+
+    // Make guy decide to turn around if they're about to walk off the edge
+    if (p->y < 5 && wander_data->dir.y < 0) {
+      int angle = Random::rand_range(90, 270);
+      Vec2 dir = Vec2(0, -1);
+      dir.face_angle(angle);
+      wander_data->dir = dir;
+    } else if (p->y > WINDOW_HEIGHT - 5 && wander_data->dir.y > 0) {
+      int angle = Random::rand_range(-90, 90);
+      Vec2 dir = Vec2(0, -1);
+      dir.face_angle(angle);
+      wander_data->dir = dir;
+    }
+    if (p->x < 5 && wander_data->dir.x < 0) {
+      int angle = Random::rand_range(0, 180);
+      Vec2 dir = Vec2(0, -1);
+      dir.face_angle(angle);
+      wander_data->dir = dir;
+    } else if (p->x > WINDOW_WIDTH - 5 && wander_data->dir.x > 0) {
+      int angle = Random::rand_range(180, 360);
+      Vec2 dir = Vec2(0, -1);
+      dir.face_angle(angle);
+      wander_data->dir = dir;
     }
   }
 }
