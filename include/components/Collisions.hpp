@@ -2,7 +2,7 @@
 
 #include <ecs/Entity.hpp>
 
-enum CollisionType { SQUISH, EXPLOSION, FOUND_SOUGHT };
+enum CollisionType { SQUISH, EXPLOSION, FOUND_SOUGHT, NO_OP };
 
 struct c_Squish {
   // CollisionType type = CollisionType::SQUISH;
@@ -19,10 +19,14 @@ struct c_Found_Sought {
   Entity sought_id;
 };
 
+struct c_no_op {};
+
 union CollisionData {
   c_Squish squish;
   c_Explosion explosion;
   c_Found_Sought found_sought;
+
+  c_no_op no_op;
 };
 
 struct Collision {

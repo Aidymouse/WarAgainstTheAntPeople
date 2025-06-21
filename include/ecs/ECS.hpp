@@ -45,6 +45,11 @@ public:
     free_ids.push(id);
   };
 
+  template <typename T> bool entity_has_component(Entity ent) {
+    return get_signature_for_entity(
+               ent)[component_manager->get_signature_index_for_type<T>()] == 1;
+  }
+
   Signature get_signature_for_entity(Entity id) { return signatures[id]; }
 
   // Components

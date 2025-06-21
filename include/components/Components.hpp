@@ -106,6 +106,7 @@ struct Persuing {
 
 struct Collided {
   Collision collisions[4]; // You can collide with up to four things on a frame
+  int num_collisions;
 };
 
 struct Collider {

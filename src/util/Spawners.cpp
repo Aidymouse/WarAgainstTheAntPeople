@@ -9,6 +9,7 @@
 
 #include "anim/GuyAnim.hpp"
 #include "anim/NotMovingAnim.hpp"
+#include "components/Collisions.hpp"
 #include "util/Random.h"
 
 TextureStore &spawners_texture_store = TextureStore::getInstance();
@@ -20,7 +21,8 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
   float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y, 0};
-  Collider c = {CollisionShapeType::CIRCLE, {x, y, 6}, 0};
+  Collision w = {CollisionType::NO_OP, {}};
+  Collider c = {CollisionShapeType::CIRCLE, {x, y, 6}, w};
   Entity g = ecs->add_entity();
   ecs->add_component_to_entity<Visible>(g, v);
   ecs->add_component_to_entity<Position>(g, p);

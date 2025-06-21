@@ -2,6 +2,7 @@
 // sure is that we have a guy present. This is, like, probably against ECS ethos
 // or some shit.
 //
+#include "components/Collisions.hpp"
 #include "components/Components.hpp"
 #include "state_machines/GuySM.h"
 #include "util/Random.h"
@@ -11,6 +12,9 @@
 #include <systems/GuyBrainSystem.h>
 
 void gs_wander(float dt, ECS *ecs);
+void g_handle_collisions(float dt, ECS *ecs);
+
+const bool guy_brain_debug = false;
 
 void GuyBrainSystem::update(float dt, ECS *ecs) {
   /** Decision Making - aka switch between states */
@@ -20,7 +24,38 @@ void GuyBrainSystem::update(float dt, ECS *ecs) {
   //   Entity ent = (Entity)*e;
   // }
 
+  g_handle_collisions(dt, ecs);
   gs_wander(dt, ecs);
+}
+
+void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs) {
+  for (auto e = registered_entities.begin(); e != registered_entities.end();
+       e++) {
+
+    Entity ent = (Entity)*e;
+
+    if (!ecs->entity_has_component<Collided>(ent))
+      continue;
+
+    if (guy_brain_debug) {
+      std::cout << "Guy (" << ent << ") has collisions" << std::endl;
+    }
+
+    Collided *co = ecs->get_component_for_entity<Collided>(ent);
+
+    for (int c = 0; c < co->num_collisions; c++) {
+      Collision col = co->collisions[c];
+      // Switch through collisions
+      switch (col.type) {
+      case CollisionType::SQUISH: {
+        GuySM::die(ent, ecs);
+      }
+      default: {
+        break;
+      }
+      }
+    }
+  }
 }
 
 /** The guy wanders around aimlessly until they get in range of something cooler

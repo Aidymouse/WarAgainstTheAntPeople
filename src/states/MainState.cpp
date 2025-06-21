@@ -41,12 +41,12 @@ MainState::MainState() {
   load_ecs();
 
   //   Hand
-  Entity hand = main_ecs.add_entity();
-  main_ecs.add_component_to_entity<Position>(hand, {0, 0, 5});
+  tool_hand = main_ecs.add_entity();
+  main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 5});
   main_ecs.add_component_to_entity<SortedVisible>(
-      hand,
+      tool_hand,
       {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
-  main_ecs.add_component_to_entity<FollowsMouse>(hand, {-1});
+  main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 
   // Guys
   // The benchmark is 3000
@@ -84,29 +84,35 @@ void MainState::handle_click(
   // Helper::cout_cell_ids(&ids);
 
   std::set<Entity> collided_ids = main_grid.get_collisions(mouse, &main_ecs);
+  //
+  main_ecs.add_component_to_entity<Collider>(tool_hand, mouse);
   // Helper::cout_set(&collided_ids);
 
-  for (auto e = collided_ids.begin(); e != collided_ids.end(); e++) {
-    Entity ent = (Entity)*e;
-
-    Visible *vis = main_ecs.get_component_for_entity<Visible>(ent);
-
-    vis->frame = GuyAnim.SQUISH0;
-    vis->anim_timer = 0;
-    vis->texture = texture_store.get("squish_sheet");
-
-    Position *pos = main_ecs.get_component_for_entity<Position>(ent);
-    pos->z = -1;
-    // main_ecs.remove_component_from_entity<Transform>(ent);
-    main_ecs.remove_component_from_entity<ScanningFor>(ent);
-    main_ecs.remove_component_from_entity<Transform>(ent);
-  }
+  // for (auto e = collided_ids.begin(); e != collided_ids.end(); e++) {
+  //   Entity ent = (Entity)*e;
+  //
+  //   Visible *vis = main_ecs.get_component_for_entity<Visible>(ent);
+  //
+  //   vis->frame = GuyAnim.SQUISH0;
+  //   vis->anim_timer = 0;
+  //   vis->texture = texture_store.get("squish_sheet");
+  //
+  //   Position *pos = main_ecs.get_component_for_entity<Position>(ent);
+  //   pos->z = -1;
+  //   // main_ecs.remove_component_from_entity<Transform>(ent);
+  //   main_ecs.remove_component_from_entity<ScanningFor>(ent);
+  //   main_ecs.remove_component_from_entity<Transform>(ent);
+  // }
 }
 
 // void MainState::handle_mousemove() {}
 
 void MainState::update(float dt) {
   // std::cout << dt << std::endl;
+
+  sys_collision->update(dt, &main_ecs, &main_grid);
+
+  main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
   sys_guy_brain->update(dt, &main_ecs);
 
@@ -117,14 +123,15 @@ void MainState::update(float dt) {
   sys_draw->update(dt, &main_ecs);
   sys_sorted_draw->update(dt, &main_ecs);
 
-  // Uint32 m = SDL_GetMouseState(nullptr, nullptr);
+  sys_collision->strip_collided(dt, &main_ecs);
+  //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
   //
-  // if (m & SDL_BUTTON_MASK(3)) {
-  //   std::cout << main_ecs.num_entities << std::endl;
-  //   add_guy(&main_ecs, &main_grid);
-  // }
-  // std::cout << "Grid After Update" << std::endl;
-  // main_grid.debug_display();
+  //  if (m & SDL_BUTTON_MASK(3)) {
+  //    std::cout << main_ecs.num_entities << std::endl;
+  //    add_guy(&main_ecs, &main_grid);
+  //  }
+  //  std::cout << "Grid After Update" << std::endl;
+  //  main_grid.debug_display();
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
@@ -161,6 +168,9 @@ void MainState::load_ecs() {
   COMP_SIG guy_brain_sig[3] = {COMP_SIG::GUY_BRAIN, COMP_SIG::POSITION,
                                COMP_SIG::VISIBLE};
   sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 3);
+
+  COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
+  sys_collision = main_ecs.register_system<CollisionSystem>(collision_sig, 1);
 
   /** Set up components */
   main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);

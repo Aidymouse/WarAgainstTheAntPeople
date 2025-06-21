@@ -11,6 +11,7 @@
 #include <engine/CollisionGrid.h>
 #include <engine/GameState.h>
 #include <memory>
+#include <systems/CollisionSystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/SortedDrawSystem.h>
 
@@ -22,6 +23,9 @@ class MainState : public GameState {
   std::shared_ptr<ScanningSystem> sys_scanning;
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
   std::shared_ptr<GuyBrainSystem> sys_guy_brain;
+  std::shared_ptr<CollisionSystem> sys_collision;
+
+  Entity tool_hand = -1;
 
   float timer_max_scrap_spawns = 5;
   float timer_scrap_spawns = 5;
