@@ -15,8 +15,14 @@ void FollowsMouseSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
     Entity ent = (Entity)*e;
     Position *pos = component_manager->get_component_data<Position>(ent);
 
-    pos->x = mX;
-    pos->y = mY;
+    FollowsMouse *f = component_manager->get_component_data<FollowsMouse>(ent);
+
+    if (f->speed == -1) {
+      pos->x = mX;
+      pos->y = mY;
+    } else {
+      // TODO
+    }
 
     if (ecs->get_signature_for_entity(ent)[COMP_SIG::COLLIDER] == 1) {
       Collider *c = component_manager->get_component_data<Collider>(ent);
@@ -26,6 +32,5 @@ void FollowsMouseSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
       grid->update_entity(ent, *pos, *c);
     }
-
   }
 };

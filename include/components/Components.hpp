@@ -26,6 +26,8 @@ enum COMP_SIG { // Component Signature Indexes
   GUY_BRAIN = 10,
 
   GUY_WANDERING = 11,
+  CARRIER = 12,
+  CARRYABLE = 13,
 
   // COL_MALLET = 7,
   //
@@ -33,7 +35,10 @@ enum COMP_SIG { // Component Signature Indexes
   // PERSUING = 9,
 };
 
-struct FollowsMouse {};
+struct FollowsMouse {
+  short speed; // Speed at which item pursues mouse. If -1 it will snap to the
+               // mouse, no travel time
+};
 
 struct Reserved {
   Entity ent;
@@ -75,6 +80,7 @@ struct Tool {
 
 enum SCAN_VALUES {
   SCRAP = 0,
+  CARRIED_SCRAP = 1,
 };
 
 struct ScanningFor {
@@ -143,7 +149,9 @@ struct Carrier {
 };
 
 struct Carryable {
-  std::optional<Entity> carried_by;
+  int carriers_count; // How many guys carrying currently
+  int carrier_effort; // total effort of carriers - higher number = move faster
+  int carrier_limit;
 };
 
 // Guy States
