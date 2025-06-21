@@ -90,11 +90,16 @@ public:
     return component_manager->get_component_data<T>(id);
   };
 
+  template <typename T>
+  std::shared_ptr<ComponentArray<T>> get_component_array() {
+    return component_manager->get_component_array<T>();
+  }
+
   // System
   template <typename T>
   std::shared_ptr<T> register_system(Signature signature) {
     return system_manager->add_system<T>(signature);
-  }
+  };
 
   template <typename T>
   std::shared_ptr<T> register_system(COMP_SIG *sigs, short num_sigs) {
@@ -103,5 +108,5 @@ public:
       sig[sigs[i]] = 1;
     }
     return register_system<T>(sig);
-  }
+  };
 };
