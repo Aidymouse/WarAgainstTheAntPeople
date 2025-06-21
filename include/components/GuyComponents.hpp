@@ -2,6 +2,7 @@
 #include <util/Vec2.hpp>
 
 struct g_Wandering {
-  int timer = 0;
+  float timer = 0;
+  int speed = 10;
   Vec2 dir;
 };
