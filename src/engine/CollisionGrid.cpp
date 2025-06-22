@@ -7,14 +7,14 @@
 #include <iostream>
 #include <util/Vec2.hpp>
 
-collision_cell_id get_cell_id(int row, int col) { return (row << 4) + col; }
-Vec2 get_cell_row_col(collision_cell_id id) {
+ColCellId get_cell_id(int row, int col) { return (row << 4) + col; }
+Vec2 get_cell_row_col(ColCellId id) {
   int row = id >> 4;
   int col = id - (row << 4);
   return Vec2(row, col);
 }
 
-void debug_cout_cell_id(collision_cell_id id) {
+void debug_cout_cell_id(ColCellId id) {
   Vec2 row_col = get_cell_row_col(id);
   std::cout << "Cell " << id << " (" << row_col.x << ", " << row_col.y << ") ";
 }
@@ -25,7 +25,7 @@ CollisionGrid::CollisionGrid() {
 
   for (int col = 0; col < cols; col++) {
     for (int row = 0; row < rows; row++) {
-      collision_cell_id id = (row << 4) + col;
+      ColCellId id = (row << 4) + col;
 
       registered_cells.insert(id);
     }
@@ -35,17 +35,17 @@ CollisionGrid::CollisionGrid() {
 // FOR NOW! Remove all cells then reapply all
 void CollisionGrid::update_entity(Entity ent, Position pos, Collider col) {
 
-  collision_cell_id prev = -1;
+  // collision_cell_id prev = -1;
 
-  collision_cell inhabited = inhabited_cells[ent];
+  collision_cell inhabited_cell = inhabited_cells[ent];
 
-  if (inhabited_cells[ent].size() > 0) {
-    prev = (int)*inhabited_cells[ent].begin();
-  }
+  // if (inhabited_cells[ent].size() > 0) {
+  //   prev = (int)*inhabited_cells[ent].begin();
+  // }
 
-  for (auto cell_iter = inhabited.begin(); cell_iter != inhabited.end();
-       cell_iter++) {
-    collision_cell_id cell_id = (collision_cell_id)*cell_iter;
+  for (auto cell_iter = inhabited_cell.begin();
+       cell_iter != inhabited_cell.end(); cell_iter++) {
+    ColCellId cell_id = (ColCellId)*cell_iter;
     cells[cell_id].erase(ent);
   }
 
@@ -73,7 +73,7 @@ void CollisionGrid::update_entity(Entity ent, Position pos, Collider col) {
   //           << ", " << pos.y << std::endl;
   // std::cout << "Init: " << init_col << ", " << init_row << std::endl;
 
-  collision_cell_id new_id = get_cell_id(init_row, init_col);
+  ColCellId new_id = get_cell_id(init_row, init_col);
   //
   // in_cells.insert(get_cell_id(init_row, init_col));
   inhabited_cells[ent].insert(new_id);
@@ -94,20 +94,21 @@ void CollisionGrid::remove_entity(Entity ent) {
 
   for (auto cell_iter = inhabited.begin(); cell_iter != inhabited.end();
        cell_iter++) {
-    collision_cell_id cell_id = (collision_cell_id)*cell_iter;
+    ColCellId cell_id = (ColCellId)*cell_iter;
     cells[cell_id].erase(ent);
   }
 
   inhabited_cells[ent].clear();
+  std::set<ColCellId> s = inhabited_cells[ent];
 }
 
-std::set<collision_cell_id> CollisionGrid::get_cells_for_entity(Entity ent) {
+std::set<ColCellId> CollisionGrid::get_cells_for_entity(Entity ent) {
   return inhabited_cells[ent];
 }
 
-std::set<collision_cell_id> CollisionGrid::get_overlapping_cells(Collider col) {
+std::set<ColCellId> CollisionGrid::get_overlapping_cells(Collider col) {
 
-  std::set<collision_cell_id> ids;
+  std::set<ColCellId> ids;
   SDL_Rect effective_dims = {0, 0, 0, 0};
 
   // Convert all shapes to a upper right hand corner bounding box
@@ -131,7 +132,7 @@ std::set<collision_cell_id> CollisionGrid::get_overlapping_cells(Collider col) {
   for (int col = init_col; col <= init_col + additional_cells_right; col++) {
     for (int row = init_row; row <= init_row + additional_cells_down; row++) {
       // std::cout << "Testing " << row << ", " << col << std::endl;
-      collision_cell_id id = get_cell_id(row, col);
+      ColCellId id = get_cell_id(row, col);
       ids.insert(id);
     }
   }
@@ -146,11 +147,11 @@ std::set<Entity> CollisionGrid::test_entity_for_collisions(Entity ent,
 
   Collider *ent_collider = ecs->get_component_for_entity<Collider>(ent);
 
-  std::set<collision_cell_id> ent_cell_ids = get_cells_for_entity(ent);
+  std::set<ColCellId> ent_cell_ids = get_cells_for_entity(ent);
 
   for (auto id_iter = ent_cell_ids.begin(); id_iter != ent_cell_ids.end();
        id_iter++) {
-    collision_cell_id cell_id = (collision_cell_id)*id_iter;
+    ColCellId cell_id = (ColCellId)*id_iter;
 
     std::set<Entity> cell_entity_ids = cells[cell_id];
 
@@ -177,12 +178,12 @@ std::set<Entity> CollisionGrid::test_entity_for_collisions(Entity ent,
 std::set<Entity> CollisionGrid::get_collisions(Collider col, ECS *ecs) {
   std::set<Entity> collided_entities;
 
-  std::set<collision_cell_id> relevant_cell_ids = get_overlapping_cells(col);
+  std::set<ColCellId> relevant_cell_ids = get_overlapping_cells(col);
   // std::set < Cel
 
   for (auto id_iter = relevant_cell_ids.begin();
        id_iter != relevant_cell_ids.end(); id_iter++) {
-    collision_cell_id cell_id = (collision_cell_id)*id_iter;
+    ColCellId cell_id = (ColCellId)*id_iter;
 
     std::set<Entity> cell_entity_ids = cells[cell_id];
 
@@ -212,7 +213,7 @@ void CollisionGrid::debug_draw_grid(SDL_Renderer *renderer) {
 
   for (auto cell_iter = registered_cells.begin();
        cell_iter != registered_cells.end(); cell_iter++) {
-    collision_cell_id cell_id = (collision_cell_id)*cell_iter;
+    ColCellId cell_id = (ColCellId)*cell_iter;
     // std::cout << cell_id << std::endl;
 
     int row = cell_id >> 4;
@@ -228,7 +229,7 @@ void CollisionGrid::debug_draw_grid(SDL_Renderer *renderer) {
   }
 }
 
-void CollisionGrid::debug_cout_cell(collision_cell_id id) {
+void CollisionGrid::debug_cout_cell(ColCellId id) {
   debug_cout_cell_id(id);
   std::cout << ": ";
   for (auto e = cells[id].begin(); e != cells[id].end(); e++) {
@@ -245,7 +246,24 @@ void CollisionGrid::debug_cout_cell(collision_cell_id id) {
 
 void CollisionGrid::debug_display() {
   for (auto ci = registered_cells.begin(); ci != registered_cells.end(); ci++) {
-    collision_cell_id id = (collision_cell_id)*ci;
+    ColCellId id = (ColCellId)*ci;
     debug_cout_cell(id);
   }
 }
+
+void CollisionGrid::debug_cout_entity_state(Entity id) {
+  std::cout << "[" << id << "] ColGrid - ";
+  // inhabited_cells =
+  if (inhabited_cells.find(id) == inhabited_cells.end()) {
+    std::cout << "Inhabits no cells";
+  } else {
+    std::set<ColCellId> inhabited_cell_ids = inhabited_cells[id];
+    std::cout << "Inhabits ";
+    for (auto cid = inhabited_cell_ids.begin(); cid != inhabited_cell_ids.end();
+         cid++) {
+      ColCellId cell_id = (ColCellId)*cid;
+      debug_cout_cell_id(cell_id);
+    }
+  }
+  std::cout << std::endl;
+};
