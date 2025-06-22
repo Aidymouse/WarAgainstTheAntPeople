@@ -24,29 +24,16 @@ TextureStore &gbs_ts = TextureStore::getInstance();
 
 void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   /** Decision Making - aka switch between states */
-  for (auto e = registered_entities.begin(); e != registered_entities.end();
-       e++) {
-
-    Entity guy_id = (Entity)*e;
-    /** DEBUG */
-    GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
-    Position *pos = ecs->get_component_for_entity<Position>(guy_id);
-    if (brain->die_timer - dt <= 0 && brain->die_timer > 0) {
-      Collision w = {CollisionType::NO_OP, {}};
-      Collider c = {CollisionShapeType::CIRCLE, {pos->x, pos->y, 6}, w};
-      ecs->add_component_to_entity<Collider>(guy_id, c);
-      grid->update_entity(guy_id, *pos, c);
-
-      Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
-      vis->frame = GuyAnim.NORM;
-      vis->anim_timer = 0;
-      vis->texture = gbs_ts.get("guy_sheet");
-    }
-    brain->die_timer -= dt;
-  }
+  // for (auto e = registered_entities.begin(); e != registered_entities.end();
+  //      e++) {
+  //
+  //   Entity guy_id = (Entity)*e;
+  //
+  //   /** DEBUG */
+  // }
 
   g_handle_collisions(dt, ecs, grid);
-  // gs_wander(dt, ecs);
+  gs_wander(dt, ecs);
 }
 
 void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
@@ -66,11 +53,14 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
     Collided *co = ecs->get_component_for_entity<Collided>(guy_id);
 
     for (int c = 0; c < co->num_collisions; c++) {
+      bool cancel_remaining_collision_checks = false;
       Collision col = co->collisions[c];
       // Switch through collisions
       switch (col.type) {
       case CollisionType::SQUISH: {
         GuySM::die(guy_id, ecs, grid);
+        // return; // Don't handle any more collisions after a guy has died!
+        cancel_remaining_collision_checks = true;
         break;
       }
 
@@ -95,6 +85,9 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
         break;
       }
       }
+
+      if (cancel_remaining_collision_checks)
+        break;
     }
   }
 }
