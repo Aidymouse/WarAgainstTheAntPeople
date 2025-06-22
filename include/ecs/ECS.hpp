@@ -64,8 +64,8 @@ public:
                 << std::endl;
     }
     if (signatures[id][sig_index]) {
-      std::cout << "Entity " << id << " already has " << typeid(T).name()
-                << std::endl;
+      // std::cout << "Entity " << id << " already has " << typeid(T).name()
+      //           << std::endl;
     } else {
       component_manager->get_component_array<T>()->add_entity(id, data);
       signatures[id][sig_index] = 1;

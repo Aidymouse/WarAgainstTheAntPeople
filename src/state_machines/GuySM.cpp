@@ -1,4 +1,5 @@
 #include "components/Components.hpp"
+#include "engine/CollisionGrid.h"
 #include <anim/GuyAnim.hpp>
 #include <data/TextureStore.hpp>
 #include <state_machines/GuySM.h>
@@ -25,17 +26,21 @@ g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
   return main_ecs->get_component_for_entity<g_Wandering>(guy_id);
 }
 
-void GuySM::die(Entity guy_id, ECS *ecs) {
+void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
   Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
 
-  vis->frame = GuyAnim.SQUISH0;
+  vis->frame = GuyAnim.SQUISH1;
   vis->anim_timer = 0;
   vis->texture = guy_sm_texture_store.get("squish_sheet");
 
-  ecs->remove_component_from_entity<ScanningFor>(guy_id);
+  GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
+  brain->die_timer = 1;
+  // ecs->remove_component_from_entity<ScanningFor>(guy_id);
   ecs->remove_component_from_entity<Transform>(guy_id);
   ecs->remove_component_from_entity<g_Wandering>(guy_id);
-  ecs->remove_component_from_entity<GuyBrain>(guy_id);
+  // ecs->remove_component_from_entity<GuyBrain>(guy_id);
   ecs->remove_component_from_entity<Collider>(guy_id);
+  grid->remove_entity(guy_id);
+
   ecs->remove_component_from_entity<Collided>(guy_id);
 }

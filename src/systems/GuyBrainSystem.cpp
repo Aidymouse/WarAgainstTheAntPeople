@@ -11,24 +11,46 @@
 #include <ecs/ECS.hpp>
 #include <systems/GuyBrainSystem.h>
 
+#include <anim/GuyAnim.hpp>
+#include <data/TextureStore.hpp>
+#include <engine/CollisionGrid.h>
+
 void gs_wander(float dt, ECS *ecs);
 void g_handle_collisions(float dt, ECS *ecs);
 
 const bool guy_brain_debug = false;
 
-void GuyBrainSystem::update(float dt, ECS *ecs) {
-  /** Decision Making - aka switch between states */
-  // for (auto e = registered_entities.begin(); e != registered_entities.end();
-  //      e++) {
-  //
-  //   Entity ent = (Entity)*e;
-  // }
+TextureStore &gbs_ts = TextureStore::getInstance();
 
-  g_handle_collisions(dt, ecs);
-  gs_wander(dt, ecs);
+void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
+  /** Decision Making - aka switch between states */
+  for (auto e = registered_entities.begin(); e != registered_entities.end();
+       e++) {
+
+    Entity guy_id = (Entity)*e;
+    /** DEBUG */
+    GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
+    Position *pos = ecs->get_component_for_entity<Position>(guy_id);
+    if (brain->die_timer - dt <= 0 && brain->die_timer > 0) {
+      Collision w = {CollisionType::NO_OP, {}};
+      Collider c = {CollisionShapeType::CIRCLE, {pos->x, pos->y, 6}, w};
+      ecs->add_component_to_entity<Collider>(guy_id, c);
+      grid->update_entity(guy_id, *pos, c);
+
+      Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
+      vis->frame = GuyAnim.NORM;
+      vis->anim_timer = 0;
+      vis->texture = gbs_ts.get("guy_sheet");
+    }
+    brain->die_timer -= dt;
+  }
+
+  g_handle_collisions(dt, ecs, grid);
+  // gs_wander(dt, ecs);
 }
 
-void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs) {
+void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
+                                         CollisionGrid *grid) {
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
 
@@ -48,7 +70,7 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs) {
       // Switch through collisions
       switch (col.type) {
       case CollisionType::SQUISH: {
-        GuySM::die(guy_id, ecs);
+        GuySM::die(guy_id, ecs, grid);
         break;
       }
 
@@ -63,10 +85,8 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs) {
 
         Vec2 away_from = Vec2(p->x, p->y) - pos_away_from;
         float angle_away = away_from.get_angle_facing();
-
-        std::cout << "Anggle away " << angle_away << std::endl;
-
         int new_angle = Random::rand_range(angle_away - 60, angle_away + 60);
+
         Vec2 dir = Vec2(1, 0);
         dir.face_angle(new_angle);
         w->dir = dir;

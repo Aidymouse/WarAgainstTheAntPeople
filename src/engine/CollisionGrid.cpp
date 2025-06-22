@@ -89,6 +89,18 @@ void CollisionGrid::update_entity(Entity ent, Position pos, Collider col) {
   // }
 }
 
+void CollisionGrid::remove_entity(Entity ent) {
+  collision_cell inhabited = inhabited_cells[ent];
+
+  for (auto cell_iter = inhabited.begin(); cell_iter != inhabited.end();
+       cell_iter++) {
+    collision_cell_id cell_id = (collision_cell_id)*cell_iter;
+    cells[cell_id].erase(ent);
+  }
+
+  inhabited_cells[ent].clear();
+}
+
 std::set<collision_cell_id> CollisionGrid::get_cells_for_entity(Entity ent) {
   return inhabited_cells[ent];
 }

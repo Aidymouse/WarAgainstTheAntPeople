@@ -52,12 +52,11 @@ void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
 void CollisionSystem::strip_collided(float dt, ECS *ecs) {
 
-  for (auto e = registered_entities.begin(); e != registered_entities.end();
-       e++) {
-    Entity ent = (Entity)*e;
-    if (ecs->entity_has_component<Collided>(ent)) {
-      Collided *c = ecs->get_component_for_entity<Collided>(ent);
-      c->num_collisions = 0;
-    }
+  std::shared_ptr<ComponentArray<Collided>> comp_collided =
+      ecs->get_component_array<Collided>();
+
+  for (int i = 0; i < comp_collided->get_num_components(); i++) {
+    Collided *c = comp_collided->get_editable_data_from_idx(i);
+    c->num_collisions = 0;
   }
 }

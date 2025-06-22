@@ -105,7 +105,9 @@ struct Persuing {
 // };
 
 struct Collided {
-  Collision collisions[4]; // You can collide with up to four things on a frame
+  Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to
+                                                   // this many things per frame
+
   int num_collisions;
 };
 
@@ -176,6 +178,7 @@ enum GuyState { SEEKING, WANDERING, CARRYING };
 // making purposes
 struct GuyBrain {
   GuyState cur_state;
+  float die_timer;
 };
 
 // struct HP {

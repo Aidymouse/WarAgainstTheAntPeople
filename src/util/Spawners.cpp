@@ -31,11 +31,13 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   ecs->add_component_to_entity<Collider>(g, c);
   ecs->add_component_to_entity<GuyBrain>(g, {});
 
-  if (rand() % 100 < 10) {
-    ecs->add_component_to_entity<ScanningFor>(g, {SCAN_VALUES::SV_SCRAP_METAL});
-  } else {
-    g_Wandering *w = GuySM::enter_wandering(g, ecs);
-  }
+  // if (rand() % 100 < 10) {
+  //   ecs->add_component_to_entity<ScanningFor>(g,
+  //   {SCAN_VALUES::SV_SCRAP_METAL});
+  // } else {
+  //   g_Wandering *w = GuySM::enter_wandering(g, ecs);
+  // }
+  g_Wandering *w2 = GuySM::enter_wandering(g, ecs);
 
   grid->update_entity(g, p, c);
 

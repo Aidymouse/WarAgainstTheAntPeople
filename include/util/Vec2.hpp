@@ -33,7 +33,15 @@ public:
       y = 0;
   };
 
-  float get_angle_facing() { return tanh(y / x) / 0.01745329; }
+  float get_angle_facing() { // Add 90 because I want 0, -1 to be up (0 degree)
+    float a = atan(y / x) / 0.01745329 + 90;
+    if (x < 0) {
+      a += 180;
+    }
+    if (std::abs(a) < ε)
+      a = 0;
+    return a;
+  }
 
   operator std::string() const {
     return "(" + std::to_string(x) + ", " + std::to_string(y) + ")";

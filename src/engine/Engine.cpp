@@ -63,7 +63,7 @@ void Engine::run() {
     frames++;
     fps_timer += dt;
     if (fps_timer > 1) {
-      std::cout << "FPS: " << frames << std::endl;
+      // std::cout << "FPS: " << frames << std::endl;
       fps_timer -= 1;
       frames = 0;
     }

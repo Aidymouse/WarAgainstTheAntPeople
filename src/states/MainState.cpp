@@ -65,7 +65,7 @@ MainState::MainState() {
   // Guys
   // The benchmark is 3000
   // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 3000; g++) {
+  for (int g = 0; g < 3; g++) {
     Spawners::add_guy(&main_ecs, &main_grid);
   }
   for (int s = 0; s < 6; s++) {
@@ -128,7 +128,7 @@ void MainState::update(float dt) {
 
   main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
-  sys_guy_brain->update(dt, &main_ecs);
+  sys_guy_brain->update(dt, &main_ecs, &main_grid);
 
   sys_transform->update(dt, &main_grid, &main_ecs);
   sys_scanning->update(dt, &main_ecs);
@@ -145,7 +145,7 @@ void MainState::update(float dt) {
   //    add_guy(&main_ecs, &main_grid);
   //  }
   //  std::cout << "Grid After Update" << std::endl;
-  //  main_grid.debug_display();
+  // main_grid.debug_display();
 }
 
 void MainState::draw(SDL_Renderer *renderer) {
@@ -154,9 +154,9 @@ void MainState::draw(SDL_Renderer *renderer) {
 
   float mX, mY;
   SDL_GetMouseState(&mX, &mY);
-  DrawFns::RenderCircle(renderer, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 50);
+  DrawFns::RenderCircle(renderer, WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f, 50);
   // DrawFns::RenderCircle(renderer, mX, mY, 16);
-  // main_grid.debug_draw_grid(renderer);
+  main_grid.debug_draw_grid(renderer);
 }
 
 void MainState::load_ecs() {

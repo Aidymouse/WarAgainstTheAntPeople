@@ -62,6 +62,7 @@ public:
   }
 
   T get_data_from_idx(int idx) { return components[idx]; }
+  T *get_editable_data_from_idx(int idx) { return &components[idx]; }
 
   int get_num_components() { return num_components; }
 

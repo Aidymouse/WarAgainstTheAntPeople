@@ -24,6 +24,7 @@ public:
   void debug_draw_grid(SDL_Renderer *renderer);
 
   void update_entity(Entity ent, Position pos, Collider col);
+  void remove_entity(Entity ent);
   std::set<collision_cell_id> get_overlapping_cells(Collider col);
   std::set<collision_cell_id> get_cells_for_entity(Entity ent);
   std::set<Entity> test_entity_for_collisions(Entity ent, ECS *ecs);
