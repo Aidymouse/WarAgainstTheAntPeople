@@ -9,6 +9,7 @@ public:
   virtual void draw(SDL_Renderer *renderer) = 0;
 
   virtual void handle_click(SDL_Event *event) {};
+  virtual void handle_keydown(SDL_Event *event) {};
   virtual void handle_mousemove() {};
 
   virtual void leave_state() = 0;

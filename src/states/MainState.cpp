@@ -79,6 +79,11 @@ void MainState::handle_mousemove() {}
 
 void register_collision(Entity ent, ECS *ecs) {}
 
+void MainState::handle_keydown(
+    SDL_Event
+        *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
+}
+
 void MainState::handle_click(
     SDL_Event
         *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.

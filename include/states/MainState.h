@@ -44,6 +44,7 @@ public:
   void draw(SDL_Renderer *renderer) override;
 
   void handle_click(SDL_Event *event) override;
+  void handle_keydown(SDL_Event *event) override;
   void handle_mousemove() override;
 
   void leave_state() override {};
