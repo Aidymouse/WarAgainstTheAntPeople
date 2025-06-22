@@ -6,7 +6,7 @@
 
 namespace Helper {
 void cout_set(std::set<int> *s);
-void cout_cell_ids(std::set<collision_cell_id> *s);
+void cout_cell_ids(std::set<ColCellId> *s);
 void cout_arr(int *a, int len);
 
 // template <typename T> void swap(T *arr, T i1, T i2) {

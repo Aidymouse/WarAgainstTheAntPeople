@@ -17,9 +17,9 @@ void Helper::cout_set(std::set<int> *s) {
   std::cout << std::endl;
 }
 
-void Helper::cout_cell_ids(std::set<collision_cell_id> *s) {
+void Helper::cout_cell_ids(std::set<ColCellId> *s) {
   for (auto i = s->begin(); i != s->end(); i++) {
-    collision_cell_id id = (collision_cell_id)*i;
+    ColCellId id = (ColCellId)*i;
     std::cout << "(" << (id >> 4) << ", " << (id - ((id >> 4) << 4)) << "), ";
   }
   std::cout << std::endl;
