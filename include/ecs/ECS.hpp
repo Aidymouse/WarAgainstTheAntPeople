@@ -1,6 +1,7 @@
 #pragma once
 
 #include "components/Components.hpp"
+#include "engine/Collisions.h"
 #include <ecs/ComponentManager.hpp>
 #include <ecs/Entity.hpp>
 #include <ecs/SystemManager.hpp>
@@ -114,4 +115,67 @@ public:
     }
     return register_system<T>(sig);
   };
+
+  /** Debug */
+  void debug_cout_entity_state(Entity id) {
+    Signature ent_sig = get_signature_for_entity(id);
+    std::cout << "[" << id << "] " << ent_sig << ": ";
+    for (int i = 0; i < MAX_COMPONENTS; i++) {
+      if (ent_sig[i]) {
+        std::cout << component_manager->get_type_from_index(i).name();
+        std::cout << ", ";
+      }
+    }
+    std::cout << std::endl;
+    for (int i = 0; i < MAX_COMPONENTS; i++) {
+      if (ent_sig[i]) {
+        debug_cout_component_state(id, (COMP_SIG)i);
+      }
+    }
+  }
+
+  void debug_cout_component_state(Entity id, COMP_SIG comp_idx) {
+    if (get_signature_for_entity(id)[comp_idx] == 0) {
+      std::cout << "Entity (" << id << ") does not have component "
+                << component_manager->get_type_from_index(comp_idx).name()
+                << std::endl;
+      return;
+    }
+    switch (comp_idx) {
+    case COMP_SIG::POSITION: {
+      Position *p = get_component_for_entity<Position>(id);
+      std::cout << "[" << id << "] Position: " << p->x << ", " << p->y
+                << std::endl;
+      break;
+    }
+    case COMP_SIG::COLLIDER: {
+      Collider *c = get_component_for_entity<Collider>(id);
+      std::string col_shape_type;
+      switch (c->type) {
+      case CollisionShapeType::CIRCLE: {
+        col_shape_type = "circle";
+        break;
+      }
+      // case CollisionShapeType::RECT: {
+      //   col_shape_type = "rect";
+      //   break;
+      // }
+      default: {
+        col_shape_type = "Not in debugger collider print out yet";
+        break;
+      }
+      }
+      std::cout << "[" << id << "] Collider: " << col_shape_type << " {";
+      if (c->type == CollisionShapeType::CIRCLE) {
+        std::cout << c->shape.circle.x << ", " << c->shape.circle.y << ", "
+                  << c->shape.circle.radius;
+      }
+      std::cout << "} - collider at " << c << " - shape at " << &c->shape
+                << std::endl;
+      break;
+    }
+    default:
+      break;
+    }
+  }
 };
