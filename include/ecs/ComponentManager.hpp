@@ -12,6 +12,7 @@ class ComponentManager {
   std::shared_ptr<ComponentArrayInterface> component_arrays[MAX_COMPONENTS] = {
       NULL};
   std::unordered_map<std::type_index, int> type_to_component_array;
+  std::optional<std::type_index> idx_to_type[MAX_COMPONENTS] = {};
   // std::unordered_map<int, std::type_index> signature_index_to_component_type;
 
 public:
@@ -29,7 +30,9 @@ public:
       return;
     } else {
       component_arrays[signature_index] = std::make_shared<ComponentArray<T>>();
-      type_to_component_array[typeid(T)] = signature_index;
+      std::type_index t = typeid(T);
+      type_to_component_array[t] = signature_index;
+      idx_to_type[signature_index] = t;
       // signature_index_to_component_type[i] = typeid(T);
       std::cout << "Added component " << typeid(T).name() << " at index "
                 << signature_index << std::endl;
@@ -57,6 +60,8 @@ public:
   template <typename T> int get_signature_index_for_type() {
     return type_to_component_array[typeid(T)];
   }
+
+  std::type_index get_type_from_index(int i) { return idx_to_type[i].value(); }
 
   void entity_removed(Entity id) {
     for (int i = 0; i < MAX_COMPONENTS; i++) {
