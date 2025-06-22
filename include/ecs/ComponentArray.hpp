@@ -38,13 +38,19 @@ public:
     // std::cout << "Removing entity (" << id << ") data from spot " <<
     // old_component_idx << std::endl;
 
-    components[old_component_idx] = components[num_components - 1];
+    swap_components(old_component_idx, num_components - 1);
 
-    // Entity swap_entity = component_idx_to_entity[num_components-1]; // When
-    // an entity is destroyed, the latest entity becomes the one that was just
-    // destroyed
-    entity_to_component_idx[id] = old_component_idx;
-    component_idx_to_entity[old_component_idx] = id;
+    entity_to_component_idx.erase(id);
+    component_idx_to_entity.erase(num_components - 1);
+    // WARN: Something about this old logic made colliders point to the same
+    // place if removed then added again? components[old_component_idx] =
+    // components[num_components - 1];
+    //
+    // std::cout << "Entity [" << id << "] " << &components[old_component_idx]
+    //           << std::endl;
+    //
+    // entity_to_component_idx[id] = old_component_idx;
+    // component_idx_to_entity[old_component_idx] = id;
 
     num_components--;
   };
@@ -111,6 +117,8 @@ public:
       }
     }
   }
+
+  void debug_cout_comp_array() {}
 
   // void sort(int start, int end, std::function<int(T *, T *)> compare_fn) {
   //   for (int i = 1; i < num_components; i++) {
