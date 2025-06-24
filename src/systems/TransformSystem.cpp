@@ -13,7 +13,10 @@ void TransformSystem::update(float dt, CollisionGrid *grid, ECS *ecs) {
     pos->x += trans->vel_x * dt;
     pos->y += trans->vel_y * dt;
 
-    if (ecs->get_signature_for_entity(ent)[COMP_SIG::COLLIDER] == 1) {
+    // std::cout << "Trans [" << ent << "] " << trans->vel_x << ", "
+    //           << trans->vel_y << std::endl;
+
+    if (ecs->entity_has_component<Collider>(ent)) {
       Collider *c = component_manager->get_component_data<Collider>(ent);
       // std::cout << "Collider for " << ent << ", " << c << std::endl;
 

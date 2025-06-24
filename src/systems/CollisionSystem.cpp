@@ -15,8 +15,7 @@ void CollisionSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       continue; // TODO optimization with passive/active colliders here
     std::set<Entity> collides_with = grid->get_collisions(c, ecs);
 
-    // TODO: every so often I splat someone way further away from me than I
-    // should be...?
+    // TODO: only allow one collision of the same type from the same entity
     for (auto e = collides_with.begin(); e != collides_with.end(); e++) {
       Collided *cd;
       Entity collided_ent = (Entity)*e;

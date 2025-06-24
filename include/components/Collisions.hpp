@@ -12,6 +12,7 @@ enum CollisionType {
   GO_SOMEWHERE_ELSE, // Used to make guys walk somewhere else when bumping into
                      // something
 
+  PICK_ME_UP,
   NO_OP
 };
 
@@ -36,6 +37,10 @@ struct c_Go_Somewhere_Else {
   int pos_away_from_y;
 };
 
+struct c_Pick_Me_Up {
+  Entity to_pick_up;
+};
+
 struct c_no_op {};
 
 union CollisionData {
@@ -43,6 +48,7 @@ union CollisionData {
   c_Squish squish;
   c_Explosion explosion;
   c_Found_Sought found_sought;
+  c_Pick_Me_Up pick_me_up;
 
   c_no_op no_op;
 };

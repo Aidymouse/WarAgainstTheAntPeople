@@ -10,6 +10,7 @@
 #include "anim/GuyAnim.hpp"
 #include "anim/NotMovingAnim.hpp"
 #include "components/Collisions.hpp"
+#include "engine/Collisions.h"
 #include "util/Random.h"
 
 TextureStore &spawners_texture_store = TextureStore::getInstance();
@@ -32,12 +33,13 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   ecs->add_component_to_entity<GuyBrain>(g, {});
 
   // if (rand() % 100 < 10) {
-  //   ecs->add_component_to_entity<ScanningFor>(g,
-  //   {SCAN_VALUES::SV_SCRAP_METAL});
+  ecs->add_component_to_entity<ScanningFor>(
+      g, {{SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP, -1, -1},
+          {-1, -1, 0, 0}});
   // } else {
   //   g_Wandering *w = GuySM::enter_wandering(g, ecs);
   // }
-  g_Wandering *w2 = GuySM::enter_wandering(g, ecs);
+  // g_Wandering *w2 = GuySM::enter_wandering(g, ecs);
 
   grid->update_entity(g, p, c);
 
@@ -49,10 +51,17 @@ void Spawners::add_scrap(ECS *ecs) {
   float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
   float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y};
-  Carryable carry_data = {0, 0, 10}; // TODO should come from somewhere dynamic
+  Carryable carry_data = {0, 0, 5}; // TODO should come from somewhere dynamic
+
   Entity s = ecs->add_entity();
+
+  std::cout << "Added scrap " << s << std::endl;
+
+  Collider c = {
+      CollisionShapeType::CIRCLE, {x, y, 8}, {CollisionType::PICK_ME_UP, {s}}};
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
   ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SV_SCRAP_METAL});
   ecs->add_component_to_entity<Carryable>(s, carry_data);
+  ecs->add_component_to_entity<Collider>(s, c);
 }

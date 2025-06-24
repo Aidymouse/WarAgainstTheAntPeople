@@ -8,4 +8,5 @@ target_sources(EvilPikmin PRIVATE
 	GuyBrainSystem.cpp
 	CollisionSystem.cpp
 	GeneralCollisionHandlerSystem.cpp
+	CarrySystem.cpp
 )

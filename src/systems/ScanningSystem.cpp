@@ -24,66 +24,92 @@ void ScanningSystem::update(float dt, ECS *ecs) {
        e++) {
     Entity ent = (Entity)*e;
 
-    // std::cout << "Scanning " << ent << " ("
-    //           << ecs->get_signature_for_entity(ent) << ")" << std::endl;
+    // std::cout << "Scanning [" << ent << "]" << std::endl;
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
 
     float shortest_dist = INFINITY;
+    Entity sought_ent = -1;
     Vec2 closest_pos;
     Position *pos = component_manager->get_component_data<Position>(ent);
 
     for (int i = 0; i < num_scannable; i++) {
       Scannable s = scannable.get_data_from_idx(i);
+      Entity scannable_ent = scannable.get_entity_from_idx(i);
 
-      if (s.scan_value == scanning_for->sought_scan_value) {
-        Entity scanned_ent = scannable.get_entity_from_idx(i);
+      if (ent == scannable_ent)
+        continue;
+
+      bool sought = false;
+      float max_scan_range = 0;
+      for (int sv = 0; sv < MAX_SCAN_VALUES; sv++) {
+        if (s.scan_value == scanning_for->sought_scan_values[sv]) {
+          sought = true;
+          max_scan_range = scanning_for->max_range[sv];
+          // break;
+        }
+      }
+
+      if (sought) {
+        // std::cout << ent << " seeking " << s.scan_value << std::endl;
         Position p =
-            *component_manager->get_component_data<Position>(scanned_ent);
+            *component_manager->get_component_data<Position>(scannable_ent);
 
         // float dist = sqrt(pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2));
         float dist = pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2);
         // std::cout << dist << "\n";
 
-        if (dist < shortest_dist) {
+        if (dist < shortest_dist &&
+            (max_scan_range == -1 || dist < max_scan_range * max_scan_range)) {
+          sought_ent = scannable_ent;
           shortest_dist = dist;
           closest_pos.x = p.x;
           closest_pos.y = p.y;
         }
-
-        // std::cout << ent << " found scanned entity " << scanned_ent
-        //           << " with pos " << p.x << ", " << p.y << std::endl;
-
-        // component_manager->get_component_array<Persuing>()->add_entity(ent, {
-        // p.x, p.y });
-        // Persuing pe = {p.x, p.y};
-        // ents_to_erase.insert(ent);
-        // ents_to_erase++ ;
-
-        // ecs->remove_component_from_entity<ScanningFor>(ent);
-        //  component_manager->get_component_array<ScanningFor>()->remove_entity(ent);
-        // break;
       }
+      // std::cout << "[" << ent << "] Shortest Dist " << shortest_dist;
     }
 
-    if (shortest_dist < 20) {
-      ents_to_erase.insert(ent);
-      Transform *trans = component_manager->get_component_data<Transform>(ent);
-      trans->vel_x = 0;
-      trans->vel_y = 0;
+    if (shortest_dist != INFINITY) {
+      if (!ecs->entity_has_component<Persuing>(ent)) {
+        ecs->add_component_to_entity<Persuing>(ent, {0, 0});
+      }
+
+      std::cout << "[" << ent << "] Seeking towards [" << sought_ent << "]"
+                << std::endl;
+
+      Persuing *per = ecs->get_component_for_entity<Persuing>(ent);
+      per->desiredX = closest_pos.x;
+      per->desiredY = closest_pos.y;
     } else {
-      Vec2 vecPos = Vec2(pos->x, pos->y);
-      Vec2 desiredPos = Vec2(closest_pos.x, closest_pos.y);
-      Vec2 diff = vecPos - desiredPos;
-      Vec2 dir = diff.normalized();
-
-      Vec2 newPos = vecPos + dir;
-      // ecs->add_component_to_entity<Persuing>(ent, pe);
-
-      Transform *trans = component_manager->get_component_data<Transform>(ent);
-      trans->vel_x = -dir.x * 50;
-      trans->vel_y = -dir.y * 50;
+      ecs->remove_component_from_entity<Persuing>(ent);
     }
+  }
+
+  std::shared_ptr<ComponentArray<Persuing>> comp_persuing =
+      ecs->get_component_array<Persuing>();
+
+  for (int i = 0; i < comp_persuing->get_num_components(); i++) {
+    Entity persuing_ent = comp_persuing->get_entity_from_idx(i);
+
+    // std::cout << "[" << i << "]" << std::endl;
+    Position *pos = ecs->get_component_for_entity<Position>(persuing_ent);
+    Persuing pur = comp_persuing->get_data_from_idx(i);
+
+    Vec2 vecPos = Vec2(pos->x, pos->y);
+    Vec2 desiredPos = Vec2(pur.desiredX, pur.desiredY);
+    Vec2 diff = vecPos - desiredPos;
+    Vec2 dir = diff.normalized();
+
+    Vec2 newPos = vecPos + dir;
+    // ecs->add_component_to_entity<Persuing>(ent, pe);
+
+    Transform *trans =
+        component_manager->get_component_data<Transform>(persuing_ent);
+    trans->vel_x = -dir.x * 50;
+    trans->vel_y = -dir.y * 50;
+
+    // std::cout << "Trans [" << ent << "]" << std::endl;
   }
 
   // Clean up, remove ents

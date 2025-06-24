@@ -24,12 +24,20 @@ enum COMP_SIG { // Component Signature Indexes
   // TOOL = 3,
   // CLICKABLE = 4,
   COLLIDER = 9,
-  GUY_BRAIN = 10,
 
-  GUY_WANDERING = 11,
-  CARRIER = 12,
-  CARRYABLE = 13,
-  COLLIDED = 14,
+  CARRIER = 10,
+  CARRYABLE = 11,
+  COLLIDED = 12,
+
+  PERSUING = 13,
+
+  // GUY
+  GUY_BRAIN = 14,
+  GUY_WANDERING = 15,
+
+  // Hivemind
+  HV_BRAIN = 16,
+  HV_PARTICIPANT = 17
 
   // COL_MALLET = 7,
   //
@@ -83,12 +91,16 @@ struct Tool {
 enum SCAN_VALUES {
   SV_SCRAP_METAL = 0,
   SV_BUILD_SITE = 1,
+
+  SV_CARRIED_SCRAP = 16,
+  SV_CARRIED_SCRAP_FULL = 17,
   // CARRIED_SCRAP = 1,
 };
 
+#define MAX_SCAN_VALUES 4
 struct ScanningFor {
-  int sought_scan_value;
-  float max_range;
+  int sought_scan_values[MAX_SCAN_VALUES];
+  float max_range[MAX_SCAN_VALUES];
 };
 
 struct Scannable {
@@ -163,12 +175,6 @@ struct Carryable {
   int carriers_count; // How many guys carrying currently
   int carrier_effort; // total effort of carriers - higher number = move faster
   int carrier_limit;
-};
-
-struct Hivemind {};
-
-struct PartOfHivemind {
-  Entity hivemind_id;
 };
 
 // Guy States

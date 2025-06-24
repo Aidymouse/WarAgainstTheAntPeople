@@ -17,6 +17,7 @@
 #include <SDL3/SDL.h>
 #include <components/Components.hpp>
 #include <components/GuyComponents.hpp>
+#include <components/HivemindComponents.hpp>
 #include <data/TextureStore.hpp>
 #include <systems/DrawSystem.h>
 #include <systems/FollowsMouseSystem.h>
@@ -41,18 +42,19 @@ MainState::MainState() {
   load_ecs();
 
   // Main Base
-  main_base = main_ecs.add_entity();
-  float base_x = WINDOW_WIDTH / 2.f;
-  float base_y = WINDOW_HEIGHT / 2.f;
-  main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
-  CollisionShape base_circle;
-  base_circle.circle = {base_x, base_y, 50};
-  Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE,
-                              {(int)base_x, (int)base_y}};
-  // base_collision.type = CollisionType::GO_SOMEWHERE_ELSE;
-  // base_collision.data.go_somewhere_else = {Vec2(base_x, base_y)};
-  Collider base_c = {CollisionShapeType::CIRCLE, base_circle, base_collision};
-  main_ecs.add_component_to_entity<Collider>(main_base, base_c);
+  // main_base = main_ecs.add_entity();
+  // float base_x = WINDOW_WIDTH / 2.f;
+  // float base_y = WINDOW_HEIGHT / 2.f;
+  // main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
+  // CollisionShape base_circle;
+  // base_circle.circle = {base_x, base_y, 50};
+  // Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE,
+  //                             {(int)base_x, (int)base_y}};
+  // // base_collision.type = CollisionType::GO_SOMEWHERE_ELSE;
+  // // base_collision.data.go_somewhere_else = {Vec2(base_x, base_y)};
+  // Collider base_c = {CollisionShapeType::CIRCLE, base_circle,
+  // base_collision}; main_ecs.add_component_to_entity<Collider>(main_base,
+  // base_c);
 
   //   Hand
   tool_hand = main_ecs.add_entity();
@@ -65,10 +67,10 @@ MainState::MainState() {
   // Guys
   // The benchmark is 3000
   // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 3000; g++) {
+  for (int g = 0; g < 2; g++) {
     Spawners::add_guy(&main_ecs, &main_grid);
   }
-  for (int s = 0; s < 6; s++) {
+  for (int s = 0; s < 2; s++) {
     Spawners::add_scrap(&main_ecs);
   }
 }
@@ -161,7 +163,7 @@ void MainState::draw(SDL_Renderer *renderer) {
   SDL_GetMouseState(&mX, &mY);
   DrawFns::RenderCircle(renderer, WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f, 50);
   // DrawFns::RenderCircle(renderer, mX, mY, 16);
-  main_grid.debug_draw_grid(renderer);
+  // main_grid.debug_draw_grid(renderer);
 }
 
 void MainState::load_ecs() {
@@ -211,8 +213,13 @@ void MainState::load_ecs() {
 
   main_ecs.register_component<Carrier>(COMP_SIG::CARRIER);
   main_ecs.register_component<Carryable>(COMP_SIG::CARRYABLE);
+  main_ecs.register_component<Persuing>(COMP_SIG::PERSUING);
 
   // Guy components
   main_ecs.register_component<GuyBrain>(COMP_SIG::GUY_BRAIN);
   main_ecs.register_component<g_Wandering>(COMP_SIG::GUY_WANDERING);
+
+  // Hivemind
+  main_ecs.register_component<hv_Brain>(COMP_SIG::HV_BRAIN);
+  main_ecs.register_component<hv_Participant>(COMP_SIG::HV_PARTICIPANT);
 }
