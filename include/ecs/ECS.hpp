@@ -93,6 +93,11 @@ public:
   }
 
   template <typename T> T *get_component_for_entity(Entity id) {
+    if (!entity_has_component<T>(id)) {
+      std::cout << "!!! [" << id
+                << "] Attempting to get component I don't have "
+                << typeid(T).name() << std::endl;
+    }
     return component_manager->get_component_data<T>(id);
   };
 
