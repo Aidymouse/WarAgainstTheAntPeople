@@ -67,10 +67,10 @@ MainState::MainState() {
   // Guys
   // The benchmark is 3000
   // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 2; g++) {
+  for (int g = 0; g < 3000; g++) {
     Spawners::add_guy(&main_ecs, &main_grid);
   }
-  for (int s = 0; s < 2; s++) {
+  for (int s = 0; s < 6; s++) {
     Spawners::add_scrap(&main_ecs);
   }
 }

@@ -35,10 +35,10 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       continue;
     }
 
-    // if (!ecs->entity_has_component<Persuing>(guy_id) &&
-    //     !ecs->entity_has_component<g_Wandering>(guy_id)) {
-    //   GuySM::enter_wandering(guy_id, ecs);
-    // }
+    if (!ecs->entity_has_component<Persuing>(guy_id) &&
+        !ecs->entity_has_component<g_Wandering>(guy_id)) {
+      GuySM::enter_wandering(guy_id, ecs);
+    }
 
     /** DEBUG */
   }
@@ -108,10 +108,10 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
           // b.num_entities = 1;
           // b.entities[0] = guy_id;
 
-          // ecs->add_component_to_entity<ScanningFor>(
-          //     pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
-          //                  SCAN_VALUES::SV_CARRIED_SCRAP_FULL, 0, 0},
-          //                 {500, 500, 0, 0}});
+          ecs->add_component_to_entity<ScanningFor>(
+              pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
+                           SCAN_VALUES::SV_CARRIED_SCRAP_FULL, 0, 0},
+                          {500, 500, 0, 0}});
           ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
           // ecs->add_component_to_entity<GuyBrain>(pickup_id,
           //                                        {GuyState::SEEKING, 0});
@@ -163,9 +163,9 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
           // ecs->remove_component_from_entity<Collided>(guy_id);
 
           c->carriers_count += 1;
-          std::cout << "Adding [" << guy_id << "] to carryable " << pickup_id
-                    << "(" << c->carriers_count << " / " << c->carrier_limit
-                    << ")" << std::endl;
+          // std::cout << "Adding [" << guy_id << "] to carryable " << pickup_id
+          //           << "(" << c->carriers_count << " / " << c->carrier_limit
+          //           << ")" << std::endl;
 
           // ecs->remove_component_from_entity<Transform>(guy_id);
           Transform *trans = ecs->get_component_for_entity<Transform>(guy_id);
@@ -175,7 +175,7 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
 
           if (c->carriers_count == c->carrier_limit) {
             Scannable *picked_up_scannable =
-                ecs->get_component_for_entity<Scannable>(guy_id);
+                ecs->get_component_for_entity<Scannable>(pickup_id);
             picked_up_scannable->scan_value =
                 SCAN_VALUES::SV_CARRIED_SCRAP_FULL;
           }

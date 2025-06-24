@@ -1,3 +1,4 @@
+#include "components/GuyComponents.hpp"
 #include <cmath>
 #include <components/Components.hpp>
 #include <ecs/ECS.hpp>
@@ -24,7 +25,6 @@ void ScanningSystem::update(float dt, ECS *ecs) {
        e++) {
     Entity ent = (Entity)*e;
 
-    // std::cout << "Scanning [" << ent << "]" << std::endl;
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
 
@@ -50,6 +50,9 @@ void ScanningSystem::update(float dt, ECS *ecs) {
         }
       }
 
+      // std::cout << "Scanning [" << ent << "] max range " << max_scan_range
+      //           << std::endl;
+
       if (sought) {
         // std::cout << ent << " seeking " << s.scan_value << std::endl;
         Position p =
@@ -73,10 +76,11 @@ void ScanningSystem::update(float dt, ECS *ecs) {
     if (shortest_dist != INFINITY) {
       if (!ecs->entity_has_component<Persuing>(ent)) {
         ecs->add_component_to_entity<Persuing>(ent, {0, 0});
+        ecs->remove_component_from_entity<g_Wandering>(ent);
       }
 
-      std::cout << "[" << ent << "] Seeking towards [" << sought_ent << "]"
-                << std::endl;
+      // std::cout << "[" << ent << "] Seeking towards [" << sought_ent << "]"
+      // << std::endl;
 
       Persuing *per = ecs->get_component_for_entity<Persuing>(ent);
       per->desiredX = closest_pos.x;
@@ -108,6 +112,11 @@ void ScanningSystem::update(float dt, ECS *ecs) {
         component_manager->get_component_data<Transform>(persuing_ent);
     trans->vel_x = -dir.x * 50;
     trans->vel_y = -dir.y * 50;
+
+    if (!ecs->entity_has_component<GuyBrain>(persuing_ent)) {
+      trans->vel_x = -dir.x * 10;
+      trans->vel_y = -dir.y * 10;
+    }
 
     // std::cout << "Trans [" << ent << "]" << std::endl;
   }

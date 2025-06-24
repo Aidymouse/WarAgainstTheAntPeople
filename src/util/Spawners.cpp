@@ -35,7 +35,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   // if (rand() % 100 < 10) {
   ecs->add_component_to_entity<ScanningFor>(
       g, {{SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP, -1, -1},
-          {-1, -1, 0, 0}});
+          {50, 50, 0, 0}});
   // } else {
   //   g_Wandering *w = GuySM::enter_wandering(g, ecs);
   // }
