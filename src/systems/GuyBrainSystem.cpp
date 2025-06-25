@@ -43,6 +43,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
     /** DEBUG */
   }
 
+  // Sub system calls
   g_handle_collisions(dt, ecs, grid);
   gs_wander(dt, ecs);
 }
@@ -68,6 +69,20 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
       Collision col = co->collisions[c];
       // Switch through collisions
       switch (col.type) {
+
+      case CollisionType::IDENTIFIER: {
+        if (col.data.identifier.id == Identifier::SCRAP_METAL) {
+          // Transform into PICK_ME_UP
+          co->collisions[c].type = CollisionType::PICK_ME_UP;
+          co->collisions[c].data.pick_me_up = {
+              co->collisions[c].data.identifier.entity_id};
+        }
+
+        c--;
+
+        break;
+      }
+
       case CollisionType::SQUISH: {
         GuySM::die(guy_id, ecs, grid);
         // return; // Don't handle any more collisions after a guy has died!
@@ -110,8 +125,9 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
 
           ecs->add_component_to_entity<ScanningFor>(
               pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
-                           SCAN_VALUES::SV_CARRIED_SCRAP_FULL, 0, 0},
-                          {500, 500, 0, 0}});
+                           SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
+                           SCAN_VALUES::SV_SCRAP_METAL, 0},
+                          {500, 500, 500, 0}});
           ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
           // ecs->add_component_to_entity<GuyBrain>(pickup_id,
           //                                        {GuyState::SEEKING, 0});

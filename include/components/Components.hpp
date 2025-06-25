@@ -24,20 +24,21 @@ enum COMP_SIG { // Component Signature Indexes
   // TOOL = 3,
   // CLICKABLE = 4,
   COLLIDER = 9,
+  MULTICOLLIDER = 10,
 
-  CARRIER = 10,
-  CARRYABLE = 11,
-  COLLIDED = 12,
+  CARRIER = 11,
+  CARRYABLE = 12,
+  COLLIDED = 13,
 
-  PERSUING = 13,
+  PERSUING = 14,
 
   // GUY
-  GUY_BRAIN = 14,
-  GUY_WANDERING = 15,
+  GUY_BRAIN = 15,
+  GUY_WANDERING = 16,
 
   // Hivemind
-  HV_BRAIN = 16,
-  HV_PARTICIPANT = 17
+  HV_BRAIN = 17,
+  HV_PARTICIPANT = 18
 
   // COL_MALLET = 7,
   //
@@ -127,6 +128,13 @@ struct Collider {
   CollisionShapeType type;
   CollisionShape shape;
   Collision collision_data;
+};
+
+#define MAX_MULTI_COLLISIONS 4
+struct MultiCollider {
+  CollisionShapeType types[MAX_MULTI_COLLISIONS];
+  CollisionShape shapes[MAX_MULTI_COLLISIONS];
+  Collision collidion_datas[MAX_MULTI_COLLISIONS];
 };
 
 // Can be smashed by big weights (like hammer)

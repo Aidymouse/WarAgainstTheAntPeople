@@ -4,6 +4,8 @@
 #include <util/Vec2.hpp>
 
 enum CollisionType {
+  IDENTIFIER,
+
   SQUISH,
   EXPLOSION,
 
@@ -11,8 +13,8 @@ enum CollisionType {
   FOUND_SOUGHT,
   GO_SOMEWHERE_ELSE, // Used to make guys walk somewhere else when bumping into
                      // something
-
   PICK_ME_UP,
+
   NO_OP
 };
 
@@ -43,12 +45,21 @@ struct c_Pick_Me_Up {
 
 struct c_no_op {};
 
+enum Identifier { SCRAP_METAL };
+
+struct c_Identifier {
+  Entity entity_id;
+  Identifier id;
+}; // Catch all for "do something based on who I am"
+
 union CollisionData {
   c_Go_Somewhere_Else go_somewhere_else;
   c_Squish squish;
   c_Explosion explosion;
   c_Found_Sought found_sought;
   c_Pick_Me_Up pick_me_up;
+
+  c_Identifier identifier;
 
   c_no_op no_op;
 };

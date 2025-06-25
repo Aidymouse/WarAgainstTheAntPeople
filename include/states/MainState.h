@@ -4,6 +4,7 @@
 #include "ecs/Entity.hpp"
 #include "systems/FollowsMouseSystem.h"
 #include "systems/GuyBrainSystem.h"
+#include "systems/HivemindBrainSystem.h"
 #include "systems/ScanningSystem.h"
 #include "systems/TransformSystem.h"
 #include <SDL3/SDL.h>
@@ -24,6 +25,7 @@ class MainState : public GameState {
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
   std::shared_ptr<GuyBrainSystem> sys_guy_brain;
   std::shared_ptr<CollisionSystem> sys_collision;
+  std::shared_ptr<HivemindBrainSystem> sys_hivemind_brain;
 
   Entity main_base = -1;
   Entity tool_hand = -1;

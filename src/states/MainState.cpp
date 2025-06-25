@@ -4,6 +4,7 @@
 #include "ecs/Entity.hpp"
 #include "engine/Collisions.h"
 #include "systems/GuyBrainSystem.h"
+#include "systems/HivemindBrainSystem.h"
 #include "systems/TransformSystem.h"
 #include <string>
 #include <util/DrawFns.h>
@@ -67,7 +68,7 @@ MainState::MainState() {
   // Guys
   // The benchmark is 3000
   // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 3000; g++) {
+  for (int g = 0; g < 3; g++) {
     Spawners::add_guy(&main_ecs, &main_grid);
   }
   for (int s = 0; s < 6; s++) {
@@ -144,6 +145,8 @@ void MainState::update(float dt) {
   sys_draw->update(dt, &main_ecs);
   sys_sorted_draw->update(dt, &main_ecs);
 
+  sys_hivemind_brain->update(dt, &main_ecs);
+
   sys_collision->strip_collided(dt, &main_ecs);
   //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
   //
@@ -192,6 +195,10 @@ void MainState::load_ecs() {
 
   COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
   sys_collision = main_ecs.register_system<CollisionSystem>(collision_sig, 1);
+
+  COMP_SIG hivemind_brain_sig[1] = {COMP_SIG::HV_BRAIN};
+  sys_hivemind_brain =
+      main_ecs.register_system<HivemindBrainSystem>(hivemind_brain_sig, 1);
 
   /** Set up components */
   main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);

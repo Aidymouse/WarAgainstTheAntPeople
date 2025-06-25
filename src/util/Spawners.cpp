@@ -35,7 +35,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   // if (rand() % 100 < 10) {
   ecs->add_component_to_entity<ScanningFor>(
       g, {{SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP, -1, -1},
-          {50, 50, 0, 0}});
+          {5000, 5000, 0, 0}});
   // } else {
   //   g_Wandering *w = GuySM::enter_wandering(g, ecs);
   // }
@@ -57,8 +57,9 @@ void Spawners::add_scrap(ECS *ecs) {
 
   std::cout << "Added scrap " << s << std::endl;
 
-  Collider c = {
-      CollisionShapeType::CIRCLE, {x, y, 8}, {CollisionType::PICK_ME_UP, {s}}};
+  Collider c = {CollisionShapeType::CIRCLE,
+                {x, y, 8},
+                {CollisionType::IDENTIFIER, {s, Identifier::SCRAP_METAL}}};
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
   ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SV_SCRAP_METAL});

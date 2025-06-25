@@ -1,5 +1,5 @@
 #include "SDL3/SDL_events.h"
-#include "SDL3/SDL_stdinc.h"
+#include "SDL3/SDL_render.h"
 #include <engine/Engine.h>
 #include <states/MainState.h>
 
@@ -10,9 +10,28 @@
 
 /** Basically just the state machine to switch between pause and running */
 
+void load_textures(SDL_Renderer *renderer) {
+  TextureStore &texture_store = TextureStore::getInstance();
+
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"),
+                             "guy_sheet", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("scrap.bmp"),
+                             "scrap_sheet", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("squish.bmp"),
+                             "squish_sheet", renderer);
+  texture_store.load_texture(
+      std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand",
+      renderer);
+  texture_store.load_texture(
+      std::string(GRAPHICS_PATH).append("buildsite_sheet.bmp"), "buildsite",
+      renderer);
+}
+
 Engine::Engine() { SDL_Init(SDL_INIT_VIDEO); }
 
 void Engine::run() {
+
+  TextureStore &texture_store = TextureStore::getInstance();
 
   SDL_Window *window = SDL_CreateWindow("The Evil Pikmin...", 800, 600, 0);
   SDL_Renderer *main_renderer = SDL_CreateRenderer(window, NULL);
@@ -21,18 +40,8 @@ void Engine::run() {
   float last = 0;
   float dt = 0;
 
-  TextureStore &texture_store = TextureStore::getInstance();
-
   /** Load Textures */
-  texture_store.load_texture(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"),
-                             "guy_sheet", main_renderer);
-  texture_store.load_texture(std::string(GRAPHICS_PATH).append("scrap.bmp"),
-                             "scrap_sheet", main_renderer);
-  texture_store.load_texture(std::string(GRAPHICS_PATH).append("squish.bmp"),
-                             "squish_sheet", main_renderer);
-  texture_store.load_texture(
-      std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand",
-      main_renderer);
+  load_textures(main_renderer);
 
   // Load Main State
   state_manager.set_state(std::make_shared<MainState>());
