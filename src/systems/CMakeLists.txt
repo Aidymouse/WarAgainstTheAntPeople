@@ -10,4 +10,5 @@ target_sources(EvilPikmin PRIVATE
 	GeneralCollisionHandlerSystem.cpp
 	CarrySystem.cpp
 	HivemindSystem.cpp
+	BuildSystem.cpp
 )

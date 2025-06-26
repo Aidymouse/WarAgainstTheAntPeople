@@ -1,14 +1,17 @@
+#include "engine/CollisionGrid.h"
 #include <components/HivemindComponents.hpp>
 #include <systems/HivemindBrainSystem.h>
 
-void HivemindBrainSystem::update(float dt, ECS *ecs) {
-  // Keep all the hiveminds children synced with this
+void hv_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid);
+
+void HivemindBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
   std::shared_ptr<ComponentArray<hv_Brain>> comp_brains =
       ecs->get_component_array<hv_Brain>();
 
   for (int h = 0; h < comp_brains->get_num_components(); h++) {
 
+    /** Keep all the hiveminds children synced with this */
     Entity hv_entity = comp_brains->get_entity_from_idx(h);
     hv_Brain brain = comp_brains->get_data_from_idx(h);
     Position *hv_pos = ecs->get_component_for_entity<Position>(hv_entity);
@@ -23,5 +26,15 @@ void HivemindBrainSystem::update(float dt, ECS *ecs) {
       p->x = hv_pos->x - hv_info->offset.x;
       p->y = hv_pos->y - hv_info->offset.y;
     }
+  }
+
+  hv_handle_collisions(dt, ecs, grid);
+}
+
+void hv_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid) {
+  std::shared_ptr<ComponentArray<hv_Brain>> comp_brains =
+      ecs->get_component_array<hv_Brain>();
+
+  for (int h = 0; h < comp_brains->get_num_components(); h++) {
   }
 }

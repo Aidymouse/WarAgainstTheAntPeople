@@ -16,29 +16,31 @@ enum COMP_SIG { // Component Signature Indexes
   VISIBLE = 3,
   SORTEDVISIBLE = 4,
   TRANSFORM = 5,
-  SCANNING_FOR = 6,
-  SCANNABLE = 7,
 
-  FOLLOWS_MOUSE = 8,
+  FOLLOWS_MOUSE = 6,
 
-  // TOOL = 3,
-  // CLICKABLE = 4,
-  COLLIDER = 9,
-  MULTICOLLIDER = 10,
+  SCANNING_FOR = 7,
+  SCANNABLE = 8,
+  CARRIER = 9,
+  CARRYABLE = 10,
+  PERSUING = 11,
 
-  CARRIER = 11,
-  CARRYABLE = 12,
+  COLLIDER = 12,
   COLLIDED = 13,
 
-  PERSUING = 14,
+  BUILDABLE = 14,
+  RESOURCE = 15,
 
   // GUY
-  GUY_BRAIN = 15,
-  GUY_WANDERING = 16,
+  GUY_BRAIN = 16,
+  GUY_WANDERING = 17,
 
   // Hivemind
-  HV_BRAIN = 17,
-  HV_PARTICIPANT = 18
+  HV_BRAIN = 18,
+  HV_PARTICIPANT = 19,
+
+  // Traits
+  HANDSFREE = 20,
 
   // COL_MALLET = 7,
   //
@@ -49,10 +51,6 @@ enum COMP_SIG { // Component Signature Indexes
 struct FollowsMouse {
   short speed; // Speed at which item pursues mouse. If -1 it will snap to the
                // mouse, no travel time
-};
-
-struct Reserved {
-  Entity ent;
 };
 
 struct Position {
@@ -73,25 +71,11 @@ struct Transform {
   float vel_z;
 };
 
-struct Tool {
-  int collision_idx;
-};
-
-/*struct Carrier { */
-/*	Entity carried_ent;*/
-/*};*/
-/**/
-/*struct Carried {*/
-/*	Entity guy_carrying = -1; // If it's -1 it's on the ground*/
-/*};*/
-
-/*struct MachineBeingBuilt {*/
-/*	int progress = 0;*/
-/*};*/
-
 enum SCAN_VALUES {
   SV_SCRAP_METAL = 0,
   SV_BUILD_SITE = 1,
+
+  SV_BUILDSITE_WANT_SCRAP = 3,
 
   SV_CARRIED_SCRAP = 16,
   SV_CARRIED_SCRAP_FULL = 17,
@@ -113,16 +97,14 @@ struct Persuing {
   float desiredY;
 };
 
-// struct Collision {
-//   Entity collided_entity;
-// };
-
 struct Collided {
   Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to
                                                    // this many things per frame
 
   int num_collisions;
 };
+
+struct HandsFree {};
 
 struct Collider {
   CollisionShapeType type;
@@ -160,17 +142,19 @@ struct SortedVisible {
   xy offset; // For texture shifting
 };
 
-struct Clickable {};
+enum ResourceTypes { RT_SCRAP_METAL };
 
-enum RESOURCE_TYPES { RT_SCRAP_METAL };
-
-struct Collectable_Resource {
-  RESOURCE_TYPES type;
+struct Resource {
+  ResourceTypes type;
   short value;
 };
 
+#define MAX_BUILDABLE_STAGES 4
 struct Buildable {
-  unsigned short points_required;
+  int cur_stage;
+  int num_stages;
+  AnimFrame stage_frames;
+  unsigned short points_required[MAX_BUILDABLE_STAGES];
   unsigned short cur_build_points;
 };
 

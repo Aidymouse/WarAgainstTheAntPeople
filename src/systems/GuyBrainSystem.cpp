@@ -44,7 +44,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   }
 
   // Sub system calls
-  g_handle_collisions(dt, ecs, grid);
+  // g_handle_collisions(dt, ecs, grid);
   gs_wander(dt, ecs);
 }
 
@@ -108,97 +108,102 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,
         w->dir = dir;
         break;
       }
-      case CollisionType::PICK_ME_UP: {
-        Entity pickup_id = col.data.pick_me_up.to_pick_up;
-
-        // Set up the hivemind and carryable state
-        if (!ecs->entity_has_component<hv_Brain>(pickup_id)) {
-          hv_Brain newB;
-          for (int i = 0; i < MAX_ENTITIES_IN_HIVEMIND; i++) {
-            newB.entities[i] = -1;
-          }
-          newB.num_entities = 0;
-
-          ecs->add_component_to_entity<hv_Brain>(pickup_id, newB);
-          // b.num_entities = 1;
-          // b.entities[0] = guy_id;
-
-          ecs->add_component_to_entity<ScanningFor>(
-              pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
-                           SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
-                           SCAN_VALUES::SV_SCRAP_METAL, 0},
-                          {500, 500, 500, 0}});
-          ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
-          // ecs->add_component_to_entity<GuyBrain>(pickup_id,
-          //                                        {GuyState::SEEKING, 0});
-          // GuySM::enter_wandering(pickup_id, ecs);
-
-          if (ecs->entity_has_component<Scannable>(pickup_id)) {
-            Scannable *s = ecs->get_component_for_entity<Scannable>(pickup_id);
-            s->scan_value = SCAN_VALUES::SV_CARRIED_SCRAP;
-            std::cout << "Set new scan value" << s->scan_value << std::endl;
-          }
-
-          // ecs->debug_cout_entity_state(pickup_id);
-        }
-
-        // Update hivemind and carrier status
-        hv_Brain *b = ecs->get_component_for_entity<hv_Brain>(pickup_id);
-        Carryable *c = ecs->get_component_for_entity<Carryable>(pickup_id);
-
-        bool already_in = false;
-        for (int in = 0; in < b->num_entities; in++) {
-          if (b->entities[in] == guy_id) {
-            already_in = true;
-            break;
-          }
-        }
-
-        if (!already_in && c->carriers_count < c->carrier_limit) {
-          // Start carrying
-          ecs->remove_component_from_entity<ScanningFor>(guy_id);
-          ecs->remove_component_from_entity<Persuing>(guy_id);
-
-          int n = b->num_entities;
-          b->entities[b->num_entities] = guy_id;
-          b->num_entities += 1;
-
-          Position *guy_pos = ecs->get_component_for_entity<Position>(guy_id);
-
-          Position *pickup_pos =
-              ecs->get_component_for_entity<Position>(pickup_id);
-
-          hv_Participant guy_hv;
-          Vec2 off =
-              Vec2(pickup_pos->x, pickup_pos->y) - Vec2(guy_pos->x, guy_pos->y);
-          guy_hv.offset = off;
-
-          ecs->add_component_to_entity(guy_id, guy_hv);
-
-          // ecs->remove_component_from_entity<Collider>(guy_id);
-          // ecs->remove_component_from_entity<Collided>(guy_id);
-
-          c->carriers_count += 1;
-          // std::cout << "Adding [" << guy_id << "] to carryable " << pickup_id
-          //           << "(" << c->carriers_count << " / " << c->carrier_limit
-          //           << ")" << std::endl;
-
-          // ecs->remove_component_from_entity<Transform>(guy_id);
-          Transform *trans = ecs->get_component_for_entity<Transform>(guy_id);
-          trans->vel_x = 0;
-          trans->vel_y = 0;
-          trans->vel_z = 0;
-
-          if (c->carriers_count == c->carrier_limit) {
-            Scannable *picked_up_scannable =
-                ecs->get_component_for_entity<Scannable>(pickup_id);
-            picked_up_scannable->scan_value =
-                SCAN_VALUES::SV_CARRIED_SCRAP_FULL;
-          }
-        }
-
-        break;
-      }
+      // case CollisionType::PICK_ME_UP: {
+      //   Entity pickup_id = col.data.pick_me_up.to_pick_up;
+      //
+      //   // Set up the hivemind and carryable state
+      //   if (!ecs->entity_has_component<hv_Brain>(pickup_id)) {
+      //     hv_Brain newB;
+      //     for (int i = 0; i < MAX_ENTITIES_IN_HIVEMIND; i++) {
+      //       newB.entities[i] = -1;
+      //     }
+      //     newB.num_entities = 0;
+      //
+      //     ecs->add_component_to_entity<hv_Brain>(pickup_id, newB);
+      //     // b.num_entities = 1;
+      //     // b.entities[0] = guy_id;
+      //
+      //     ecs->add_component_to_entity<ScanningFor>(
+      //         pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
+      //                      SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
+      //                      SCAN_VALUES::SV_SCRAP_METAL, 0},
+      //                     {500, 500, 500, 0}});
+      //     ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
+      //     // ecs->add_component_to_entity<GuyBrain>(pickup_id,
+      //     //                                        {GuyState::SEEKING, 0});
+      //     // GuySM::enter_wandering(pickup_id, ecs);
+      //
+      //     if (ecs->entity_has_component<Scannable>(pickup_id)) {
+      //       Scannable *s =
+      //       ecs->get_component_for_entity<Scannable>(pickup_id);
+      //       s->scan_value = SCAN_VALUES::SV_CARRIED_SCRAP;
+      //       std::cout << "Set new scan value" << s->scan_value << std::endl;
+      //     }
+      //
+      //     // ecs->debug_cout_entity_state(pickup_id);
+      //   }
+      //
+      //   // Update hivemind and carrier status
+      //   hv_Brain *b = ecs->get_component_for_entity<hv_Brain>(pickup_id);
+      //   Carryable *c = ecs->get_component_for_entity<Carryable>(pickup_id);
+      //
+      //   bool already_in = false;
+      //   for (int in = 0; in < b->num_entities; in++) {
+      //     if (b->entities[in] == guy_id) {
+      //       already_in = true;
+      //       break;
+      //     }
+      //   }
+      //
+      //   if (!already_in && c->carriers_count < c->carrier_limit) {
+      //     // Start carrying
+      //     ecs->remove_component_from_entity<ScanningFor>(guy_id);
+      //     ecs->remove_component_from_entity<Persuing>(guy_id);
+      //
+      //     int n = b->num_entities;
+      //     b->entities[b->num_entities] = guy_id;
+      //     b->num_entities += 1;
+      //
+      //     Position *guy_pos =
+      //     ecs->get_component_for_entity<Position>(guy_id);
+      //
+      //     Position *pickup_pos =
+      //         ecs->get_component_for_entity<Position>(pickup_id);
+      //
+      //     hv_Participant guy_hv;
+      //     Vec2 off =
+      //         Vec2(pickup_pos->x, pickup_pos->y) - Vec2(guy_pos->x,
+      //         guy_pos->y);
+      //     guy_hv.offset = off;
+      //
+      //     ecs->add_component_to_entity(guy_id, guy_hv);
+      //
+      //     // ecs->remove_component_from_entity<Collider>(guy_id);
+      //     // ecs->remove_component_from_entity<Collided>(guy_id);
+      //
+      //     c->carriers_count += 1;
+      //     // std::cout << "Adding [" << guy_id << "] to carryable " <<
+      //     pickup_id
+      //     //           << "(" << c->carriers_count << " / " <<
+      //     c->carrier_limit
+      //     //           << ")" << std::endl;
+      //
+      //     // ecs->remove_component_from_entity<Transform>(guy_id);
+      //     Transform *trans =
+      //     ecs->get_component_for_entity<Transform>(guy_id); trans->vel_x = 0;
+      //     trans->vel_y = 0;
+      //     trans->vel_z = 0;
+      //
+      //     if (c->carriers_count == c->carrier_limit) {
+      //       Scannable *picked_up_scannable =
+      //           ecs->get_component_for_entity<Scannable>(pickup_id);
+      //       picked_up_scannable->scan_value =
+      //           SCAN_VALUES::SV_CARRIED_SCRAP_FULL;
+      //     }
+      //   }
+      //
+      //   break;
+      // }
       default: {
         break;
       }

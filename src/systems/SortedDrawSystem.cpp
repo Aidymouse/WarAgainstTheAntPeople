@@ -88,8 +88,6 @@ void SortedDrawSystem::update(float dt, ECS *ecs) {
   visibles->insertion_sort(&compare_visibles_by_position, ecs);
 }
 
-int compare_reserved_ents(Reserved r1, Reserved r2, ECS *ecs) { return 1; }
-
 // void SortedDrawSystem::draw_beneath_0() {
 // }
 

@@ -3,6 +3,7 @@
 #include "components/Collisions.hpp"
 #include "ecs/Entity.hpp"
 #include "engine/Collisions.h"
+#include "systems/BuildSystem.h"
 #include "systems/GuyBrainSystem.h"
 #include "systems/HivemindBrainSystem.h"
 #include "systems/TransformSystem.h"
@@ -132,11 +133,12 @@ void MainState::handle_click(
 void MainState::update(float dt) {
   // std::cout << dt << std::endl;
 
-  sys_collision->update(dt, &main_ecs, &main_grid);
+  // sys_collision->update(dt, &main_ecs, &main_grid);
 
   main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
   sys_guy_brain->update(dt, &main_ecs, &main_grid);
+  sys_carry->update(dt, &main_ecs, &main_grid);
 
   sys_transform->update(dt, &main_grid, &main_ecs);
   sys_scanning->update(dt, &main_ecs);
@@ -145,9 +147,9 @@ void MainState::update(float dt) {
   sys_draw->update(dt, &main_ecs);
   sys_sorted_draw->update(dt, &main_ecs);
 
-  sys_hivemind_brain->update(dt, &main_ecs);
+  sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
 
-  sys_collision->strip_collided(dt, &main_ecs);
+  // sys_collision->strip_collided(dt, &main_ecs);
   //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
   //
   //  if (m & SDL_BUTTON_MASK(3)) {
@@ -193,16 +195,21 @@ void MainState::load_ecs() {
                                COMP_SIG::VISIBLE};
   sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 3);
 
-  COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
-  sys_collision = main_ecs.register_system<CollisionSystem>(collision_sig, 1);
+  // COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
+  // sys_collision = main_ecs.register_system<CollisionSystem>(collision_sig,
+  // 1);
 
   COMP_SIG hivemind_brain_sig[1] = {COMP_SIG::HV_BRAIN};
   sys_hivemind_brain =
       main_ecs.register_system<HivemindBrainSystem>(hivemind_brain_sig, 1);
 
-  /** Set up components */
-  main_ecs.register_component<Reserved>(COMP_SIG::RESERVED);
+  COMP_SIG carry_sig[2] = {COMP_SIG::CARRYABLE, COMP_SIG::COLLIDER};
+  sys_carry = main_ecs.register_system<CarrySystem>(carry_sig, 2);
 
+  Signature build_sig = COMP_SIG::BUILDABLE ^ 2;
+  sys_build = main_ecs.register_system<BuildSystem>(build_sig);
+
+  /** Set up components */
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
   main_ecs.register_component<ZEnabled>(COMP_SIG::ZENABLED);
 
@@ -210,17 +217,23 @@ void MainState::load_ecs() {
   main_ecs.register_component<SortedVisible>(COMP_SIG::SORTEDVISIBLE);
   main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
 
-  main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
-  main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
   main_ecs.register_component<FollowsMouse>(COMP_SIG::FOLLOWS_MOUSE);
 
   // Collisions
   main_ecs.register_component<Collider>(COMP_SIG::COLLIDER);
   main_ecs.register_component<Collided>(COMP_SIG::COLLIDED);
 
+  // Scanning and Persuing
+  main_ecs.register_component<ScanningFor>(COMP_SIG::SCANNING_FOR);
+  main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
+  main_ecs.register_component<Persuing>(COMP_SIG::PERSUING);
+
   main_ecs.register_component<Carrier>(COMP_SIG::CARRIER);
   main_ecs.register_component<Carryable>(COMP_SIG::CARRYABLE);
-  main_ecs.register_component<Persuing>(COMP_SIG::PERSUING);
+
+  // Building
+  main_ecs.register_component<Buildable>(COMP_SIG::BUILDABLE);
+  main_ecs.register_component<Resource>(COMP_SIG::RESOURCE);
 
   // Guy components
   main_ecs.register_component<GuyBrain>(COMP_SIG::GUY_BRAIN);
@@ -229,4 +242,6 @@ void MainState::load_ecs() {
   // Hivemind
   main_ecs.register_component<hv_Brain>(COMP_SIG::HV_BRAIN);
   main_ecs.register_component<hv_Participant>(COMP_SIG::HV_PARTICIPANT);
+
+  main_ecs.register_component<HandsFree>(COMP_SIG::HANDSFREE);
 }

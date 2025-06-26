@@ -31,6 +31,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   ecs->add_component_to_entity<Transform>(g, {0, 0, 0});
   ecs->add_component_to_entity<Collider>(g, c);
   ecs->add_component_to_entity<GuyBrain>(g, {});
+  ecs->add_component_to_entity<HandsFree>(g, {});
 
   // if (rand() % 100 < 10) {
   ecs->add_component_to_entity<ScanningFor>(

@@ -1,4 +1,5 @@
 
+
 #pragma once
 
 #include "engine/CollisionGrid.h"
@@ -6,7 +7,7 @@
 #include <ecs/ECS.hpp>
 #include <ecs/System.hpp>
 
-class CarrySystem : public System {
+class BuildSystem : public System {
 public:
   void update(float dt, ECS *ecs, CollisionGrid *grid);
   // void draw(SDL_Renderer *renderer, ECS *ecs);

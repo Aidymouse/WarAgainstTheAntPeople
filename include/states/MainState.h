@@ -2,6 +2,7 @@
 
 #include "SDL3/SDL_events.h"
 #include "ecs/Entity.hpp"
+#include "systems/BuildSystem.h"
 #include "systems/FollowsMouseSystem.h"
 #include "systems/GuyBrainSystem.h"
 #include "systems/HivemindBrainSystem.h"
@@ -12,6 +13,7 @@
 #include <engine/CollisionGrid.h>
 #include <engine/GameState.h>
 #include <memory>
+#include <systems/CarrySystem.h>
 #include <systems/CollisionSystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/SortedDrawSystem.h>
@@ -26,6 +28,8 @@ class MainState : public GameState {
   std::shared_ptr<GuyBrainSystem> sys_guy_brain;
   std::shared_ptr<CollisionSystem> sys_collision;
   std::shared_ptr<HivemindBrainSystem> sys_hivemind_brain;
+  std::shared_ptr<CarrySystem> sys_carry;
+  std::shared_ptr<BuildSystem> sys_build;
 
   Entity main_base = -1;
   Entity tool_hand = -1;
