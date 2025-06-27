@@ -24,28 +24,34 @@ const bool guy_brain_debug = false;
 TextureStore &gbs_ts = TextureStore::getInstance();
 
 void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
-  /** Decision Making - aka switch between states */
-  for (auto e = registered_entities.begin(); e != registered_entities.end();
-       e++) {
-
-    Entity guy_id = (Entity)*e;
-
-    if (ecs->entity_has_component<hv_Participant>(guy_id) ||
-        ecs->entity_has_component<hv_Brain>(guy_id)) {
-      continue;
-    }
-
-    if (!ecs->entity_has_component<Persuing>(guy_id) &&
-        !ecs->entity_has_component<g_Wandering>(guy_id)) {
-      GuySM::enter_wandering(guy_id, ecs);
-    }
-
-    /** DEBUG */
-  }
+  // TODO: mystery #1 - why does the guys dissapear when they pick up scrap
+  // mystery #2 - why does this cause a segfault when an entity is removed?
+  // /** Decision Making - aka switch between states */
+  // for (auto e = registered_entities.begin(); e != registered_entities.end();
+  //      e++) {
+  //
+  //   Entity guy_id = (Entity)*e;
+  //
+  //   std::cout << "Processing guy up top decision making for [" << guy_id <<
+  //   "]"
+  //             << std::endl;
+  //
+  //   if (ecs->entity_has_component<hv_Participant>(guy_id) ||
+  //       ecs->entity_has_component<hv_Brain>(guy_id)) {
+  //     continue;
+  //   }
+  //
+  //   if (!ecs->entity_has_component<Persuing>(guy_id) &&
+  //       !ecs->entity_has_component<g_Wandering>(guy_id)) {
+  //     GuySM::enter_wandering(guy_id, ecs);
+  //   }
+  //
+  //   /** DEBUG */
+  // }
 
   // Sub system calls
   // g_handle_collisions(dt, ecs, grid);
-  gs_wander(dt, ecs);
+  // gs_wander(dt, ecs);
 }
 
 void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs,

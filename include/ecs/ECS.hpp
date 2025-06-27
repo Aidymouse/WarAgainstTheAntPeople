@@ -35,20 +35,27 @@ public:
   Entity add_entity() {
     Entity id = free_ids.front();
     signatures[id] = 0;
+    signatures[id][0] = 1;
     free_ids.pop();
     return id;
   };
 
   void remove_entity(Entity id) {
+    std::cout << "Removing from components" << std::endl;
+    component_manager->entity_removed(id, signatures[id]);
+    std::cout << "Removing from systems" << std::endl;
+    system_manager->entity_changed(id, signatures[id]);
+    std::cout << "Setting sig to 0" << std::endl;
     signatures[id] = 0;
-    component_manager->entity_removed(id);
-    /*system_manager->entity_changed(id, signatures[id]);*/
+    std::cout << "Pushing to free" << std::endl;
     free_ids.push(id);
   };
 
   template <typename T> bool entity_has_component(Entity ent) {
-    return get_signature_for_entity(
-               ent)[component_manager->get_signature_index_for_type<T>()] == 1;
+    return entity_exists(ent) &&
+           (get_signature_for_entity(
+                ent)[component_manager->get_signature_index_for_type<T>()] ==
+            1);
   }
   bool entity_has_components(Entity ent, Signature sig) {
     Signature ent_sig = get_signature_for_entity(ent);
@@ -57,10 +64,12 @@ public:
     // std::cout << (ent_sig & sig) << std::endl;
     // std::cout << ((ent_sig & sig) == sig) << std::endl;
     // std::cout << std::endl;
-    return (ent_sig & sig) == sig;
+    return entity_exists(ent) && ((ent_sig & sig) == sig);
   }
 
   Signature get_signature_for_entity(Entity id) { return signatures[id]; }
+
+  bool entity_exists(Entity ent) { return signatures[ent][0] == 1; }
 
   // Components
   template <typename T> void register_component(COMP_SIG idx) {

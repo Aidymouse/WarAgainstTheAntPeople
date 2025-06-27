@@ -10,6 +10,7 @@
 #include "anim/GuyAnim.hpp"
 #include "anim/NotMovingAnim.hpp"
 #include "components/Collisions.hpp"
+#include "components/Components.hpp"
 #include "engine/Collisions.h"
 #include "util/Random.h"
 
@@ -61,6 +62,7 @@ void Spawners::add_scrap(ECS *ecs) {
   Collider c = {CollisionShapeType::CIRCLE,
                 {x, y, 8},
                 {CollisionType::IDENTIFIER, {s, Identifier::SCRAP_METAL}}};
+  ecs->add_component_to_entity<Resource>(s, {ResourceTypes::RT_SCRAP_METAL, 1});
   ecs->add_component_to_entity<Visible>(s, v);
   ecs->add_component_to_entity<Position>(s, p);
   ecs->add_component_to_entity<Scannable>(s, {SCAN_VALUES::SV_SCRAP_METAL});

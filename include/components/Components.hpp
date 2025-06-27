@@ -10,7 +10,8 @@
 #include <optional>
 
 enum COMP_SIG { // Component Signature Indexes
-  RESERVED = 0,
+  EXISTS = 0,
+
   POSITION = 1,
   ZENABLED = 2,
   VISIBLE = 3,
@@ -153,7 +154,7 @@ struct Resource {
 struct Buildable {
   int cur_stage;
   int num_stages;
-  AnimFrame stage_frames;
+  AnimFrame stage_frames[MAX_BUILDABLE_STAGES];
   unsigned short points_required[MAX_BUILDABLE_STAGES];
   unsigned short cur_build_points;
 };

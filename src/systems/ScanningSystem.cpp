@@ -46,7 +46,7 @@ void ScanningSystem::update(float dt, ECS *ecs) {
         if (s.scan_value == scanning_for->sought_scan_values[sv]) {
           sought = true;
           max_scan_range = scanning_for->max_range[sv];
-          // break;
+          break;
         }
       }
 
@@ -114,8 +114,8 @@ void ScanningSystem::update(float dt, ECS *ecs) {
     trans->vel_y = -dir.y * 50;
 
     if (!ecs->entity_has_component<GuyBrain>(persuing_ent)) {
-      trans->vel_x = -dir.x * 10;
-      trans->vel_y = -dir.y * 10;
+      trans->vel_x = -dir.x * 50;
+      trans->vel_y = -dir.y * 50;
     }
 
     // std::cout << "Trans [" << ent << "]" << std::endl;

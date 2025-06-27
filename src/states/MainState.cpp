@@ -75,6 +75,9 @@ MainState::MainState() {
   for (int s = 0; s < 6; s++) {
     Spawners::add_scrap(&main_ecs);
   }
+
+  // std::cout << "Removing entity" << std::endl;
+  // main_ecs.remove_entity(3);
 }
 
 MainState::~MainState() {}
@@ -137,16 +140,27 @@ void MainState::update(float dt) {
 
   main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
+  std::cout << "--- Guy Brain System" << std::endl;
   sys_guy_brain->update(dt, &main_ecs, &main_grid);
-  sys_carry->update(dt, &main_ecs, &main_grid);
 
+  std::cout << "--- Carry System" << std::endl;
+  sys_carry->update(dt, &main_ecs, &main_grid);
+  std::cout << "--- Build System" << std::endl;
+  sys_build->update(dt, &main_ecs, &main_grid);
+
+  std::cout << "--- Transform System" << std::endl;
   sys_transform->update(dt, &main_grid, &main_ecs);
+  std::cout << "--- Scanning System" << std::endl;
   sys_scanning->update(dt, &main_ecs);
+  std::cout << "--- Follows Mouse System" << std::endl;
   sys_follows_mouse->update(dt, &main_ecs, &main_grid);
 
+  std::cout << "--- Draw System" << std::endl;
   sys_draw->update(dt, &main_ecs);
+  std::cout << "--- Sorted Draw System" << std::endl;
   sys_sorted_draw->update(dt, &main_ecs);
 
+  std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
 
   // sys_collision->strip_collided(dt, &main_ecs);

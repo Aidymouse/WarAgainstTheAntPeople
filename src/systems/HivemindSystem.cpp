@@ -1,10 +1,15 @@
 #include "engine/CollisionGrid.h"
 #include <components/HivemindComponents.hpp>
+#include <exception>
 #include <systems/HivemindBrainSystem.h>
 
 void hv_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid);
+// TODO
+void hv_strip_nonexistant_participants(float dt, ECS *ecs);
 
 void HivemindBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
+
+  hv_strip_nonexistant_participants(dt, ecs);
 
   std::shared_ptr<ComponentArray<hv_Brain>> comp_brains =
       ecs->get_component_array<hv_Brain>();
@@ -25,6 +30,10 @@ void HivemindBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
       p->x = hv_pos->x - hv_info->offset.x;
       p->y = hv_pos->y - hv_info->offset.y;
+
+      std::cout << "[" << hv_entity << "] participant [" << attached_ent
+                << "] new position: (" << p->x << ", " << p->y << ")"
+                << std::endl;
     }
   }
 
@@ -36,5 +45,32 @@ void hv_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid) {
       ecs->get_component_array<hv_Brain>();
 
   for (int h = 0; h < comp_brains->get_num_components(); h++) {
+  }
+}
+
+void hv_strip_nonexistant_participants(float dt, ECS *ecs) {
+  std::shared_ptr<ComponentArray<hv_Brain>> comp_hv_brains =
+      ecs->get_component_array<hv_Brain>();
+
+  for (int b = 0; b < comp_hv_brains->get_num_components(); b++) {
+    Entity hv_Ent = comp_hv_brains->get_entity_from_idx(b);
+
+    hv_Brain *brain = comp_hv_brains->get_editable_data_from_idx(b);
+
+    for (int e = 0; e < brain->num_entities; e++) {
+      Entity participant_ent = brain->entities[e];
+
+      // ecs->debug_cout_entity_state(participant_ent);
+      // throw std::exception();
+      if (!ecs->entity_exists(participant_ent)) {
+        // std::cout << "[" << hv_Ent << "] participant [" << participant_ent
+        //           << "] does not exist!" << std::endl;
+        Entity latest = brain->entities[brain->num_entities - 1];
+        brain->entities[e] = latest;
+        brain->entities[brain->num_entities - 1] = -1;
+        brain->num_entities--;
+        e--;
+      }
+    }
   }
 }

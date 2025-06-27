@@ -63,10 +63,15 @@ public:
 
   std::type_index get_type_from_index(int i) { return idx_to_type[i].value(); }
 
-  void entity_removed(Entity id) {
+  void entity_removed(Entity id, Signature s) {
     for (int i = 0; i < MAX_COMPONENTS; i++) {
-      if (component_arrays[i] != NULL)
-        component_arrays[i]->entity_destroyed(id);
+      if (component_arrays[i] == NULL)
+        continue;
+      if (!s[i] == 1)
+        continue;
+
+      std::cout << "Removing [" << id << "] from component " << i << std::endl;
+      component_arrays[i]->entity_destroyed(id);
     }
   }
 };
