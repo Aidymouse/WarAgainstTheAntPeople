@@ -5,15 +5,43 @@
 #include <components/HivemindComponents.hpp>
 #include <systems/CarrySystem.h>
 
+void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
+                    CollisionGrid *grid);
+void strip_invalid_carrieds(ECS *ecs);
+
 void CarrySystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
+  process_pickup(dt, &registered_entities, ecs, grid);
+
+  strip_invalid_carrieds(ecs);
+}
+
+void strip_invalid_carrieds(ECS *ecs) {
+  std::shared_ptr<ComponentArray<Carrier>> comp_carriers =
+      ecs->get_component_array<Carrier>();
+  for (int c = 0; c < comp_carriers->get_num_components(); c++) {
+    // Entity c_ent = comp_carriers->get_entity_from_idx(c);
+    Carrier *ca = comp_carriers->get_editable_data_from_idx(c);
+
+    if (!ca->carried_entity.has_value())
+      return;
+
+    Entity carried_ent = ca->carried_entity.value();
+    if (!ecs->entity_has_component<Carryable>(carried_ent)) {
+      ca->carried_entity.reset();
+    }
+  }
+}
+
+void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
+                    CollisionGrid *grid) {
   std::shared_ptr<ComponentArray<Carrier>> comp_carrier =
       ecs->get_component_array<Carrier>();
 
   std::shared_ptr<ComponentArray<Carryable>> comp_carryable =
       ecs->get_component_array<Carryable>();
 
-  for (auto carryable_e = registered_entities.begin();
-       carryable_e != registered_entities.end(); carryable_e++) {
+  for (auto carryable_e = registered_entities->begin();
+       carryable_e != registered_entities->end(); carryable_e++) {
     Entity carryable_ent = (Entity)*carryable_e;
 
     Collider *carryable_col =
@@ -33,9 +61,6 @@ void CarrySystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       // s[COMP_SIG::CARRIER] = 1;
 
       if (ecs->entity_has_components(collided_ent, s)) {
-
-        // Collided!
-        std::cout << "Collided! [" << collided_ent << "]" << std::endl;
 
         Entity pickup_id = carryable_ent;
         Entity guy_id = collided_ent;
