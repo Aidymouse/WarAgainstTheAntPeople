@@ -70,7 +70,7 @@ public:
       if (!s[i] == 1)
         continue;
 
-      std::cout << "Removing [" << id << "] from component " << i << std::endl;
+      //std::cout << "Removing [" << id << "] from component " << i << std::endl;
       component_arrays[i]->entity_destroyed(id);
     }
   }
