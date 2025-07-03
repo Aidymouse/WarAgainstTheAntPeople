@@ -42,9 +42,8 @@ public:
 
     entity_to_component_idx.erase(id);
     component_idx_to_entity.erase(num_components - 1);
-    // WARN: Something about this old logic made colliders point to the same
-    // place if removed then added again? components[old_component_idx] =
-    // components[num_components - 1];
+    // WARN: Something about this old logic made colliders point to the same place if removed then added again?
+    // components[old_component_idx] = components[num_components - 1];
     //
     // std::cout << "Entity [" << id << "] " << &components[old_component_idx]
     //           << std::endl;
