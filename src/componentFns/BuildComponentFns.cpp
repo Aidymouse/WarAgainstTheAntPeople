@@ -9,3 +9,12 @@ void stop_being_carryable(ECS *ecs, Entity ent) {
 }
 
 void create_buildsite(ECS *ecs) {}
+
+void advance_build_stage(ECS *ecs, Buildable *b, Entity ent){
+	//b->cur_build_points -= b->points_required[b->cur_stage];
+	b->cur_stage+=1;
+
+	if (ecs->entity_has_component<Visible>(ent)) {
+		Visible *v
+	}
+}
