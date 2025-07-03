@@ -44,7 +44,7 @@ public:
     std::cout << "Removing from components" << std::endl;
     component_manager->entity_removed(id, signatures[id]);
     std::cout << "Removing from systems" << std::endl;
-    system_manager->entity_changed(id, signatures[id]);
+    system_manager->entity_removed(id);
     std::cout << "Setting sig to 0" << std::endl;
     signatures[id] = 0;
     std::cout << "Pushing to free" << std::endl;
@@ -175,15 +175,15 @@ public:
       Collider *c = get_component_for_entity<Collider>(id);
       std::string col_shape_type;
       switch (c->type) {
-      case CollisionShapeType::CIRCLE: {
-        col_shape_type = "circle";
-        break;
-      }
+	      case CollisionShapeType::CIRCLE: {
+		col_shape_type = "circle";
+		break;
+	      }
       // case CollisionShapeType::RECT: {
       //   col_shape_type = "rect";
       //   break;
       // }
-      default: {
+	default: {
         col_shape_type = "Not in debugger collider print out yet";
         break;
       }
