@@ -76,7 +76,7 @@ MainState::MainState() {
     Spawners::add_scrap(&main_ecs);
   }
 
-  // std::cout << "Removing entity" << std::endl;
+  // if (mainstate_debug) std::cout << "Removing entity" << std::endl;
   // main_ecs.remove_entity(3);
 }
 
@@ -96,7 +96,7 @@ void MainState::handle_click(
         *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
   int btn = event->button.button;
   if (mainstate_debug)
-    std::cout << "Clicked: " << btn << std::endl;
+    if (mainstate_debug) std::cout << "Clicked: " << btn << std::endl;
 
   Collision mallet_hit = {
       CollisionType::SQUISH,
@@ -134,34 +134,34 @@ void MainState::handle_click(
 // void MainState::handle_mousemove() {}
 
 void MainState::update(float dt) {
-  // std::cout << dt << std::endl;
-  std::cout << "\nNew Frame" << std::endl;
+  // if (mainstate_debug) std::cout << dt << std::endl;
+  if (mainstate_debug) std::cout << "\nNew Frame" << std::endl;
 
   // sys_collision->update(dt, &main_ecs, &main_grid);
 
   main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
-  std::cout << "--- Guy Brain System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Guy Brain System" << std::endl;
   sys_guy_brain->update(dt, &main_ecs, &main_grid);
 
-  std::cout << "--- Carry System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Carry System" << std::endl;
   sys_carry->update(dt, &main_ecs, &main_grid);
-  std::cout << "--- Build System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Build System" << std::endl;
   sys_build->update(dt, &main_ecs, &main_grid);
 
-  std::cout << "--- Transform System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Transform System" << std::endl;
   sys_transform->update(dt, &main_grid, &main_ecs);
-  std::cout << "--- Scanning System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Scanning System" << std::endl;
   sys_scanning->update(dt, &main_ecs);
-  std::cout << "--- Follows Mouse System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Follows Mouse System" << std::endl;
   sys_follows_mouse->update(dt, &main_ecs, &main_grid);
 
-  std::cout << "--- Draw System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Draw System" << std::endl;
   sys_draw->update(dt, &main_ecs);
-  std::cout << "--- Sorted Draw System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Sorted Draw System" << std::endl;
   sys_sorted_draw->update(dt, &main_ecs);
 
-  std::cout << "--- Hivemind Brain System" << std::endl;
+  if (mainstate_debug) std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
 
 
@@ -169,10 +169,10 @@ void MainState::update(float dt) {
   //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
   //
   //  if (m & SDL_BUTTON_MASK(3)) {
-  //    std::cout << main_ecs.num_entities << std::endl;
+  //    if (mainstate_debug) std::cout << main_ecs.num_entities << std::endl;
   //    add_guy(&main_ecs, &main_grid);
   //  }
-  //  std::cout << "Grid After Update" << std::endl;
+  //  if (mainstate_debug) std::cout << "Grid After Update" << std::endl;
   // main_grid.debug_display();
 }
 
