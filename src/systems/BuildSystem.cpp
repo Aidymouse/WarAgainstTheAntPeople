@@ -2,6 +2,9 @@
 #include "components/Components.hpp"
 #include <anim/BuildsiteAnim.hpp>
 #include <systems/BuildSystem.h>
+#include <componentFns/HivemindComponentFns.h>
+#include <components/HivemindComponents.hpp>
+#include <data/TextureStore.hpp>
 
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid);
 void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid);
@@ -13,14 +16,16 @@ void BuildSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 }
 
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
+
+	TextureStore &b_texture_store = TextureStore::getInstance();
+
   std::shared_ptr<ComponentArray<Resource>> comp_resource =
       ecs->get_component_array<Resource>();
 
   for (int r = 0; r < comp_resource->get_num_components(); r++) {
     Entity resource_id = comp_resource->get_entity_from_idx(r);
 
-    std::cout << "Checking build system for [" << resource_id << "]"
-              << std::endl;
+    //std::cout << "Checking build system for [" << resource_id << "]" << std::endl;
     // If two resources are touching and at least one of them is being carried
     // then they should transform into a buildsite
     Collider *resource_c = ecs->get_component_for_entity<Collider>(resource_id);
@@ -51,13 +56,38 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
            ecs->get_component_for_entity<Carryable>(collided_resource_ent)
                    ->carriers_count > 0) ||
           is_carried) {
-        // Turn me into buildsite and remove other
+		// Remove whatever i collided with
+		// Whatever was carrying this will get sorted out in the carry system
+		// Need to update all the same stuff as the resource we collided with too though!!!
+		
+		//std::cout << "Removing [" << collided_resource_ent << "]" << std::endl;
+		//ecs->debug_cout_entity_state(collided_resource_ent);
+		
+		if (ecs->entity_has_component<hv_Brain>(collided_resource_ent)) {
+			// Resource is being carried most likely
+			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_resource_ent);
+
+			for (int e = 0; e<hv->num_entities; e++){
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
+			}
+
+			dissolve_hivemind(ecs, collided_resource_ent);
+			
+		}
+		grid->remove_entity(collided_resource_ent);
         ecs->remove_entity(collided_resource_ent);
 
+        // Turn me into buildsite 
+        // Tower for now cos i only have one
         ecs->remove_component_from_entity<Resource>(resource_id);
         ecs->remove_component_from_entity<Carryable>(resource_id);
+        ecs->remove_component_from_entity<ScanningFor>(resource_id);
+        ecs->remove_component_from_entity<ScanningFor>(resource_id);
+        ecs->remove_component_from_entity<Persuing>(resource_id);
+        ecs->remove_component_from_entity<Transform>(resource_id);
 
-        Buildable b = {1,
+        Buildable b = {0,
                        4,
                        {
                            bs_TowerAnim.BUILD1,
@@ -68,7 +98,29 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
                        {5, 5, 5, 5},
                        0};
 
+		Visible *v = ecs->get_component_for_entity<Visible>(resource_id);
+		v->texture = b_texture_store.get("tower");
+		v->frame = b.stage_frames[0];
+
         ecs->add_component_to_entity<Buildable>(resource_id, b);
+		
+		Scannable *s = ecs->get_component_for_entity<Scannable>(resource_id);
+		s->scan_value = SCAN_VALUES::SV_BUILD_SITE;
+
+		if (ecs->entity_has_component<hv_Brain>(resource_id)) {
+			// Resource is being carried most likely
+			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
+
+			for (int e = 0; e<hv->num_entities; e++){
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
+			}
+
+			dissolve_hivemind(ecs, resource_id);
+			
+		}
+	// TODO: kick out anyone holding me - i can't be held anymore! tho theoretically carryable being turned off should fix this...
+
       }
     }
   }
