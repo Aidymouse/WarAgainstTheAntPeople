@@ -135,6 +135,7 @@ void MainState::handle_click(
 
 void MainState::update(float dt) {
   // std::cout << dt << std::endl;
+  std::cout << "\nNew Frame" << std::endl;
 
   // sys_collision->update(dt, &main_ecs, &main_grid);
 
@@ -162,6 +163,7 @@ void MainState::update(float dt) {
 
   std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
+
 
   // sys_collision->strip_collided(dt, &main_ecs);
   //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
