@@ -50,8 +50,9 @@ public:
 
   void entity_removed(Entity id) {
     for (int i = 0; i < MAX_SYSTEMS; i++) {
-      if (systems[i] != NULL)
+      if (systems[i] != NULL) {
         systems[i]->remove_entity(id);
+	}
     }
   }
 };
