@@ -41,13 +41,14 @@ public:
   };
 
   void remove_entity(Entity id) {
-    std::cout << "Removing from components" << std::endl;
+	const bool debug = false;
+    if (debug) std::cout << "Removing from components" << std::endl;
     component_manager->entity_removed(id, signatures[id]);
-    std::cout << "Removing from systems" << std::endl;
+    if (debug) std::cout << "Removing from systems" << std::endl;
     system_manager->entity_removed(id);
-    std::cout << "Setting sig to 0" << std::endl;
+    if (debug) std::cout << "Setting sig to 0" << std::endl;
     signatures[id] = 0;
-    std::cout << "Pushing to free" << std::endl;
+    if (debug) std::cout << "Pushing to free" << std::endl;
     free_ids.push(id);
   };
 
