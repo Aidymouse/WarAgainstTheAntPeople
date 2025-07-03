@@ -25,6 +25,11 @@ void ScanningSystem::update(float dt, ECS *ecs) {
        e++) {
     Entity ent = (Entity)*e;
 
+	/*
+	std::cout << "Scanning System Processing for [" << ent << "]" << std::endl;
+	ecs->debug_cout_entity_state(ent);
+	*/
+
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
 

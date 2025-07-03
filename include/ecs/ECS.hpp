@@ -143,14 +143,15 @@ public:
   void debug_cout_entity_state(Entity id) {
     Signature ent_sig = get_signature_for_entity(id);
     std::cout << "[" << id << "] " << ent_sig << ": ";
-    for (int i = 0; i < MAX_COMPONENTS; i++) {
+	// Must start from 1 because 0 is reserved for existence and not actually registered!!!
+    for (int i = 1; i < MAX_COMPONENTS; i++) {
       if (ent_sig[i]) {
         std::cout << component_manager->get_type_from_index(i).name();
         std::cout << ", ";
       }
     }
     std::cout << std::endl;
-    for (int i = 0; i < MAX_COMPONENTS; i++) {
+    for (int i = 1; i < MAX_COMPONENTS; i++) {
       if (ent_sig[i]) {
         debug_cout_component_state(id, (COMP_SIG)i);
       }
