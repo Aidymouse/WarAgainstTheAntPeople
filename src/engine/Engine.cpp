@@ -23,7 +23,7 @@ void load_textures(SDL_Renderer *renderer) {
       std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand",
       renderer);
   texture_store.load_texture(
-      std::string(GRAPHICS_PATH).append("buildsite_sheet.bmp"), "buildsite",
+      std::string(GRAPHICS_PATH).append("tower.bmp"), "tower",
       renderer);
 }
 
