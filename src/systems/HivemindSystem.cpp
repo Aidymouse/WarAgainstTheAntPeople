@@ -28,12 +28,10 @@ void HivemindBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       hv_Participant *hv_info =
           ecs->get_component_for_entity<hv_Participant>(attached_ent);
 
-      p->x = hv_pos->x - hv_info->offset.x;
-      p->y = hv_pos->y - hv_info->offset.y;
+      p->x = hv_pos->x + hv_info->offset.x;
+      p->y = hv_pos->y + hv_info->offset.y;
 
-      std::cout << "[" << hv_entity << "] participant [" << attached_ent
-                << "] new position: (" << p->x << ", " << p->y << ")"
-                << std::endl;
+      //std::cout << "[" << hv_entity << "] participant [" << attached_ent << "] new position: (" << p->x << ", " << p->y << ")" << std::endl;
     }
   }
 
@@ -74,3 +72,4 @@ void hv_strip_nonexistant_participants(float dt, ECS *ecs) {
     }
   }
 }
+

@@ -14,6 +14,8 @@ void CarrySystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   process_pickup(dt, &registered_entities, ecs, grid);
 }
 
+/** It's possible that the thing a guy is carrying has been destroyed 
+ * We only have a carrier-> carried relationship so we check here to strip them out */
 void strip_invalid_carrieds(ECS *ecs) {
   std::shared_ptr<ComponentArray<Carrier>> comp_carriers =
       ecs->get_component_array<Carrier>();
@@ -26,6 +28,7 @@ void strip_invalid_carrieds(ECS *ecs) {
 
     Entity carried_ent = ca->carried_entity.value();
     if (!ecs->entity_has_component<Carryable>(carried_ent)) {
+	// TODO: why this not work??
       ca->carried_entity.reset();
     }
   }
@@ -89,7 +92,7 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
           if (ecs->entity_has_component<Scannable>(pickup_id)) {
             Scannable *s = ecs->get_component_for_entity<Scannable>(pickup_id);
             s->scan_value = SCAN_VALUES::SV_CARRIED_SCRAP;
-            std::cout << "Set new scan value" << s->scan_value << std::endl;
+            //std::cout << "Set new scan value" << s->scan_value << std::endl;
           }
 
           // ecs->debug_cout_entity_state(pickup_id);
@@ -123,8 +126,7 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
               ecs->get_component_for_entity<Position>(pickup_id);
 
           hv_Participant guy_hv;
-          Vec2 off =
-              Vec2(pickup_pos->x, pickup_pos->y) - Vec2(guy_pos->x, guy_pos->y);
+          Vec2 off = Vec2(guy_pos->x, guy_pos->y) - Vec2(pickup_pos->x, pickup_pos->y);
           guy_hv.offset = off;
 
           ecs->add_component_to_entity(guy_id, guy_hv);
