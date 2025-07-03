@@ -69,10 +69,10 @@ MainState::MainState() {
   // Guys
   // The benchmark is 3000
   // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 3; g++) {
+  for (int g = 0; g < 5; g++) {
     Spawners::add_guy(&main_ecs, &main_grid);
   }
-  for (int s = 0; s < 6; s++) {
+  for (int s = 0; s < 60; s++) {
     Spawners::add_scrap(&main_ecs);
   }
 
@@ -88,7 +88,8 @@ void register_collision(Entity ent, ECS *ecs) {}
 
 void MainState::handle_keydown(
     SDL_Event
-        *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
+        *event) { // We can be sure it's an ...
+	main_ecs.debug_cout_entity_state(2);
 }
 
 void MainState::handle_click(
