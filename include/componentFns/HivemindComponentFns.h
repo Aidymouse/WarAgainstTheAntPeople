@@ -2,4 +2,4 @@
 
 #include <ecs/ECS.hpp>
 
-void dissolve_hivemind(ECS *ecs, Entity ent) {}
+void dissolve_hivemind(ECS *ecs, Entity ent);
