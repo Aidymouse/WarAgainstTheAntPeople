@@ -157,6 +157,7 @@ struct Buildable {
   AnimFrame stage_frames[MAX_BUILDABLE_STAGES];
   unsigned short points_required[MAX_BUILDABLE_STAGES];
   unsigned short cur_build_points;
+	ResourceTypes desired_resource;
 };
 
 struct Carrier {
