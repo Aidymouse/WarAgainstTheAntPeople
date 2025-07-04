@@ -9,10 +9,10 @@
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid);
 void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid);
 
-/** Looks at build sites and resources and determines if a buildsite should be
- * created or added to */
+/** Looks at build sites and resources and determines if a buildsite should be created or added to */
 void BuildSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   BuildSystem_check_resources(dt, ecs, grid);
+  BuildSystem_check_buildsites(dt, ecs, grid);
 }
 
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
@@ -102,10 +102,10 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 		v->texture = b_texture_store.get("tower");
 		v->frame = b.stage_frames[0];
 
-        ecs->add_component_to_entity<Buildable>(resource_id, b);
-		
+        	ecs->add_component_to_entity<Buildable>(resource_id, b);
+	
 		Scannable *s = ecs->get_component_for_entity<Scannable>(resource_id);
-		s->scan_value = SCAN_VALUES::SV_BUILD_SITE;
+		s->scan_value = SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP;
 
 		if (ecs->entity_has_component<hv_Brain>(resource_id)) {
 			// Resource is being carried most likely
@@ -119,11 +119,47 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			dissolve_hivemind(ecs, resource_id);
 			
 		}
-	// TODO: kick out anyone holding me - i can't be held anymore! tho theoretically carryable being turned off should fix this...
 
       }
     }
   }
 }
 
-void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {}
+void BuildSystem_add_resource_to_buildsite(ECS *ecs, Entity buildsite_id, Entity resource_id) {
+}
+
+void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
+
+	std::shared_ptr<ComponentArray<Buildable>> comp_buildable = ecs->get_component_array<Buildable>();
+
+	for (int e = 0; e<comp_buildable->get_num_components(); e++) {
+		Entity buildsite_id = comp_buildable->get_entity_from_idx(e);
+		Collider buildsite_collider = *(ecs->get_component_for_entity<Collider>(buildsite_id));
+		std::set<Entity> col_ents = grid->get_collisions(buildsite_collider, ecs);
+		Buildable *buildsite_buildable = ecs->get_component_for_entity<Buildable>(buildsite_id);
+		for (auto ce=col_ents.begin(); ce!=col_ents.end(); ce++) {
+			Entity collided_ent = (Entity) *ce;
+			if (ecs->entity_has_component<Resource>(collided_ent)) { 
+				Resource *collided_resource = ecs->get_component_for_entity<Resource>(collided_ent);
+				if (collided_resource->type == buildsite_buildable->desired_resource) {
+					// Add resource to buildsite
+					buildsite_buildable->cur_build_points += collided_resource->value;
+					
+					// Clean Resorce
+					if (ecs->entity_has_component<hv_Brain>(collided_ent)) {
+						dissolve_hivemind(ecs, collided_ent);
+					}
+					grid->remove_entity(collided_ent);
+					ecs->remove_entity(collided_ent);
+
+					// TODO progress buildsite
+					// TODO let guys wander again
+					
+				}
+			}
+		}
+	}
+
+}
+
+
