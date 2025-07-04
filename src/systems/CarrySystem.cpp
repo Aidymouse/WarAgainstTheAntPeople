@@ -82,8 +82,8 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
           ecs->add_component_to_entity<ScanningFor>(
               pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
                            SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
-                           SCAN_VALUES::SV_SCRAP_METAL, -1},
-                          {500, 500, 500, 0}});
+                           SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP},
+                          {500, 500, 500, 500}});
           ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
           // ecs->add_component_to_entity<GuyBrain>(pickup_id,
           //                                        {GuyState::SEEKING, 0});
