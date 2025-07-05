@@ -43,6 +43,9 @@ enum COMP_SIG { // Component Signature Indexes
   // Traits
   HANDSFREE = 20,
 
+  SHOOTER = 21,
+  PROJECTILE = 22,
+
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
@@ -132,7 +135,7 @@ struct Visible {
   SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
-  xy offset; // For texture shifting
+  xy offset; // For texture shifting, in addition to frames offset
 };
 
 // Same as visible except drawn seperately
@@ -140,7 +143,7 @@ struct SortedVisible {
   SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
-  xy offset; // For texture shifting
+  xy offset; // For texture shifting, in addition to frames offset
 };
 
 enum ResourceTypes { RT_SCRAP_METAL };
@@ -150,14 +153,31 @@ struct Resource {
   short value;
 };
 
+
+enum StructureType { ST_TOWER };
+
 #define MAX_BUILDABLE_STAGES 4
 struct Buildable {
-  int cur_stage;
-  int num_stages;
-  AnimFrame stage_frames[MAX_BUILDABLE_STAGES];
-  unsigned short points_required[MAX_BUILDABLE_STAGES];
-  unsigned short cur_build_points;
+	int cur_stage;
+	int num_stages;
+	AnimFrame stage_frames[MAX_BUILDABLE_STAGES];
+	unsigned short points_required[MAX_BUILDABLE_STAGES];
+	unsigned short cur_build_points;
 	ResourceTypes desired_resource;
+	StructureType target_structure_type;
+	bool full;
+};
+
+enum ProjectileType { PT_ROCK };
+struct Shooter {
+	ProjectileType projectile_type;
+	float shoot_interval;
+	float shoot_timer;
+	Vec2 target_pos;
+};
+
+struct Projectile {
+	int damage;
 };
 
 struct Carrier {
