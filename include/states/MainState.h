@@ -17,6 +17,7 @@
 #include <systems/CollisionSystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/SortedDrawSystem.h>
+#include <systems/ShootSystem.h>
 
 class MainState : public GameState {
 
@@ -30,6 +31,7 @@ class MainState : public GameState {
   std::shared_ptr<HivemindBrainSystem> sys_hivemind_brain;
   std::shared_ptr<CarrySystem> sys_carry;
   std::shared_ptr<BuildSystem> sys_build;
+  std::shared_ptr<ShootSystem> sys_shoot;
 
   Entity main_base = -1;
   Entity tool_hand = -1;

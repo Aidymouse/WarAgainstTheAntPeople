@@ -11,4 +11,5 @@ target_sources(EvilPikmin PRIVATE
 	CarrySystem.cpp
 	HivemindSystem.cpp
 	BuildSystem.cpp
+	ShootSystem.cpp
 )

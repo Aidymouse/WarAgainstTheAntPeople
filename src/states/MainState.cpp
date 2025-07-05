@@ -25,6 +25,7 @@
 #include <systems/FollowsMouseSystem.h>
 #include <systems/ScanningSystem.h>
 #include <systems/SortedDrawSystem.h>
+#include <systems/ShootSystem.h>
 
 #include <anim/GuyAnim.hpp>
 #include <anim/NotMovingAnim.hpp>
@@ -192,24 +193,21 @@ void MainState::load_ecs() {
   /** Set up Systems */
   COMP_SIG draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE};
   sys_draw = main_ecs.register_system<DrawSystem>(draw_sigs, 2);
+
   COMP_SIG sorted_draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::SORTEDVISIBLE};
-  sys_sorted_draw =
-      main_ecs.register_system<SortedDrawSystem>(sorted_draw_sigs, 2);
+  sys_sorted_draw = main_ecs.register_system<SortedDrawSystem>(sorted_draw_sigs, 2);
 
   COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
   sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);
 
-  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION,
-                               COMP_SIG::TRANSFORM};
+  COMP_SIG scanning_sigs[3] = {COMP_SIG::SCANNING_FOR, COMP_SIG::POSITION, COMP_SIG::TRANSFORM};
   sys_scanning = main_ecs.register_system<ScanningSystem>(scanning_sigs, 3);
 
   COMP_SIG follows_mouse[2] = {COMP_SIG::FOLLOWS_MOUSE, COMP_SIG::POSITION};
-  sys_follows_mouse =
-      main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
+  sys_follows_mouse = main_ecs.register_system<FollowsMouseSystem>(follows_mouse, 2);
   // sys_draw = main_ecs.register_system<DrawSystem>(draw_sig);
 
-  COMP_SIG guy_brain_sig[3] = {COMP_SIG::GUY_BRAIN, COMP_SIG::POSITION,
-                               COMP_SIG::VISIBLE};
+  COMP_SIG guy_brain_sig[3] = {COMP_SIG::GUY_BRAIN, COMP_SIG::POSITION, COMP_SIG::VISIBLE};
   sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 3);
 
   // COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
@@ -217,14 +215,16 @@ void MainState::load_ecs() {
   // 1);
 
   COMP_SIG hivemind_brain_sig[1] = {COMP_SIG::HV_BRAIN};
-  sys_hivemind_brain =
-      main_ecs.register_system<HivemindBrainSystem>(hivemind_brain_sig, 1);
+  sys_hivemind_brain = main_ecs.register_system<HivemindBrainSystem>(hivemind_brain_sig, 1);
 
   COMP_SIG carry_sig[2] = {COMP_SIG::CARRYABLE, COMP_SIG::COLLIDER};
   sys_carry = main_ecs.register_system<CarrySystem>(carry_sig, 2);
 
   Signature build_sig = COMP_SIG::BUILDABLE ^ 2;
   sys_build = main_ecs.register_system<BuildSystem>(build_sig);
+
+  Signature shoot_sig = COMP_SIG::SHOOTER ^ 2;
+  sys_shoot = main_ecs.register_system<ShootSystem>(shoot_sig);
 
   /** Set up components */
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
@@ -261,4 +261,7 @@ void MainState::load_ecs() {
   main_ecs.register_component<hv_Participant>(COMP_SIG::HV_PARTICIPANT);
 
   main_ecs.register_component<HandsFree>(COMP_SIG::HANDSFREE);
+
+  main_ecs.register_component<Shooter>(COMP_SIG::SHOOTER);
+  main_ecs.register_component<Projectile>(COMP_SIG::PROJECTILE);
 }
