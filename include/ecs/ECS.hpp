@@ -11,7 +11,7 @@
 
 #include <ProjectConfig.h>
 
-const bool debug = false;
+const bool ecs_debug = false;
 
 class ECS {
   std::queue<Entity> free_ids;
@@ -53,10 +53,7 @@ public:
   };
 
   template <typename T> bool entity_has_component(Entity ent) {
-    return entity_exists(ent) &&
-           (get_signature_for_entity(
-                ent)[component_manager->get_signature_index_for_type<T>()] ==
-            1);
+    return entity_exists(ent) && (get_signature_for_entity( ent)[component_manager->get_signature_index_for_type<T>()] == 1);
   }
   bool entity_has_components(Entity ent, Signature sig) {
     Signature ent_sig = get_signature_for_entity(ent);
@@ -79,9 +76,8 @@ public:
 
   template <typename T> void add_component_to_entity(Entity id, T data) {
     int sig_index = component_manager->get_signature_index_for_type<T>();
-    if (debug) {
-      std::cout << "Adding entity " << id << " to component " << sig_index
-                << std::endl;
+    if (ecs_debug) {
+      std::cout << "Adding entity " << id << " to component " << sig_index << std::endl;
     }
     if (signatures[id][sig_index]) {
       // std::cout << "Entity " << id << " already has " << typeid(T).name()
