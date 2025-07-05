@@ -108,8 +108,8 @@ void SortedDrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
         component_manager->get_component_data<SortedVisible>(ent);
 
     SDL_FRect source_rect = vis->frame.rect;
-    SDL_FRect target_rect = {std::floor(pos->x + vis->offset.x),
-                             std::floor(pos->y + vis->offset.y),
+    SDL_FRect target_rect = {std::floor(pos->x + vis->offset.x + vis->frame.offset_x),
+                             std::floor(pos->y + vis->offset.y + vis->frame.offset_y),
                              vis->frame.rect.w, vis->frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis->texture, &source_rect, &target_rect);

@@ -6,9 +6,9 @@ struct {
 
   /* Normal Ant Behavior */
   // guy_sheet.bmp
-  AnimFrame NORM = {{0, 0, 16, 16}, 0.3, &NORM2};
+  AnimFrame NORM = {{0, 0, 16, 16}, 0.3, &NORM2, -7, -11};
   // NORM2 = {{16, 0, 16, 16}, -1, &NORM};
-  AnimFrame NORM2 = {{16, 0, 16, 16}, 0.3, &NORM};
+  AnimFrame NORM2 = {{16, 0, 16, 16}, 0.3, &NORM, -7, -11};
 
   /** Squish */
   // squish.bmp

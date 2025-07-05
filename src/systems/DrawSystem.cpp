@@ -44,10 +44,8 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 
   // To keep rendering fast, we're going to assume that all
 
-  std::shared_ptr<ComponentArray<Visible>> visibles =
-      component_manager->get_component_array<Visible>();
-  std::shared_ptr<ComponentArray<Position>> positions =
-      component_manager->get_component_array<Position>();
+  std::shared_ptr<ComponentArray<Visible>> visibles = component_manager->get_component_array<Visible>();
+  std::shared_ptr<ComponentArray<Position>> positions = component_manager->get_component_array<Position>();
 
   // Draw all visibles
   for (int i = 0; i < visibles->get_num_components(); i++) {
@@ -60,8 +58,8 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
     // Visible *vis = component_manager->get_component_data<Visible>(ent);
 
     SDL_FRect source_rect = vis.frame.rect;
-    SDL_FRect target_rect = {std::floor(pos->x + vis.offset.x),
-                             std::floor(pos->y + vis.offset.y),
+    SDL_FRect target_rect = {std::floor(pos->x + vis.offset.x + vis.frame.offset_x),
+                             std::floor(pos->y + vis.offset.y + vis.frame.offset_y),
                              vis.frame.rect.w, vis.frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
