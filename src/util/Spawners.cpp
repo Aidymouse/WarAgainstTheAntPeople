@@ -19,7 +19,7 @@ TextureStore &spawners_texture_store = TextureStore::getInstance();
 void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
   Visible v = {
-      spawners_texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {-7, -11}};
+      spawners_texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {0, 0}};
   float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
   float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
   Position p = {x, y, 0};
@@ -35,9 +35,10 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
   ecs->add_component_to_entity<HandsFree>(g, {});
 
   // if (rand() % 100 < 10) {
-  ecs->add_component_to_entity<ScanningFor>(
-      g, {{SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP, -1, -1},
-          {5000, 5000, 0, 0}});
+  ecs->add_component_to_entity<ScanningFor>( g, {
+	{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
+          {500, 500, 0, 0}
+});
   // } else {
   //   g_Wandering *w = GuySM::enter_wandering(g, ecs);
   // }
