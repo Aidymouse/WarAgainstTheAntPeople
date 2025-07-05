@@ -166,6 +166,8 @@ void MainState::update(float dt) {
   if (mainstate_debug) std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
 
+	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
+	sys_shoot->update(dt, &main_ecs, &main_grid);
 
   // sys_collision->strip_collided(dt, &main_ecs);
   //  Uint32 m = SDL_GetMouseState(nullptr, nullptr);
@@ -210,21 +212,17 @@ void MainState::load_ecs() {
   COMP_SIG guy_brain_sig[3] = {COMP_SIG::GUY_BRAIN, COMP_SIG::POSITION, COMP_SIG::VISIBLE};
   sys_guy_brain = main_ecs.register_system<GuyBrainSystem>(guy_brain_sig, 3);
 
-  // COMP_SIG collision_sig[1] = {COMP_SIG::COLLIDER};
-  // sys_collision = main_ecs.register_system<CollisionSystem>(collision_sig,
-  // 1);
-
   COMP_SIG hivemind_brain_sig[1] = {COMP_SIG::HV_BRAIN};
   sys_hivemind_brain = main_ecs.register_system<HivemindBrainSystem>(hivemind_brain_sig, 1);
 
   COMP_SIG carry_sig[2] = {COMP_SIG::CARRYABLE, COMP_SIG::COLLIDER};
   sys_carry = main_ecs.register_system<CarrySystem>(carry_sig, 2);
 
-  Signature build_sig = COMP_SIG::BUILDABLE ^ 2;
-  sys_build = main_ecs.register_system<BuildSystem>(build_sig);
+  COMP_SIG build_sig[1] = {COMP_SIG::BUILDABLE};
+  sys_build = main_ecs.register_system<BuildSystem>(build_sig, 1);
 
-  Signature shoot_sig = COMP_SIG::SHOOTER ^ 2;
-  sys_shoot = main_ecs.register_system<ShootSystem>(shoot_sig);
+  COMP_SIG shoot_sig[1] = {COMP_SIG::SHOOTER};
+  sys_shoot = main_ecs.register_system<ShootSystem>(shoot_sig, 1);
 
   /** Set up components */
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
