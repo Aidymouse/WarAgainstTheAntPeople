@@ -181,9 +181,9 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 							ecs->remove_component_from_entity<Scannable>(buildsite_id);	
 							Shooter s = {
 								ProjectileType::PT_ROCK,
-								1000,
-								200,
-								Vec2(0, 0)
+								10,
+								2,
+								Vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
 							};
 							ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
 						}
