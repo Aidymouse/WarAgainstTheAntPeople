@@ -28,7 +28,6 @@ void strip_invalid_carrieds(ECS *ecs) {
 
     Entity carried_ent = ca->carried_entity.value();
     if (!ecs->entity_has_component<Carryable>(carried_ent)) {
-	// TODO: why this not work??
       ca->carried_entity.reset();
     }
   }
@@ -36,26 +35,22 @@ void strip_invalid_carrieds(ECS *ecs) {
 
 void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
                     CollisionGrid *grid) {
-  std::shared_ptr<ComponentArray<Carrier>> comp_carrier =
-      ecs->get_component_array<Carrier>();
+  std::shared_ptr<ComponentArray<Carrier>> comp_carrier = ecs->get_component_array<Carrier>();
 
-  std::shared_ptr<ComponentArray<Carryable>> comp_carryable =
-      ecs->get_component_array<Carryable>();
+  std::shared_ptr<ComponentArray<Carryable>> comp_carryable = ecs->get_component_array<Carryable>();
 
   for (auto carryable_e = registered_entities->begin();
        carryable_e != registered_entities->end(); carryable_e++) {
     Entity carryable_ent = (Entity)*carryable_e;
 
-    Collider *carryable_col =
-        ecs->get_component_for_entity<Collider>(carryable_ent);
+    Collider *carryable_col = ecs->get_component_for_entity<Collider>(carryable_ent);
 
     std::set<Entity> collided = grid->get_collisions(*carryable_col, ecs);
     for (auto collided_e = collided.begin(); collided_e != collided.end();
          collided_e++) {
       Entity collided_ent = (Entity)*collided_e;
 
-      if (collided_ent == carryable_ent)
-        continue;
+      if (collided_ent == carryable_ent) continue;
 
       Signature s;
       s[COMP_SIG::HANDSFREE] = 1;
@@ -80,9 +75,12 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
           // b.entities[0] = guy_id;
 
           ecs->add_component_to_entity<ScanningFor>(
-              pickup_id, {{SCAN_VALUES::SV_CARRIED_SCRAP,
-                           SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
-                           SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP},
+              pickup_id, {{
+			SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP,
+			SCAN_VALUES::SV_CARRIED_SCRAP,
+                        SCAN_VALUES::SV_SCRAP_METAL,
+                        SCAN_VALUES::SV_CARRIED_SCRAP_FULL,
+			},
                           {500, 500, 500, 500}});
           ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
           // ecs->add_component_to_entity<GuyBrain>(pickup_id,
@@ -122,8 +120,7 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
 
           Position *guy_pos = ecs->get_component_for_entity<Position>(guy_id);
 
-          Position *pickup_pos =
-              ecs->get_component_for_entity<Position>(pickup_id);
+          Position *pickup_pos = ecs->get_component_for_entity<Position>(pickup_id);
 
           hv_Participant guy_hv;
           Vec2 off = Vec2(guy_pos->x, guy_pos->y) - Vec2(pickup_pos->x, pickup_pos->y);
@@ -148,10 +145,8 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
           trans->vel_z = 0;
 
           if (c->carriers_count == c->carrier_limit) {
-            Scannable *picked_up_scannable =
-                ecs->get_component_for_entity<Scannable>(pickup_id);
-            picked_up_scannable->scan_value =
-                SCAN_VALUES::SV_CARRIED_SCRAP_FULL;
+            Scannable *picked_up_scannable = ecs->get_component_for_entity<Scannable>(pickup_id);
+            picked_up_scannable->scan_value = SCAN_VALUES::SV_CARRIED_SCRAP_FULL;
           }
         }
       }
