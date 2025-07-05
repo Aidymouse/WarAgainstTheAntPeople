@@ -7,28 +7,27 @@
 #include <systems/ScanningSystem.h>
 #include <util/Vec2.hpp>
 
+/** When scanning for an object, an entity will target the closest object with the highest priority 
+ * (the order of scan values in the ScanningFor component is priority order) 
+ * */
 void ScanningSystem::update(float dt, ECS *ecs) {
 
-  ComponentArray<Scannable> scannable =
-      *(component_manager->get_component_array<Scannable>());
-  int num_scannable = scannable.get_num_components();
+	ComponentArray<Scannable> comp_scannable = *(component_manager->get_component_array<Scannable>());
+	int num_scannable = comp_scannable.get_num_components();
 
-  std::set<Entity> ents_to_erase;
+	std::set<Entity> ents_to_erase;
 
-  // std::cout << ents_to_erase << std::endl;
-  //
   // Eureka!
   // We need to scan for entities in rings of collision cells. That'll be way
   // faster than scanning each of them.
 
-  for (auto e = registered_entities.begin(); e != registered_entities.end();
-       e++) {
-    Entity ent = (Entity)*e;
+ 	for (auto e = registered_entities.begin(); e != registered_entities.end(); e++) {
+    	Entity ent = (Entity)*e;
 
-/*
-	std::cout << "Scanning System Processing for [" << ent << "]" << std::endl;
-	ecs->debug_cout_entity_state(ent);
-*/
+		/*
+		std::cout << "Scanning System Processing for [" << ent << "]" << std::endl;
+		ecs->debug_cout_entity_state(ent);
+		*/
 
     ScanningFor *scanning_for =
         component_manager->get_component_data<ScanningFor>(ent);
@@ -38,44 +37,40 @@ void ScanningSystem::update(float dt, ECS *ecs) {
     Vec2 closest_pos;
     Position *pos = component_manager->get_component_data<Position>(ent);
 
-    for (int i = 0; i < num_scannable; i++) {
-      Scannable s = scannable.get_data_from_idx(i);
-      Entity scannable_ent = scannable.get_entity_from_idx(i);
+	int earliest_scan_value_found = MAX_SCAN_VALUES+1; // Very simple priority system
+
+	for (int i = 0; i < num_scannable; i++) {
+	Scannable s = comp_scannable.get_data_from_idx(i);
+	Entity scannable_ent = comp_scannable.get_entity_from_idx(i);
 
       if (ent == scannable_ent)
         continue;
 
-      bool sought = false;
-      float max_scan_range = 0;
-      for (int sv = 0; sv < MAX_SCAN_VALUES; sv++) {
-        if (s.scan_value == scanning_for->sought_scan_values[sv]) {
-          sought = true;
-          max_scan_range = scanning_for->max_range[sv];
-          break;
-        }
-      }
+	bool sought = false;
+	float max_scan_range = 0;
 
-      // std::cout << "Scanning [" << ent << "] max range " << max_scan_range
-      //           << std::endl;
+	for (int sv = 0; sv < MAX_SCAN_VALUES; sv++) {
+		if (s.scan_value == scanning_for->sought_scan_values[sv] && sv <= earliest_scan_value_found) {
+			sought = true;
+			earliest_scan_value_found = sv;
+			max_scan_range = scanning_for->max_range[sv];
+			break;
+		}
+	}
 
-      if (sought) {
-        // std::cout << ent << " seeking " << s.scan_value << std::endl;
-        Position p =
-            *component_manager->get_component_data<Position>(scannable_ent);
+	if (!sought) continue;
 
-        // float dist = sqrt(pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2));
-        float dist = pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2);
-        // std::cout << dist << "\n";
+	Position p = *component_manager->get_component_data<Position>(scannable_ent);
+	float dist = pow((p.x - pos->x), 2) + pow((p.y - pos->y), 2);
 
-        if (dist < shortest_dist &&
-            (max_scan_range == -1 || dist < max_scan_range * max_scan_range)) {
-          sought_ent = scannable_ent;
-          shortest_dist = dist;
-          closest_pos.x = p.x;
-          closest_pos.y = p.y;
-        }
-      }
-      // std::cout << "[" << ent << "] Shortest Dist " << shortest_dist;
+	// Squaring max scan range means i dont need to square root tee hee
+	if (dist < shortest_dist && (max_scan_range == -1 || dist < max_scan_range * max_scan_range)) {
+		sought_ent = scannable_ent;
+		shortest_dist = dist;
+		closest_pos.x = p.x;
+		closest_pos.y = p.y;
+	}
+	// std::cout << "[" << ent << "] Shortest Dist " << shortest_dist;
     }
 
     if (shortest_dist != INFINITY) {
