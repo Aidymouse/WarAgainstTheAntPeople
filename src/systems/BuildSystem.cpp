@@ -5,6 +5,7 @@
 #include <componentFns/HivemindComponentFns.h>
 #include <components/HivemindComponents.hpp>
 #include <data/TextureStore.hpp>
+#include <componentFns/BuildComponentFns.h>
 
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid);
 void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid);
@@ -68,7 +69,7 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_resource_ent);
 
 			for (int e = 0; e<hv->num_entities; e++){
-				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {500, 500, 0, 0}});
 				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 			}
 
@@ -87,20 +88,30 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
         ecs->remove_component_from_entity<Persuing>(resource_id);
         ecs->remove_component_from_entity<Transform>(resource_id);
 
-        Buildable b = {0,
-                       4,
-                       {
-                           bs_TowerAnim.BUILD1,
-                           bs_TowerAnim.BUILD2,
-                           bs_TowerAnim.BUILD3,
-                           bs_TowerAnim.BUILD4,
-                       },
-                       {5, 5, 5, 5},
-                       0};
+        Buildable b = {
+			0,
+			4,
+			{ bs_TowerAnim.BUILD1, bs_TowerAnim.BUILD2, bs_TowerAnim.BUILD3, bs_TowerAnim.BUILD4, },
+			{0, 1, 1, 0},
+			0,
+			ResourceTypes::RT_SCRAP_METAL,
+			StructureType::ST_TOWER,
+			false
+		};
 
 		Visible *v = ecs->get_component_for_entity<Visible>(resource_id);
 		v->texture = b_texture_store.get("tower");
 		v->frame = b.stage_frames[0];
+
+		SortedVisible sv;
+		sv.texture = v->texture;
+		sv.frame = b.stage_frames[0];
+		sv.anim_timer = b.stage_frames[0].duration;
+		sv.offset.x = v->offset.x;
+		sv.offset.y = v->offset.y;
+
+        	ecs->add_component_to_entity<SortedVisible>(resource_id, sv);
+        	ecs->remove_component_from_entity<Visible>(resource_id);
 
         	ecs->add_component_to_entity<Buildable>(resource_id, b);
 	
@@ -112,7 +123,7 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
 
 			for (int e = 0; e<hv->num_entities; e++){
-				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {500, 500, 0, 0}});
 				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 			}
 
@@ -137,23 +148,47 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 		Collider buildsite_collider = *(ecs->get_component_for_entity<Collider>(buildsite_id));
 		std::set<Entity> col_ents = grid->get_collisions(buildsite_collider, ecs);
 		Buildable *buildsite_buildable = ecs->get_component_for_entity<Buildable>(buildsite_id);
+		if (buildsite_buildable->full) continue;
+
 		for (auto ce=col_ents.begin(); ce!=col_ents.end(); ce++) {
 			Entity collided_ent = (Entity) *ce;
 			if (ecs->entity_has_component<Resource>(collided_ent)) { 
 				Resource *collided_resource = ecs->get_component_for_entity<Resource>(collided_ent);
 				if (collided_resource->type == buildsite_buildable->desired_resource) {
+					
 					// Add resource to buildsite
 					buildsite_buildable->cur_build_points += collided_resource->value;
 					
-					// Clean Resorce
+					// Clean Resource
 					if (ecs->entity_has_component<hv_Brain>(collided_ent)) {
+						hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_ent);
+
+						for (int e = 0; e<hv->num_entities; e++){
+							ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+							ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
+						}
 						dissolve_hivemind(ecs, collided_ent);
 					}
 					grid->remove_entity(collided_ent);
 					ecs->remove_entity(collided_ent);
 
-					// TODO progress buildsite
-					// TODO let guys wander again
+					// Progress Buildsite
+					if (buildsite_buildable->cur_build_points >= buildsite_buildable->points_required[buildsite_buildable->cur_stage]) {
+						advance_build_stage(ecs, buildsite_buildable, buildsite_id);
+
+						// TODO turn fully built site into designated structure					
+						if (buildsite_buildable->full) {
+							ecs->remove_component_from_entity<Scannable>(buildsite_id);	
+							Shooter s = {
+								ProjectileType::PT_ROCK,
+								1000,
+								200,
+								Vec2(0, 0)
+							};
+							ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
+						}
+					}
+					
 					
 				}
 			}
@@ -163,3 +198,4 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 }
 
 
+// TODO destruction subroutine
