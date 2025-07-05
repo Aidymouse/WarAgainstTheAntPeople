@@ -1,4 +1,3 @@
-
 #include <ctime>
 #include <iostream>
 
@@ -9,11 +8,10 @@
 #include <util/Helper.h>
 
 int main() {
+	srand(time(NULL));
 
-  srand(time(NULL));
+	std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
 
-  std::cout << "Graphics Path: " << GRAPHICS_PATH << std::endl;
-
-  Engine game;
-  game.run();
+	Engine game;
+	game.run();
 }
