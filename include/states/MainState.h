@@ -18,6 +18,7 @@
 #include <systems/DrawSystem.h>
 #include <systems/SortedDrawSystem.h>
 #include <systems/ShootSystem.h>
+#include <systems/DamageSystem.h>
 
 class MainState : public GameState {
 
@@ -32,6 +33,7 @@ class MainState : public GameState {
   std::shared_ptr<CarrySystem> sys_carry;
   std::shared_ptr<BuildSystem> sys_build;
   std::shared_ptr<ShootSystem> sys_shoot;
+  std::shared_ptr<DamageSystem> sys_damage;
 
   Entity main_base = -1;
   Entity tool_hand = -1;

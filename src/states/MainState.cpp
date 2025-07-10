@@ -26,6 +26,7 @@
 #include <systems/ScanningSystem.h>
 #include <systems/SortedDrawSystem.h>
 #include <systems/ShootSystem.h>
+#include <systems/DamageSystem.h>
 
 #include <anim/GuyAnim.hpp>
 #include <anim/NotMovingAnim.hpp>
@@ -40,45 +41,43 @@ TextureStore &texture_store = TextureStore::getInstance();
 
 MainState::MainState() {
 
-  TextureStore &texture_store = TextureStore::getInstance();
+	TextureStore &texture_store = TextureStore::getInstance();
 
-  load_ecs();
+	load_ecs();
 
-  // Main Base
-  // main_base = main_ecs.add_entity();
-  // float base_x = WINDOW_WIDTH / 2.f;
-  // float base_y = WINDOW_HEIGHT / 2.f;
-  // main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
-  // CollisionShape base_circle;
-  // base_circle.circle = {base_x, base_y, 50};
-  // Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE,
-  //                             {(int)base_x, (int)base_y}};
-  // // base_collision.type = CollisionType::GO_SOMEWHERE_ELSE;
-  // // base_collision.data.go_somewhere_else = {Vec2(base_x, base_y)};
-  // Collider base_c = {CollisionShapeType::CIRCLE, base_circle,
-  // base_collision}; main_ecs.add_component_to_entity<Collider>(main_base,
-  // base_c);
+	// Main Base
+	main_base = main_ecs.add_entity();
+	float base_x = WINDOW_WIDTH / 2.f;
+	float base_y = WINDOW_HEIGHT / 2.f;
+	main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
+	CollisionShape base_circle;
+	base_circle.circle = {base_x, base_y, 50};
+	Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE, {(int)base_x, (int)base_y}};
+	Collider base_c = {CollisionShapeType::CIRCLE, base_circle, base_collision};
+	main_ecs.add_component_to_entity<Collider>(main_base, base_c);
+	main_ecs.add_component_to_entity<Damageable>(main_base, {
+		100,
+		1
+	});
 
-  //   Hand
-  tool_hand = main_ecs.add_entity();
-  main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 5});
-  main_ecs.add_component_to_entity<SortedVisible>(
-      tool_hand,
-      {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
-  main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
+	// Hand
+	tool_hand = main_ecs.add_entity();
+	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 5});
+	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
+	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 
-  // Guys
-  // The benchmark is 3000
-  // If we want to hit 10,000 then I'll need to bust out Vulkan I think
-  for (int g = 0; g < 5; g++) {
-    Spawners::add_guy(&main_ecs, &main_grid);
-  }
-  for (int s = 0; s < 60; s++) {
-    Spawners::add_scrap(&main_ecs);
-  }
+	// Guys
+	// The benchmark is 3000
+	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
+	for (int g = 0; g < 5; g++) {
+		Spawners::add_guy(&main_ecs, &main_grid);
+	}
+	for (int s = 0; s < 60; s++) {
+		Spawners::add_scrap(&main_ecs);
+	}
 
-  // if (mainstate_debug) std::cout << "Removing entity" << std::endl;
-  // main_ecs.remove_entity(3);
+	// if (mainstate_debug) std::cout << "Removing entity" << std::endl;
+	// main_ecs.remove_entity(3);
 }
 
 MainState::~MainState() {}
@@ -93,22 +92,14 @@ void MainState::handle_keydown(
 	main_ecs.debug_cout_entity_state(2);
 }
 
-void MainState::handle_click(
-    SDL_Event
-        *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
+void MainState::handle_click( SDL_Event *event) { // We can be sure it's an SDL_MouseButtonEvent, i checked.
   int btn = event->button.button;
-  if (mainstate_debug)
-    if (mainstate_debug) std::cout << "Clicked: " << btn << std::endl;
+  if (mainstate_debug) if (mainstate_debug) std::cout << "Clicked: " << btn << std::endl;
 
-  Collision mallet_hit = {
-      CollisionType::SQUISH,
-      {10},
-  };
+  Collision mallet_hit = { CollisionType::SQUISH, {10}, };
 
-  Collider mouse = {CollisionShapeType::CIRCLE,
-                    {event->button.x, event->button.y, 16},
-                    mallet_hit};
-  // std::set<int> ids = main_grid.get_overlapping_cells(mouse);
+  Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, mallet_hit}; 
+	// std::set<int> ids = main_grid.get_overlapping_cells(mouse);
   // Helper::cout_cell_ids(&ids);
 
   std::set<Entity> collided_ids = main_grid.get_collisions(mouse, &main_ecs);
@@ -165,6 +156,9 @@ void MainState::update(float dt) {
 
   if (mainstate_debug) std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
+
+  if (mainstate_debug) std::cout << "--- Damage System" << std::endl;
+	sys_damage->update(dt, &main_ecs, &main_grid);
 
 	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
 	sys_shoot->update(dt, &main_ecs, &main_grid);
@@ -224,6 +218,9 @@ void MainState::load_ecs() {
   COMP_SIG shoot_sig[1] = {COMP_SIG::SHOOTER};
   sys_shoot = main_ecs.register_system<ShootSystem>(shoot_sig, 1);
 
+	COMP_SIG damage_sig[2] = {COMP_SIG::DAMAGEABLE, COMP_SIG::COLLIDER};
+	sys_damage = main_ecs.register_system<DamageSystem>(damage_sig, 1);
+
   /** Set up components */
   main_ecs.register_component<Position>(COMP_SIG::POSITION);
   main_ecs.register_component<ZEnabled>(COMP_SIG::ZENABLED);
@@ -262,4 +259,7 @@ void MainState::load_ecs() {
 
   main_ecs.register_component<Shooter>(COMP_SIG::SHOOTER);
   main_ecs.register_component<Projectile>(COMP_SIG::PROJECTILE);
+
+  main_ecs.register_component<Damageable>(COMP_SIG::DAMAGEABLE);
+  main_ecs.register_component<Damager>(COMP_SIG::DAMAGER);
 }
