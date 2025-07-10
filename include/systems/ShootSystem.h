@@ -8,5 +8,6 @@
 class ShootSystem : public System {
 public:
   void update(float dt, ECS *ecs, CollisionGrid *grid);
+	void update_shooters(float dt, ECS *ecs, CollisionGrid *grid);
   // void draw(SDL_Renderer *renderer, ECS *ecs);
 };
