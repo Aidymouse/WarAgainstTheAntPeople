@@ -25,7 +25,7 @@ static int compare_visibles_by_position(SortedVisible v1, SortedVisible v2,
 // TODO one day it will handle decorations too
 void DrawSystem::update(float dt, ECS *ecs) {
 
-  // Update animation timer
+  // Update animation timers TODO
   for (auto e = registered_entities.begin(); e != registered_entities.end();
        e++) {
     Entity ent = (Entity)*e;
@@ -58,7 +58,9 @@ void DrawSystem::update(float dt, ECS *ecs) {
 
 
 void render_component(SDL_Renderer *renderer, ECS *ecs, Visible vis, Position *pos) {
+	/** Draw Shadow if in air */
 	if (pos->z > 0) {
+    	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
 		int shadow_radius = vis.frame.rect.w/1.5 - pos->z*5;
 		if (shadow_radius < 10) { shadow_radius = 10; }
 		DrawFns::RenderFilledCircle(renderer, pos->x, pos->y, shadow_radius);
@@ -66,7 +68,7 @@ void render_component(SDL_Renderer *renderer, ECS *ecs, Visible vis, Position *p
 
     SDL_FRect source_rect = vis.frame.rect;
     SDL_FRect target_rect = {std::floor(pos->x + vis.offset.x + vis.frame.offset_x),
-                             std::floor(pos->y + vis.offset.y + vis.frame.offset_y),
+                             std::floor(pos->y + vis.offset.y + vis.frame.offset_y - pos->z),
                              vis.frame.rect.w, vis.frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
@@ -93,6 +95,7 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
   }
 
 /** Idk if this is horribly slow or what but we can convert a visible into a sorted visible pretty easily */
+// My biggest worry would be the stack frames calling a func for every entity but surely the component is smart enough to inline here...
 	std::shared_ptr<ComponentArray<SortedVisible>> sorted_visibles = component_manager->get_component_array<SortedVisible>();
   for (int i = 0; i < sorted_visibles->get_num_components(); i++) {
 
