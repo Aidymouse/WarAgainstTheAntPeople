@@ -46,6 +46,9 @@ enum COMP_SIG { // Component Signature Indexes
   SHOOTER = 21,
   PROJECTILE = 22,
 
+	DAMAGEABLE = 23,
+	DAMAGER = 24,
+
   // COL_MALLET = 7,
   //
   // SCANNABLE = 8,
@@ -102,9 +105,7 @@ struct Persuing {
 };
 
 struct Collided {
-  Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to
-                                                   // this many things per frame
-
+  Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to // this many things per frame
   int num_collisions;
 };
 
@@ -201,6 +202,20 @@ struct GuyBrain {
   float die_timer;
 };
 
-// struct HP {
-//   int hp;
-// };
+#define NUM_DAMAGE_TYPES 2
+enum DamageTypes {
+	DT_BLUDGEON=0, // Splat, hammer, etc
+	DT_FIRE=1, 
+};
+
+struct Damageable {
+	int hp;
+	std::bitset<NUM_DAMAGE_TYPES> valid_damage_types;
+};
+
+struct Damager {
+	int damage;
+	DamageTypes damage_type;
+	bool damaged_this_frame; // True if we did that
+	// TODO: behaivour after damage. For now just get rid of it after damage
+};
