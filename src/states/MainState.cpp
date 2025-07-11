@@ -61,7 +61,7 @@ MainState::MainState() {
 
 	// Hand
 	tool_hand = main_ecs.add_entity();
-	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 5});
+	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 50});
 	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
 	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 
