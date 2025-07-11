@@ -4,4 +4,5 @@
 
 namespace DrawFns {
 void RenderCircle(SDL_Renderer *renderer, float x, float y, float radius);
+void RenderFilledCircle(SDL_Renderer *renderer, float x, float y, float radius);
 } // namespace DrawFns

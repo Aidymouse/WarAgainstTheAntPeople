@@ -24,7 +24,6 @@
 #include <systems/DrawSystem.h>
 #include <systems/FollowsMouseSystem.h>
 #include <systems/ScanningSystem.h>
-#include <systems/SortedDrawSystem.h>
 #include <systems/ShootSystem.h>
 #include <systems/DamageSystem.h>
 
@@ -69,7 +68,7 @@ MainState::MainState() {
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
-	for (int g = 0; g < 5; g++) {
+	for (int g = 0; g < 3000; g++) {
 		Spawners::add_guy(&main_ecs, &main_grid);
 	}
 	for (int s = 0; s < 60; s++) {
@@ -86,9 +85,7 @@ void MainState::handle_mousemove() {}
 
 void register_collision(Entity ent, ECS *ecs) {}
 
-void MainState::handle_keydown(
-    SDL_Event
-        *event) { // We can be sure it's an ...
+void MainState::handle_keydown( SDL_Event *event) { // We can be sure it's an ...
 	main_ecs.debug_cout_entity_state(2);
 }
 
@@ -130,7 +127,6 @@ void MainState::update(float dt) {
   // if (mainstate_debug) std::cout << dt << std::endl;
   if (mainstate_debug) std::cout << "\nNew Frame" << std::endl;
 
-  // sys_collision->update(dt, &main_ecs, &main_grid);
 
   main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
@@ -139,20 +135,21 @@ void MainState::update(float dt) {
 
   if (mainstate_debug) std::cout << "--- Carry System" << std::endl;
   sys_carry->update(dt, &main_ecs, &main_grid);
+
   if (mainstate_debug) std::cout << "--- Build System" << std::endl;
   sys_build->update(dt, &main_ecs, &main_grid);
 
   if (mainstate_debug) std::cout << "--- Transform System" << std::endl;
   sys_transform->update(dt, &main_grid, &main_ecs);
+
   if (mainstate_debug) std::cout << "--- Scanning System" << std::endl;
   sys_scanning->update(dt, &main_ecs);
+
   if (mainstate_debug) std::cout << "--- Follows Mouse System" << std::endl;
   sys_follows_mouse->update(dt, &main_ecs, &main_grid);
 
   if (mainstate_debug) std::cout << "--- Draw System" << std::endl;
   sys_draw->update(dt, &main_ecs);
-  if (mainstate_debug) std::cout << "--- Sorted Draw System" << std::endl;
-  sys_sorted_draw->update(dt, &main_ecs);
 
   if (mainstate_debug) std::cout << "--- Hivemind Brain System" << std::endl;
   sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
@@ -176,7 +173,6 @@ void MainState::update(float dt) {
 
 void MainState::draw(SDL_Renderer *renderer) {
   sys_draw->draw(renderer, &main_ecs);
-  sys_sorted_draw->draw(renderer, &main_ecs);
 
   float mX, mY;
   SDL_GetMouseState(&mX, &mY);
@@ -187,11 +183,8 @@ void MainState::draw(SDL_Renderer *renderer) {
 
 void MainState::load_ecs() {
   /** Set up Systems */
-  COMP_SIG draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE};
-  sys_draw = main_ecs.register_system<DrawSystem>(draw_sigs, 2);
-
-  COMP_SIG sorted_draw_sigs[2] = {COMP_SIG::POSITION, COMP_SIG::SORTEDVISIBLE};
-  sys_sorted_draw = main_ecs.register_system<SortedDrawSystem>(sorted_draw_sigs, 2);
+  COMP_SIG draw_sigs[3] = {COMP_SIG::POSITION, COMP_SIG::VISIBLE, COMP_SIG::SORTEDVISIBLE}; // It's impossible to register with this system pretty much
+  sys_draw = main_ecs.register_system<DrawSystem>(draw_sigs, 3);
 
   COMP_SIG transform_sigs[2] = {COMP_SIG::TRANSFORM, COMP_SIG::POSITION};
   sys_transform = main_ecs.register_system<TransformSystem>(transform_sigs, 2);

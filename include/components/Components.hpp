@@ -135,13 +135,6 @@ struct xy {
   int y;
 };
 
-struct Visible {
-  SDL_Texture *texture;
-  AnimFrame frame;
-  float anim_timer;
-  xy offset; // For texture shifting, in addition to frames offset
-};
-
 // Same as visible except drawn seperately
 struct SortedVisible {
   SDL_Texture *texture;
@@ -149,6 +142,19 @@ struct SortedVisible {
   float anim_timer;
   xy offset; // For texture shifting, in addition to frames offset
 };
+
+struct Visible {
+  SDL_Texture *texture;
+  AnimFrame frame;
+  float anim_timer;
+  xy offset; // For texture shifting, in addition to frames offset
+
+/* TODO
+	explicit Visible(const SortedVisible& s_vis) { 
+	}
+*/
+};
+
 
 enum ResourceTypes { RT_SCRAP_METAL };
 

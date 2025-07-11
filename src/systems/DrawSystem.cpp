@@ -8,6 +8,21 @@
 #include <systems/DrawSystem.h>
 #include <util/DrawFns.h>
 
+static int compare_visibles_by_position(SortedVisible v1, SortedVisible v2,
+                                        Entity e1, Entity e2, ECS *ecs) {
+  Position p1 = *ecs->get_component_for_entity<Position>(e1);
+  Position p2 = *ecs->get_component_for_entity<Position>(e2);
+
+  if (p1.z > p2.z) {
+    return 1;
+  }
+
+  return 0;
+}
+
+// The draw system is responsible for two types of drawable entities - sorted and unsorted
+// It also manages putting things in sorted vs unsorted
+// TODO one day it will handle decorations too
 void DrawSystem::update(float dt, ECS *ecs) {
 
   // Update animation timer
@@ -35,27 +50,19 @@ void DrawSystem::update(float dt, ECS *ecs) {
       }
     }
   }
+
+	// Sort the sorted drawables
+  std::shared_ptr<ComponentArray<SortedVisible>> visibles = component_manager->get_component_array<SortedVisible>();
+  visibles->insertion_sort(&compare_visibles_by_position, ecs);
 }
 
-// This simplistic draw system just draws everything visible.
-// There is a counterpart, the sorted draw system, that sorts before it draws
-// Typically, this is used to draw guys.
-void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 
-  // To keep rendering fast, we're going to assume that all
-
-  std::shared_ptr<ComponentArray<Visible>> visibles = component_manager->get_component_array<Visible>();
-  std::shared_ptr<ComponentArray<Position>> positions = component_manager->get_component_array<Position>();
-
-  // Draw all visibles
-  for (int i = 0; i < visibles->get_num_components(); i++) {
-
-    Entity ent = visibles->get_entity_from_idx(i);
-    Visible vis = visibles->get_data_from_idx(i);
-
-    // Position *pos = component_manager->get_component_data<Position>(ent);
-    Position *pos = positions->get_data(ent);
-    // Visible *vis = component_manager->get_component_data<Visible>(ent);
+void render_component(SDL_Renderer *renderer, ECS *ecs, Visible vis, Position *pos) {
+	if (pos->z > 0) {
+		int shadow_radius = vis.frame.rect.w/1.5 - pos->z*5;
+		if (shadow_radius < 10) { shadow_radius = 10; }
+		DrawFns::RenderFilledCircle(renderer, pos->x, pos->y, shadow_radius);
+	}
 
     SDL_FRect source_rect = vis.frame.rect;
     SDL_FRect target_rect = {std::floor(pos->x + vis.offset.x + vis.frame.offset_x),
@@ -63,5 +70,45 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
                              vis.frame.rect.w, vis.frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, vis.texture, &source_rect, &target_rect);
-  }
 }
+
+
+
+
+// This simplistic draw system just draws everything visible. It sorts things marked sortable
+void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
+
+  std::shared_ptr<ComponentArray<Visible>> visibles = component_manager->get_component_array<Visible>();
+  //std::shared_ptr<ComponentArray<Position>> positions = component_manager->get_component_array<Position>();
+
+	//std::shared_ptr<ComponentArray<Visible>> sorted_visibles_c = std::static_pointer_cast<ComponentArray<Visible>>(sorted_visibles);
+
+  for (int i = 0; i < visibles->get_num_components(); i++) {
+
+    Entity ent = visibles->get_entity_from_idx(i);
+    Visible vis = visibles->get_data_from_idx(i);
+    Position *pos = ecs->get_component_for_entity<Position>(ent);
+
+	render_component(renderer, ecs, vis, pos);
+  }
+
+/** Idk if this is horribly slow or what but we can convert a visible into a sorted visible pretty easily */
+	std::shared_ptr<ComponentArray<SortedVisible>> sorted_visibles = component_manager->get_component_array<SortedVisible>();
+  for (int i = 0; i < sorted_visibles->get_num_components(); i++) {
+
+    Entity ent = sorted_visibles->get_entity_from_idx(i);
+    SortedVisible s_vis = sorted_visibles->get_data_from_idx(i);
+
+	Visible vis;
+	vis.texture = s_vis.texture;
+	vis.frame = s_vis.frame;
+	vis.offset.x = s_vis.offset.x;
+	vis.offset.y = s_vis.offset.y;
+
+    Position *pos = ecs->get_component_for_entity<Position>(ent);
+
+	render_component(renderer, ecs, vis, pos);
+  }
+
+}
+
