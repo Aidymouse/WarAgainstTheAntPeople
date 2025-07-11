@@ -41,21 +41,16 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
       }
     }
 
-    std::set<Entity> collided_resources =
-        grid->get_collisions(*resource_c, ecs);
+    std::set<Entity> collided_resources = grid->get_collisions(*resource_c, ecs);
 
-    for (auto resource_e = collided_resources.begin();
-         resource_e != collided_resources.end(); resource_e++) {
+    for (auto resource_e = collided_resources.begin(); resource_e != collided_resources.end(); resource_e++) {
       Entity collided_resource_ent = (Entity)*resource_e;
-      if (!ecs->entity_has_component<Resource>(collided_resource_ent))
-        continue;
+      if (!ecs->entity_has_component<Resource>(collided_resource_ent)) { continue; }
 
-      if (collided_resource_ent == resource_id)
-        continue;
+      if (collided_resource_ent == resource_id) { continue; }
 
       if ((ecs->entity_has_component<Carryable>(collided_resource_ent) &&
-           ecs->get_component_for_entity<Carryable>(collided_resource_ent)
-                   ->carriers_count > 0) ||
+           ecs->get_component_for_entity<Carryable>(collided_resource_ent) ->carriers_count > 0) ||
           is_carried) {
 		// Remove whatever i collided with
 		// Whatever was carrying this will get sorted out in the carry system
@@ -82,7 +77,13 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
         // Turn me into buildsite 
         // Tower for now cos i only have one
         ecs->remove_component_from_entity<Resource>(resource_id);
+
         ecs->remove_component_from_entity<Carryable>(resource_id);
+		if (ecs->entity_has_component<Position>(resource_id)) {
+			Position *p = ecs->get_component_for_entity<Position>(resource_id);
+			p->z = 0;
+		}
+
         ecs->remove_component_from_entity<ScanningFor>(resource_id);
         ecs->remove_component_from_entity<ScanningFor>(resource_id);
         ecs->remove_component_from_entity<Persuing>(resource_id);

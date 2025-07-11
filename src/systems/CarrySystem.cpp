@@ -57,6 +57,8 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
       s[COMP_SIG::GUY_BRAIN] = 1;
       // s[COMP_SIG::CARRIER] = 1;
 
+// TODO we should do the already in check OUT HERE!!!
+// If we;re relying on hands being free we might as well not check it at all!
       if (ecs->entity_has_components(collided_ent, s)) {
 
         Entity pickup_id = carryable_ent;
@@ -121,6 +123,7 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
           Position *guy_pos = ecs->get_component_for_entity<Position>(guy_id);
 
           Position *pickup_pos = ecs->get_component_for_entity<Position>(pickup_id);
+			pickup_pos->z = 5;
 
           hv_Participant guy_hv;
           Vec2 off = Vec2(guy_pos->x, guy_pos->y) - Vec2(pickup_pos->x, pickup_pos->y);
