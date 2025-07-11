@@ -117,12 +117,15 @@ struct Collider {
   Collision collision_data;
 };
 
+/** Unused
 #define MAX_MULTI_COLLISIONS 4
 struct MultiCollider {
   CollisionShapeType types[MAX_MULTI_COLLISIONS];
   CollisionShape shapes[MAX_MULTI_COLLISIONS];
   Collision collidion_datas[MAX_MULTI_COLLISIONS];
 };
+*/
+
 
 // Can be smashed by big weights (like hammer)
 struct Smashable {};

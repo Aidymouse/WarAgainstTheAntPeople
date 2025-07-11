@@ -50,6 +50,18 @@ void ShootSystem::update_shooters(float dt, ECS *ecs, CollisionGrid *grid) {
 				target_dir.y * 200,
 				0, 
 			});
+			CollisionShape rock_col_shape;
+			rock_col_shape.circle = { p->x, p->y, 3 };
+			ecs->add_component_to_entity<Collider>(projectile_id, {
+				CollisionShapeType::CIRCLE,
+				rock_col_shape,
+				{},
+			});
+			ecs->add_component_to_entity<Damager>(projectile_id, {
+				1,
+				DamageTypes::DT_BLUDGEON,
+				false
+			});
 		}
 	}
 
