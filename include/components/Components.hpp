@@ -15,39 +15,40 @@ enum COMP_SIG { // Component Signature Indexes
   POSITION = 1,
   ZENABLED = 2,
   VISIBLE = 3,
-  SORTEDVISIBLE = 4,
-  TRANSFORM = 5,
+	DECORATION=4,
+  SORTEDVISIBLE = 5,
+  TRANSFORM = 6,
 
-  FOLLOWS_MOUSE = 6,
+  FOLLOWS_MOUSE = 7,
 
-  SCANNING_FOR = 7,
-  SCANNABLE = 8,
-  CARRIER = 9,
-  CARRYABLE = 10,
-  PERSUING = 11,
+  SCANNING_FOR = 8,
+  SCANNABLE = 9,
+  CARRIER = 10,
+  CARRYABLE = 11,
+  PERSUING = 12,
 
-  COLLIDER = 12,
-  COLLIDED = 13,
+  COLLIDER = 13,
+  COLLIDED = 14,
 
-  BUILDABLE = 14,
-  RESOURCE = 15,
+  BUILDABLE = 15,
+  RESOURCE = 16,
 
   // GUY
-  GUY_BRAIN = 16,
-  GUY_WANDERING = 17,
+  GUY_BRAIN = 17,
+  GUY_WANDERING = 18,
 
   // Hivemind
-  HV_BRAIN = 18,
-  HV_PARTICIPANT = 19,
+  HV_BRAIN = 19,
+  HV_PARTICIPANT = 20,
 
   // Traits
-  HANDSFREE = 20,
+  HANDSFREE = 21,
 
-  SHOOTER = 21,
-  PROJECTILE = 22,
+  SHOOTER = 22,
+  PROJECTILE = 23,
 
-	DAMAGEABLE = 23,
-	DAMAGER = 24,
+	DAMAGEABLE = 24,
+	DAMAGER = 25,
 
   // COL_MALLET = 7,
   //
@@ -149,10 +150,18 @@ struct Visible {
   float anim_timer;
   xy offset; // For texture shifting, in addition to frames offset
 
-/* TODO
+/* TODO some kind of auto conversion from sorted visible to visible.
 	explicit Visible(const SortedVisible& s_vis) { 
 	}
 */
+};
+
+// Same as Visible except drawn before the guys
+struct Decoration {
+  SDL_Texture *texture;
+  AnimFrame frame;
+  float anim_timer;
+  xy offset; // For texture shifting, in addition to frames offset
 };
 
 

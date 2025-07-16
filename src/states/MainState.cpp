@@ -219,6 +219,7 @@ void MainState::load_ecs() {
   main_ecs.register_component<ZEnabled>(COMP_SIG::ZENABLED);
 
   main_ecs.register_component<Visible>(COMP_SIG::VISIBLE);
+  main_ecs.register_component<Decoration>(COMP_SIG::DECORATION);
   main_ecs.register_component<SortedVisible>(COMP_SIG::SORTEDVISIBLE);
   main_ecs.register_component<Transform>(COMP_SIG::TRANSFORM);
 
