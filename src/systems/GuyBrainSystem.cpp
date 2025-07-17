@@ -34,7 +34,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   
 		Signature skip_guy_processing;
 		skip_guy_processing[COMP_SIG::HV_PARTICIPANT] = 1;
-		skip_guy_processing[COMP_SIG::HV_BRAIN] = 1;
+		//skip_guy_processing[COMP_SIG::HV_BRAIN] = 1;
 		if ((ecs->get_signature_for_entity(guy_id) & skip_guy_processing) != 0) {
 			continue;
 		}
@@ -47,17 +47,17 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
 		if (ecs->entity_has_any_components(guy_id, s)) {
 			preoccupied = true;
+			//ecs->debug_cout_entity_state(guy_id);
 			/*
 			std::cout << "Entity [" << guy_id << "] " << ecs->get_signature_for_entity(guy_id) << std::endl;
 			std::cout << "Entity [" << guy_id << "] " << s << std::endl;
 			std::cout << std::endl;
-			ecs->debug_cout_entity_state(guy_id);
 			*/
 		} 
 
 		if (preoccupied) continue;
 
-		// Decision making code
+		// Decision making code goes here, one day
 		GuySM::enter_wandering(guy_id, ecs);
 		
 
@@ -98,10 +98,10 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid
 
 			case CollisionType::IDENTIFIER: {
 				if (col.data.identifier.id == Identifier::SCRAP_METAL) {
-					// Transform into PICK_ME_UP
-					co->collisions[c].type = CollisionType::PICK_ME_UP;
-					co->collisions[c].data.pick_me_up = {
-							co->collisions[c].data.identifier.entity_id};
+				// Transform into PICK_ME_UP
+				co->collisions[c].type = CollisionType::PICK_ME_UP;
+				co->collisions[c].data.pick_me_up = {
+					co->collisions[c].data.identifier.entity_id};
 				}
 
 				c--;
