@@ -1,13 +1,14 @@
 #pragma once
 
-#include <ECS/ecs.hpp>
+#include <ecs/ECS.hpp>
+#include <engine/CollisionGrid.h>
 
 namespace ComponentFns {
 	void clean_remove(Entity ent, ECS* ecs);
 	void clean_remove(Entity ent, ECS* ecs, CollisionGrid *grid);
 
 	/** Hivemind */
-	void dissolve_hivemind(ECS *ecs, Entity ent);
+	void remove_hivemind(Entity ent, ECS *ecs);
 
 	/** Carry */
 	//void stop_being_carryable(ECS *ecs, Entity ent);
