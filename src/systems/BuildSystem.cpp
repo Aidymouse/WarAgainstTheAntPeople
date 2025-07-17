@@ -1,5 +1,6 @@
-#include "anim/BuildsiteAnim.hpp"
-#include "components/Components.hpp"
+#include <data/Attrs.hpp>
+#include <anim/BuildsiteAnim.hpp>
+#include <components/Components.hpp>
 #include <anim/BuildsiteAnim.hpp>
 #include <systems/BuildSystem.h>
 #include <componentFns/HivemindComponentFns.h>
@@ -64,7 +65,7 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_resource_ent);
 
 			for (int e = 0; e<hv->num_entities; e++){
-				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {500, 500, 0, 0}});
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}});
 				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 			}
 
@@ -124,7 +125,7 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
 
 			for (int e = 0; e<hv->num_entities; e++){
-				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {500, 500, 0, 0}});
+				ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, {GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}});
 				ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 			}
 
@@ -165,7 +166,7 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 						hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_ent);
 
 						for (int e = 0; e<hv->num_entities; e++){
-							ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {500, 0, 0, 0}});
+							ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, {GuyAttrs.scan_range, 0, 0, 0}});
 							ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 						}
 						dissolve_hivemind(ecs, collided_ent);
