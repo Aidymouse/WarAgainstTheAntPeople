@@ -45,7 +45,9 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			// We have collided with another resource!
 			// I'm going to turn into a buildsite, whatever I collided with is going to be removed
 
-			// Deal with 
+			// TODO: give participant guys their carrier back
+			ComponentFns::clean_remove(collided_resource_ent, ecs, grid);
+/*
 			if (is_carried(collided_resource_ent, ecs)) {
 					// Whatever was carrying this will get sorted out in the carry system
 					// Need to update all the same stuff as the resource we collided with too though!!!
@@ -72,6 +74,7 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 
 			grid->remove_entity(collided_resource_ent);
 			ecs->remove_entity(collided_resource_ent);
+*/
 
 			// Turn me into buildsite 
 			// Tower for now cos i only have one
