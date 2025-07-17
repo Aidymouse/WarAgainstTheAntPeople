@@ -4,4 +4,5 @@ target_sources(EvilPikmin PRIVATE
 	Spawners.cpp
 	Helper.cpp
 	Random.cpp
+	ComponentFns.cpp
 )
