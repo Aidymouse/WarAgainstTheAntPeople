@@ -10,4 +10,5 @@ namespace GuySM {
 g_Wandering *enter_wandering(Entity guy_id, ECS *main_ecs);
 void enter_seeking(Entity guy_id, ECS *main_ecs);
 void die(Entity guy_id, ECS *main_ecs, CollisionGrid *grid);
+void stop_being_guy(Entity guy_id, ECS *main_ecs);
 } // namespace GuySM

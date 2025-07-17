@@ -44,3 +44,9 @@ void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
 
   ecs->remove_component_from_entity<Collided>(guy_id);
 }
+
+/** Strips all guy brain related components */
+void GuySM::stop_being_guy(Entity guy_id, ECS *ecs) {
+	ecs->remove_component_from_entity<GuyBrain>(guy_id);
+	ecs->remove_component_from_entity<g_Wandering>(guy_id);
+}
