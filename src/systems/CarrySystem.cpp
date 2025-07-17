@@ -17,14 +17,12 @@ void CarrySystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 /** It's possible that the thing a guy is carrying has been destroyed 
  * We only have a carrier-> carried relationship so we check here to strip them out */
 void strip_invalid_carrieds(ECS *ecs) {
-	std::shared_ptr<ComponentArray<Carrier>> comp_carriers =
-			ecs->get_component_array<Carrier>();
+	std::shared_ptr<ComponentArray<Carrier>> comp_carriers = ecs->get_component_array<Carrier>();
 	for (int c = 0; c < comp_carriers->get_num_components(); c++) {
 		// Entity c_ent = comp_carriers->get_entity_from_idx(c);
 		Carrier *ca = comp_carriers->get_editable_data_from_idx(c);
 
-		if (!ca->carried_entity.has_value())
-			return;
+		if (!ca->carried_entity.has_value()) { return; }
 
 		Entity carried_ent = ca->carried_entity.value();
 		if (!ecs->entity_has_component<Carryable>(carried_ent)) {
@@ -54,8 +52,8 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 			s[COMP_SIG::GUY_BRAIN] = 1;
 			// s[COMP_SIG::CARRIER] = 1;
 
-// TODO we should do the already in check OUT HERE!!!
-// If we;re relying on hands being free we might as well not check it at all!
+			// TODO we should do the already in check OUT HERE!!!
+			// If we;re relying on hands being free we might as well not check it at all! You need hands free to even be registered here
 			if (ecs->entity_has_components(collided_ent, s)) {
 
 				Entity pickup_id = carryable_ent;
@@ -74,13 +72,12 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 					// b.entities[0] = guy_id;
 
 					ecs->add_component_to_entity<ScanningFor>(pickup_id, {
-						{ SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP_FULL, },
+						{SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP_FULL},
 						{GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range}
 					});
 
 					ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
-					// ecs->add_component_to_entity<GuyBrain>(pickup_id,
-					//																				{GuyState::SEEKING, 0});
+					ecs->add_component_to_entity<GuyBrain>(pickup_id, {GuyState::SEEKING, 0});
 					// GuySM::enter_wandering(pickup_id, ecs);
 
 					if (ecs->entity_has_component<Scannable>(pickup_id)) {
