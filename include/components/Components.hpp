@@ -10,50 +10,46 @@
 #include <optional>
 
 enum COMP_SIG { // Component Signature Indexes
-  EXISTS = 0,
+	EXISTS = 0,
 
-  POSITION = 1,
-  ZENABLED = 2,
-  VISIBLE = 3,
-	DECORATION=4,
-  SORTEDVISIBLE = 5,
-  TRANSFORM = 6,
+	POSITION = 1,
 
-  FOLLOWS_MOUSE = 7,
+	VISIBLE = 2,
+	DECORATION=3,
+	SORTEDVISIBLE = 4,
+	TRANSFORM = 5,
 
-  SCANNING_FOR = 8,
-  SCANNABLE = 9,
-  CARRIER = 10,
-  CARRYABLE = 11,
-  PERSUING = 12,
+	FOLLOWS_MOUSE = 6,
 
-  COLLIDER = 13,
-  COLLIDED = 14,
+	SCANNING_FOR = 7,
+	SCANNABLE = 8,
+	CARRIER = 9,
+	CARRYABLE = 10,
+	PERSUING = 11,
 
-  BUILDABLE = 15,
-  RESOURCE = 16,
+	COLLIDER = 12,
+	COLLIDED = 13,
 
-  // GUY
-  GUY_BRAIN = 17,
-  GUY_WANDERING = 18,
+	BUILDABLE = 14,
+	RESOURCE = 15,
 
-  // Hivemind
-  HV_BRAIN = 19,
-  HV_PARTICIPANT = 20,
+	// GUY
+	GUY_BRAIN = 16,
+	GUY_WANDERING = 17,
 
-  // Traits
-  HANDSFREE = 21,
+	// Hivemind
+	HV_BRAIN = 18,
+	HV_PARTICIPANT = 19,
 
-  SHOOTER = 22,
-  PROJECTILE = 23,
+	// Traits
+	HANDSFREE = 20,
 
-	DAMAGEABLE = 24,
-	DAMAGER = 25,
+	SHOOTER = 21,
+	PROJECTILE = 22,
 
-  // COL_MALLET = 7,
-  //
-  // SCANNABLE = 8,
-  // PERSUING = 9,
+	DAMAGEABLE = 23,
+	DAMAGER = 24,
+
 };
 
 struct FollowsMouse {
