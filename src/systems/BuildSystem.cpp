@@ -21,6 +21,28 @@ bool is_carried(Entity ent, ECS *ecs) {
 	return (ecs->entity_has_component<Carryable>(ent) && ecs->get_component_for_entity<Carryable>(ent)->carriers_count > 0);
 }
 
+/** Strips away all the resource related stuff from an entity, handling guy state 
+ * Note only has the functionality common for both collided resources. One will then be removed and one will turn into a buildsite
+ * */
+void handle_resource_collision(Entity resource_id, ECS *ecs) {
+	if (ecs->entity_has_component<hv_Brain>(resource_id)) {
+		// If the resource is a hivemind then it's being carried 
+		hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
+
+		for (int e = 0; e<hv->num_entities; e++) {
+			ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {
+				{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, 
+				{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
+			});
+
+			ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
+		}
+
+		ComponentFns::remove_hivemind(resource_id, ecs);
+	
+	}
+}
+
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 
 	TextureStore &b_texture_store = TextureStore::getInstance();
@@ -36,48 +58,25 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 
 		std::set<Entity> collided_resources = grid->get_collisions(*resource_c, ecs);
 
-		for (auto resource_e = collided_resources.begin(); resource_e != collided_resources.end(); resource_e++) {
-			Entity collided_resource_ent = (Entity)*resource_e;
-			if (!ecs->entity_has_component<Resource>(collided_resource_ent)) { continue; }
+		for (auto col_res_e = collided_resources.begin(); col_res_e != collided_resources.end(); col_res_e++) {
+			Entity collided_id = (Entity)*col_res_e;
+			if (!ecs->entity_has_component<Resource>(collided_id)) { continue; }
 
-			if (collided_resource_ent == resource_id) { continue; }
+			if (collided_id == resource_id) { continue; }
 			
 			// We have collided with another resource!
 			// I'm going to turn into a buildsite, whatever I collided with is going to be removed
 
-			// TODO: give participant guys their carrier back
-			ComponentFns::clean_remove(collided_resource_ent, ecs, grid);
-/*
-			if (is_carried(collided_resource_ent, ecs)) {
-					// Whatever was carrying this will get sorted out in the carry system
-					// Need to update all the same stuff as the resource we collided with too though!!!
-						
-					//std::cout << "Removing [" << collided_resource_ent << "]" << std::endl;
-					//ecs->debug_cout_entity_state(collided_resource_ent);
-				
-					if (ecs->entity_has_component<hv_Brain>(collided_resource_ent)) {
-						// Resource is being carried most likely
-						hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_resource_ent);
-
-						for (int e = 0; e<hv->num_entities; e++){
-							ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {
-								{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
-								{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
-							});
-							ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
-						}
-
-						ComponentFns::remove_hivemind(collided_resource_ent, ecs);
-							
-					}
+			handle_resource_collision(collided_id, ecs);
+			if (ecs->entity_has_component<Carryable>(collided_id) && ecs->get_component_for_entity<Carryable>(collided_id)->carriers_count > 0) {
+				std::cout << "[" << resource_id << "] collided with also carried resource [" << collided_id << "]" << std::endl;
 			}
-
-			grid->remove_entity(collided_resource_ent);
-			ecs->remove_entity(collided_resource_ent);
-*/
+			ComponentFns::clean_remove(collided_id, ecs, grid);
 
 			// Turn me into buildsite 
 			// Tower for now cos i only have one
+			handle_resource_collision(resource_id, ecs);
+
 			ecs->remove_component_from_entity<Resource>(resource_id);
 
 			ecs->remove_component_from_entity<Carryable>(resource_id);
@@ -89,20 +88,21 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			GuySM::stop_being_guy(resource_id, ecs);
 
 			ecs->remove_component_from_entity<ScanningFor>(resource_id);
-			ecs->remove_component_from_entity<ScanningFor>(resource_id);
 			ecs->remove_component_from_entity<Persuing>(resource_id);
 			ecs->remove_component_from_entity<Transform>(resource_id);
 
 			Buildable b = {
 				0,
 				4,
-				{ bs_TowerAnim.BUILD1, bs_TowerAnim.BUILD2, bs_TowerAnim.BUILD3, bs_TowerAnim.BUILD4, },
+				{bs_TowerAnim.BUILD1, bs_TowerAnim.BUILD2, bs_TowerAnim.BUILD3, bs_TowerAnim.BUILD4},
 				{0, 1, 1, 0},
 				0,
 				ResourceTypes::RT_SCRAP_METAL,
 				StructureType::ST_TOWER,
 				false
 			};
+
+			ecs->add_component_to_entity<Buildable>(resource_id, b);
 
 			Visible *v = ecs->get_component_for_entity<Visible>(resource_id);
 			v->texture = b_texture_store.get("tower");
@@ -117,27 +117,9 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 
 			ecs->add_component_to_entity<SortedVisible>(resource_id, sv);
 			ecs->remove_component_from_entity<Visible>(resource_id);
-
-			ecs->add_component_to_entity<Buildable>(resource_id, b);
 			
 			Scannable *s = ecs->get_component_for_entity<Scannable>(resource_id);
 			s->scan_value = SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP;
-
-			if (ecs->entity_has_component<hv_Brain>(resource_id)) {
-				// Resource is being carried most likely ... I can check that this is true...
-				hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
-
-				for (int e = 0; e<hv->num_entities; e++) {
-					ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {
-						{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, 
-						{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
-					});
-					ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
-				}
-
-				ComponentFns::remove_hivemind(resource_id, ecs);
-			
-			}
 
 		}
 	}
@@ -169,20 +151,8 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 					buildsite_buildable->cur_build_points += collided_resource->value;
 					
 					// Clean Resource
-					if (ecs->entity_has_component<hv_Brain>(collided_ent)) {
-						hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(collided_ent);
-
-						for (int e = 0; e<hv->num_entities; e++){
-							ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {
-								{SCAN_VALUES::SV_SCRAP_METAL, -1, -1, -1}, 
-								{GuyAttrs.scan_range, 0, 0, 0}
-							});
-							ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
-						}
-						ComponentFns::remove_hivemind(collided_ent, ecs);
-					}
-					grid->remove_entity(collided_ent);
-					ecs->remove_entity(collided_ent);
+					handle_resource_collision(collided_ent, ecs);
+					ComponentFns::clean_remove(collided_ent, ecs, grid);
 
 					// Progress Buildsite
 					if (buildsite_buildable->cur_build_points >= buildsite_buildable->points_required[buildsite_buildable->cur_stage]) {
