@@ -102,7 +102,7 @@ struct Persuing {
 };
 
 struct Collided {
-  Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to // this many things per frame
+  Collision collisions[MAX_COLLISIONS_PER_ENTITY]; // You can collide with up to this many things per frame
   int num_collisions;
 };
 
@@ -205,6 +205,7 @@ struct Carryable {
 	int carrier_effort; // total effort of carriers - higher number = move faster
 	int carrier_limit;
 	int weight; // Heavier things are harder to move
+	int min_weight; // Minimum weight required to move at all
 };
 
 // Guy States
