@@ -7,7 +7,6 @@
 // Removes an entity making provision for all noodley interconnected component bits
 void ComponentFns::clean_remove(Entity ent, ECS *ecs) {
 	if (ecs->entity_has_component<hv_Brain>(ent)) { ComponentFns::remove_hivemind(ent, ecs); }
-	if (ecs->entity_has_component<Carryable>(ent)) { ComponentFns::remove_hivemind(ent, ecs); }
 	ecs->remove_entity(ent);
 }
 
