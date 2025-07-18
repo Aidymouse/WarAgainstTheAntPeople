@@ -11,9 +11,15 @@ void TransformSystem::update(float dt, CollisionGrid *grid, ECS *ecs) {
 
 	float speed_multiplier = 1;
 
+	/** Adjust speed multiplier based on amount carrying */
 	if (ecs->entity_has_component<Carryable>(ent)) {
-		Carryable *c = ecs->get_component_for_entity<Carryable>(ent);
-		speed_multiplier = std::min((float)c->carrier_effort / (float)c->weight, 1.f);
+		Carryable c = *ecs->get_component_for_entity<Carryable>(ent);
+		if (c.carrier_effort < c.min_weight) {
+			speed_multiplier = 0.05;
+		} else {
+			speed_multiplier = std::min((float)c.carrier_effort / (float)c.weight, 1.f);
+		}
+
 		//std::cout << "Speed Multiplier [" << ent << "]: " << speed_multiplier << std::endl;
 	}
 
