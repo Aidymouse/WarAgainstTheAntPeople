@@ -83,7 +83,7 @@ public:
 			std::cout << "Adding entity " << id << " to component " << sig_index << std::endl;
 		}
 		if (signatures[id][sig_index]) {
-			// std::cout << "Entity " << id << " already has " << typeid(T).name() << std::endl;
+			std::cout << "Entity [" << id << "] is being given " << typeid(T).name() << " but they already have it" << std::endl;
 		} else {
 			component_manager->get_component_array<T>()->add_entity(id, data);
 			signatures[id][sig_index] = 1;
@@ -185,8 +185,20 @@ public:
 			// std::cout << "} - collider at " << c << " - shape at " << &c->shape << std::endl;
 			break;
 		}
+		case COMP_SIG::SCANNING_FOR: {
+			ScanningFor sfor = *get_component_for_entity<ScanningFor>(id);
+			std::cout << "[" << id << "] is scanning for: ";
+
+			for (int i=0; i<MAX_SCAN_VALUES; i++) {
+				std::cout << sfor.sought_scan_values[i] << " (" << sfor.max_range[i] << "), ";
+			}
+
+			std::cout << std::endl;
+			
+			break;
+		}
 		default:
-			std::cout << comp_idx << " not in debug output yet" << std::endl;
+			//std::cout << comp_idx << " not in debug output yet" << std::endl;
 			break;
 		}
 	}
