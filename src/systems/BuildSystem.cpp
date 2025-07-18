@@ -135,7 +135,7 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 
 	for (int e = 0; e<comp_buildable->get_num_components(); e++) {
 		Entity buildsite_id = comp_buildable->get_entity_from_idx(e);
-		Collider buildsite_collider = *(ecs->get_component_for_entity<Collider>(buildsite_id));
+		Collider buildsite_collider = *ecs->get_component_for_entity<Collider>(buildsite_id);
 		std::set<Entity> col_ents = grid->get_collisions(buildsite_collider, ecs);
 		Buildable *buildsite_buildable = ecs->get_component_for_entity<Buildable>(buildsite_id);
 		if (buildsite_buildable->full) continue;
@@ -145,34 +145,34 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 		
 			if (ecs->entity_has_component<Resource>(collided_ent)) { 
 				Resource *collided_resource = ecs->get_component_for_entity<Resource>(collided_ent);
-				if (collided_resource->type == buildsite_buildable->desired_resource) {
+				if (!collided_resource->type == buildsite_buildable->desired_resource) { return; } 
 					
-					// Add resource to buildsite
-					buildsite_buildable->cur_build_points += collided_resource->value;
-					
-					// Clean Resource
-					handle_resource_collision(collided_ent, ecs);
-					ComponentFns::clean_remove(collided_ent, ecs, grid);
+				// Add resource to buildsite
+				buildsite_buildable->cur_build_points += collided_resource->value;
+				
+				// Clean Resource
+				handle_resource_collision(collided_ent, ecs);
+				ComponentFns::clean_remove(collided_ent, ecs, grid);
 
-					// Progress Buildsite
-					if (buildsite_buildable->cur_build_points >= buildsite_buildable->points_required[buildsite_buildable->cur_stage]) {
-						ComponentFns::advance_build_stage(ecs, buildsite_buildable, buildsite_id);
+				// Progress Buildsite
+				if (buildsite_buildable->cur_build_points >= buildsite_buildable->points_required[buildsite_buildable->cur_stage]) {
+					ComponentFns::advance_build_stage(ecs, buildsite_buildable, buildsite_id);
 
-						// TODO turn fully built site into designated structure					
-						if (buildsite_buildable->full) {
-							ecs->remove_component_from_entity<Scannable>(buildsite_id);	
-							Shooter s = {
-								ProjectileType::PT_ROCK,
-								10,
-								2,
-								Vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
-							};
-							ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
-						}
+					// TODO turn fully built site into designated structure					
+					if (buildsite_buildable->full) {
+						ecs->remove_component_from_entity<Scannable>(buildsite_id);	
+						Shooter s = {
+							ProjectileType::PT_ROCK,
+							10,
+							2,
+							Vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+						};
+						ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
 					}
-					
-					
 				}
+					
+					
+				
 			}
 		}
 	}
