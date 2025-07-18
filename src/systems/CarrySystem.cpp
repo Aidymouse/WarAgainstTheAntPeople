@@ -126,15 +126,11 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 
 					ecs->add_component_to_entity(guy_id, guy_hv);
 
-					// ecs->remove_component_from_entity<Collider>(guy_id);
-					// ecs->remove_component_from_entity<Collided>(guy_id);
-
+					// .... we dont actually give the guy carrier. Oops */
+					// TODO: use a guys Carrier component
 					c->carriers_count += 1;
-					// std::cout << "Adding [" << guy_id << "] to carryable " <<
-					// pickup_id
-					//					 << "(" << c->carriers_count << " / " <<
-					// c->carrier_limit
-					//					 << ")" << std::endl;
+					c->carrier_effort += GuyAttrs.carry_strength;
+					// std::cout << "Adding [" << guy_id << "] to carryable " << pickup_id << "(" << c->carriers_count << " / " << c->carrier_limit << ")" << std::endl;
 
 					// ecs->remove_component_from_entity<Transform>(guy_id);
 					Transform *trans = ecs->get_component_for_entity<Transform>(guy_id);
