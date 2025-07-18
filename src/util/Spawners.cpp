@@ -36,7 +36,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
 	// if (rand() % 100 < 10) {
 	ecs->add_component_to_entity<ScanningFor>( g, {
-	{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
+		{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
 		{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
 	});
 	// } else {
@@ -54,7 +54,7 @@ void Spawners::add_scrap(ECS *ecs) {
 	float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
 	float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
 	Position p = {x, y};
-	Carryable carry_data = {0, 0, 5, 125}; // TODO should come from somewhere dynamic
+	Carryable carry_data = {0, 0, 5, 125, 51}; // TODO should come from somewhere dynamic
 
 	Entity s = ecs->add_entity();
 
