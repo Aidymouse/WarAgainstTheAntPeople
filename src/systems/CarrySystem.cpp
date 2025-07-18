@@ -31,6 +31,10 @@ void strip_invalid_carrieds(ECS *ecs) {
 	}
 }
 
+/** When an item is picked up, it transforms into a guy itself and becomes a hivemind for all participating guys 
+ * Yknow actually maybe being part of a hivemind should be processed on a guy by guy basis if we're currently carrying something, but whatever.
+ * The carried resource has scan targets and pursues them in ScanningSystem
+ * */
 void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, CollisionGrid *grid) {
 	std::shared_ptr<ComponentArray<Carrier>> comp_carrier = ecs->get_component_array<Carrier>();
 
