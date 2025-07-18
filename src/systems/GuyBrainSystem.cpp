@@ -30,7 +30,6 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   
 		Entity guy_id = (Entity)*e;
   
-		//std::cout << "Processing guy up top decision making for [" << guy_id << "]" << std::endl;
   
 		Signature skip_guy_processing;
 		skip_guy_processing[COMP_SIG::HV_PARTICIPANT] = 1;
@@ -57,8 +56,10 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 
 		if (preoccupied) continue;
 
+		//std::cout << "Processing guy up top decision making for [" << guy_id << "]" << std::endl;
+
 		// Decision making code goes here, one day
-		GuySM::enter_wandering(guy_id, ecs);
+		if (!ecs->entity_has_component<g_Wandering>(guy_id)) { GuySM::enter_wandering(guy_id, ecs); }
 		
 
 		//if (!ecs->entity_has_any_components(guy_id, s)) {
