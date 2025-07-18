@@ -201,9 +201,10 @@ struct Carrier {
 };
 
 struct Carryable {
-  int carriers_count; // How many guys carrying currently
-  int carrier_effort; // total effort of carriers - higher number = move faster
-  int carrier_limit;
+	int carriers_count; // How many guys carrying currently
+	int carrier_effort; // total effort of carriers - higher number = move faster
+	int carrier_limit;
+	int weight; // Heavier things are harder to move
 };
 
 // Guy States

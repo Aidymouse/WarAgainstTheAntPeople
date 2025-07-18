@@ -54,7 +54,7 @@ void Spawners::add_scrap(ECS *ecs) {
 	float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
 	float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
 	Position p = {x, y};
-	Carryable carry_data = {0, 0, 5}; // TODO should come from somewhere dynamic
+	Carryable carry_data = {0, 0, 5, 125}; // TODO should come from somewhere dynamic
 
 	Entity s = ecs->add_entity();
 
