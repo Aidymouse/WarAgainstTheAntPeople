@@ -181,7 +181,7 @@ public:
 				std::cout << c->shape.circle.x << ", " << c->shape.circle.y << ", "
 									<< c->shape.circle.radius;
 			}
-			std::cout << "} - " << c->collision_data.type << std::endl;
+			std::cout << "} - " << c->identifier << std::endl;
 			// std::cout << "} - collider at " << c << " - shape at " << &c->shape << std::endl;
 			break;
 		}

@@ -51,8 +51,7 @@ MainState::MainState() {
 	main_ecs.add_component_to_entity<Position>(main_base, {base_x, base_y});
 	CollisionShape base_circle;
 	base_circle.circle = {base_x, base_y, 50};
-	Collision base_collision = {CollisionType::GO_SOMEWHERE_ELSE, {(int)base_x, (int)base_y}};
-	Collider base_c = {CollisionShapeType::CIRCLE, base_circle, base_collision};
+	Collider base_c = {CollisionShapeType::CIRCLE, base_circle, CollisionIdentifier::CI_BASE};
 	main_ecs.add_component_to_entity<Collider>(main_base, base_c);
 	main_ecs.add_component_to_entity<Damageable>(main_base, {
 		100,
@@ -68,11 +67,11 @@ MainState::MainState() {
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
-	for (int g = 0; g < 20; g++) {
+	for (int g = 0; g < 1; g++) {
 		Spawners::add_guy(&main_ecs, &main_grid);
 	}
 	for (int s = 0; s < 60; s++) {
-		Spawners::add_scrap(&main_ecs);
+		Spawners::add_scrap(&main_ecs, &main_grid);
 	}
 
 	// if (mainstate_debug) std::cout << "Removing entity" << std::endl;
@@ -93,32 +92,10 @@ void MainState::handle_click( SDL_Event *event) { // We can be sure it's an SDL_
 	int btn = event->button.button;
 	if (mainstate_debug) if (mainstate_debug) std::cout << "Clicked: " << btn << std::endl;
 
-	Collision mallet_hit = { CollisionType::SQUISH, {10}, };
+	Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, CollisionIdentifier::CI_HAND}; 
 
-	Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, mallet_hit}; 
-	// std::set<int> ids = main_grid.get_overlapping_cells(mouse);
-	// Helper::cout_cell_ids(&ids);
+	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
 
-	std::set<Entity> collided_ids = main_grid.get_collisions(mouse, &main_ecs);
-	//
-	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse);
-	// Helper::cout_set(&collided_ids);
-
-	// for (auto e = collided_ids.begin(); e != collided_ids.end(); e++) {
-	//	 Entity ent = (Entity)*e;
-	//
-	//	 Visible *vis = main_ecs.get_component_for_entity<Visible>(ent);
-	//
-	//	 vis->frame = GuyAnim.SQUISH0;
-	//	 vis->anim_timer = 0;
-	//	 vis->texture = texture_store.get("squish_sheet");
-	//
-	//	 Position *pos = main_ecs.get_component_for_entity<Position>(ent);
-	//	 pos->z = -1;
-	//	 // main_ecs.remove_component_from_entity<Transform>(ent);
-	//	 main_ecs.remove_component_from_entity<ScanningFor>(ent);
-	//	 main_ecs.remove_component_from_entity<Transform>(ent);
-	// }
 }
 
 // void MainState::handle_mousemove() {}
@@ -128,7 +105,6 @@ void MainState::update(float dt) {
 	if (mainstate_debug) std::cout << "\nNew Frame" << std::endl;
 
 
-	main_ecs.remove_component_from_entity<Collider>(tool_hand);
 
 	if (mainstate_debug) std::cout << "--- Guy Brain System" << std::endl;
 	sys_guy_brain->update(dt, &main_ecs, &main_grid);
@@ -160,7 +136,7 @@ void MainState::update(float dt) {
 	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
 	sys_shoot->update(dt, &main_ecs, &main_grid);
 
-	// sys_collision->strip_collided(dt, &main_ecs);
+	main_ecs.remove_component_from_entity<Collider>(tool_hand);
 	//	Uint32 m = SDL_GetMouseState(nullptr, nullptr);
 	//
 	//	if (m & SDL_BUTTON_MASK(3)) {
@@ -178,7 +154,8 @@ void MainState::draw(SDL_Renderer *renderer) {
   SDL_GetMouseState(&mX, &mY);
   DrawFns::RenderCircle(renderer, WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f, 50);
   // DrawFns::RenderCircle(renderer, mX, mY, 16);
-  // main_grid.debug_draw_grid(renderer);
+  main_grid.debug_draw_grid(renderer);
+  //sys_scanning->debug_draw(renderer, &main_ecs);
 }
 
 void MainState::load_ecs() {

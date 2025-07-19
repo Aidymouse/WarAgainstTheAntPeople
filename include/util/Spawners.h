@@ -5,5 +5,5 @@
 
 namespace Spawners {
 void add_guy(ECS *ecs, CollisionGrid *grid);
-void add_scrap(ECS *ecs);
+void add_scrap(ECS *ecs, CollisionGrid *grid);
 } // namespace Spawners

@@ -5,8 +5,6 @@ target_sources(EvilPikmin PRIVATE
 	ScanningSystem.cpp
 	FollowsMouseSystem.cpp
 	GuyBrainSystem.cpp
-	CollisionSystem.cpp
-	GeneralCollisionHandlerSystem.cpp
 	CarrySystem.cpp
 	HivemindSystem.cpp
 	BuildSystem.cpp

@@ -14,7 +14,6 @@
 #include <engine/GameState.h>
 #include <memory>
 #include <systems/CarrySystem.h>
-#include <systems/CollisionSystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/ShootSystem.h>
 #include <systems/DamageSystem.h>
@@ -26,7 +25,6 @@ class MainState : public GameState {
   std::shared_ptr<ScanningSystem> sys_scanning;
   std::shared_ptr<FollowsMouseSystem> sys_follows_mouse;
   std::shared_ptr<GuyBrainSystem> sys_guy_brain;
-  std::shared_ptr<CollisionSystem> sys_collision;
   std::shared_ptr<HivemindBrainSystem> sys_hivemind_brain;
   std::shared_ptr<CarrySystem> sys_carry;
   std::shared_ptr<BuildSystem> sys_build;

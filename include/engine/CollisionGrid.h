@@ -27,7 +27,10 @@ public:
   void remove_entity(Entity ent);
   std::set<ColCellId> get_overlapping_cells(Collider col);
   std::set<ColCellId> get_cells_for_entity(Entity ent);
-  std::set<Entity> test_entity_for_collisions(Entity ent, ECS *ecs);
+
+  std::set<Entity> test_entity_for_collisions(Entity ent, ECS *ecs, CollisionIdentifier identity);
+  std::set<Entity> test_entity_for_all_collisions(Entity ent, ECS *ecs);
+
   std::set<Entity> get_collisions(Collider col, ECS *ecs);
 
   void debug_cout_entity_state(Entity id);

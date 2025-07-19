@@ -108,10 +108,17 @@ struct Collided {
 
 struct HandsFree {};
 
+enum CollisionIdentifier {
+	CI_HAND=0,
+	CI_BASE=0,
+	CI_RESOURCE=16,
+	CI_GUY=17,
+};
+
 struct Collider {
-  CollisionShapeType type;
-  CollisionShape shape;
-  Collision collision_data;
+	CollisionShapeType type;
+	CollisionShape shape;
+	CollisionIdentifier identifier;
 };
 
 /** Unused
@@ -218,15 +225,17 @@ struct GuyBrain {
   float die_timer;
 };
 
-#define NUM_DAMAGE_TYPES 2
-enum DamageTypes {
-	DT_BLUDGEON=0, // Splat, hammer, etc
-	DT_FIRE=1, 
-};
 
+#define NUM_DAMAGE_TYPES 3
 struct Damageable {
 	int hp;
 	std::bitset<NUM_DAMAGE_TYPES> valid_damage_types;
+};
+
+enum DamageTypes {
+	DT_LIGHTSQUISH=0,
+	DT_HEAVYSQUISH=1, // Splat, hammer, etc
+	DT_FIRE=2, 
 };
 
 struct Damager {

@@ -56,13 +56,13 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 		// If two resources are touching and at least one of them is being carried then they should transform into a buildsite
 		Collider *resource_c = ecs->get_component_for_entity<Collider>(resource_id);
 
-		std::set<Entity> collided_resources = grid->get_collisions(*resource_c, ecs);
+		std::set<Entity> collided_resources = grid->test_entity_for_collisions(resource_id, ecs, CollisionIdentifier::CI_RESOURCE);
 
 		for (auto col_res_e = collided_resources.begin(); col_res_e != collided_resources.end(); col_res_e++) {
 			Entity collided_id = (Entity)*col_res_e;
 			if (!ecs->entity_has_component<Resource>(collided_id)) { continue; }
 
-			if (collided_id == resource_id) { continue; }
+			//if (collided_id == resource_id) { continue; }
 			
 			// We have collided with another resource!
 			// I'm going to turn into a buildsite, whatever I collided with is going to be removed
