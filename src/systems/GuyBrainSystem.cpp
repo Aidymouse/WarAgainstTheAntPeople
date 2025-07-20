@@ -42,7 +42,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 		// They *are* continuing to scan, maybe their carrier isn't removed?
 		/** Check if guy is preoccupied */
 		bool preoccupied = false;
-		Signature s = (2 << (int)COMP_SIG::PERSUING-1) + (2 << (int)COMP_SIG::CARRIER-1);
+		Signature s = (2 << (int)COMP_SIG::PERSUING-1) + (2 << (int)COMP_SIG::CARRYING-1);
 
 		if (ecs->entity_has_any_components(guy_id, s)) {
 			preoccupied = true;
@@ -73,7 +73,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
    }
 
   // Sub system calls
-  // g_handle_collisions(dt, ecs, grid);
+  g_handle_collisions(dt, ecs, grid);
   gs_wander(dt, ecs);
 }
 
@@ -81,68 +81,15 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid
 	for (auto e = registered_entities.begin(); e != registered_entities.end(); e++) {
 
 		Entity guy_id = (Entity)*e;
-
-		if (!ecs->entity_has_component<Collided>(guy_id))
-			continue;
-
-		if (guy_brain_debug) {
-			std::cout << "Guy (" << guy_id << ") has collisions" << std::endl;
-		}
-
-		Collided *co = ecs->get_component_for_entity<Collided>(guy_id);
-
-		for (int c = 0; c < co->num_collisions; c++) {
-			bool cancel_remaining_collision_checks = false;
-			Collision col = co->collisions[c];
-			// Switch through collisions
-			switch (col.type) {
-
-			case CollisionType::IDENTIFIER: {
-				if (col.data.identifier.id == Identifier::SCRAP_METAL) {
-				// Transform into PICK_ME_UP
-				co->collisions[c].type = CollisionType::PICK_ME_UP;
-				co->collisions[c].data.pick_me_up = {
-					co->collisions[c].data.identifier.entity_id};
-				}
-
-				c--;
-
-				break;
-			}
-
-			case CollisionType::SQUISH: {
+	
+		/** Handle Damage Response */
+		if (ecs->entity_has_component<Damageable>(guy_id)) { // Hiveminds masquerading as guys aren't actually damageable
+			Damageable dmg = *ecs->get_component_for_entity<Damageable>(guy_id);
+			if (dmg.hp <= 0) {
 				GuySM::die(guy_id, ecs, grid);
-				// return; // Don't handle any more collisions after a guy has died!
-				cancel_remaining_collision_checks = true;
-				break;
 			}
-
-			case CollisionType::GO_SOMEWHERE_ELSE: {
-				if (co->num_collisions > 1)
-					break;
-				g_Wandering *w = GuySM::enter_wandering(guy_id, ecs);
-				Position *p = ecs->get_component_for_entity<Position>(guy_id);
-
-				Vec2 pos_away_from = Vec2(col.data.go_somewhere_else.pos_away_from_x,
-																	col.data.go_somewhere_else.pos_away_from_y);
-
-				Vec2 away_from = Vec2(p->x, p->y) - pos_away_from;
-				float angle_away = away_from.get_angle_facing();
-				int new_angle = Random::rand_range(angle_away - 60, angle_away + 60);
-
-				Vec2 dir = Vec2(1, 0);
-				dir.face_angle(new_angle);
-				w->dir = dir;
-				break;
-			}
-			default: {
-				break;
-			}
-	}
-
-			if (cancel_remaining_collision_checks)
-				break;
 		}
+
 	}
 }
 

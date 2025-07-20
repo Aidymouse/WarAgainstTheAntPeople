@@ -63,11 +63,14 @@ MainState::MainState() {
 	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 50});
 	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
 	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
+	Collider mouse = {CollisionShapeType::CIRCLE, {0, 0, 16}, CollisionIdentifier::CI_HAND}; 
+	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
+	main_grid.update_entity(tool_hand, {0, 0, 50}, mouse);
 
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
-	for (int g = 0; g < 1; g++) {
+	for (int g = 0; g < 3; g++) {
 		Spawners::add_guy(&main_ecs, &main_grid);
 	}
 	for (int s = 0; s < 60; s++) {
@@ -92,9 +95,9 @@ void MainState::handle_click( SDL_Event *event) { // We can be sure it's an SDL_
 	int btn = event->button.button;
 	if (mainstate_debug) if (mainstate_debug) std::cout << "Clicked: " << btn << std::endl;
 
-	Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, CollisionIdentifier::CI_HAND}; 
+	//Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, CollisionIdentifier::CI_HAND}; 
 
-	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
+	main_ecs.add_component_to_entity<Damager>(tool_hand, {10, DamageTypes::DT_LIGHTSQUISH, false}); // Will be stripped out this frame after use
 
 }
 
@@ -104,7 +107,8 @@ void MainState::update(float dt) {
 	// if (mainstate_debug) std::cout << dt << std::endl;
 	if (mainstate_debug) std::cout << "\nNew Frame" << std::endl;
 
-
+	if (mainstate_debug) std::cout << "--- Damage System" << std::endl;
+	sys_damage->update(dt, &main_ecs, &main_grid);
 
 	if (mainstate_debug) std::cout << "--- Guy Brain System" << std::endl;
 	sys_guy_brain->update(dt, &main_ecs, &main_grid);
@@ -130,13 +134,11 @@ void MainState::update(float dt) {
 	if (mainstate_debug) std::cout << "--- Hivemind Brain System" << std::endl;
 	sys_hivemind_brain->update(dt, &main_ecs, &main_grid);
 
-	if (mainstate_debug) std::cout << "--- Damage System" << std::endl;
-	sys_damage->update(dt, &main_ecs, &main_grid);
-
 	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
 	sys_shoot->update(dt, &main_ecs, &main_grid);
 
-	main_ecs.remove_component_from_entity<Collider>(tool_hand);
+	//main_ecs.remove_component_from_entity<Collider>(tool_hand);
+	main_ecs.remove_component_from_entity<Damager>(tool_hand);
 	//	Uint32 m = SDL_GetMouseState(nullptr, nullptr);
 	//
 	//	if (m & SDL_BUTTON_MASK(3)) {
@@ -154,7 +156,7 @@ void MainState::draw(SDL_Renderer *renderer) {
   SDL_GetMouseState(&mX, &mY);
   DrawFns::RenderCircle(renderer, WINDOW_WIDTH / 2.f, WINDOW_HEIGHT / 2.f, 50);
   // DrawFns::RenderCircle(renderer, mX, mY, 16);
-  main_grid.debug_draw_grid(renderer);
+  //main_grid.debug_draw_grid(renderer);
   //sys_scanning->debug_draw(renderer, &main_ecs);
 }
 
@@ -212,7 +214,7 @@ void MainState::load_ecs() {
 	main_ecs.register_component<Scannable>(COMP_SIG::SCANNABLE);
 	main_ecs.register_component<Persuing>(COMP_SIG::PERSUING);
 
-	main_ecs.register_component<Carrier>(COMP_SIG::CARRIER);
+	main_ecs.register_component<Carrying>(COMP_SIG::CARRYING);
 	main_ecs.register_component<Carryable>(COMP_SIG::CARRYABLE);
 
 	// Building

@@ -1,8 +1,10 @@
 #include "components/Components.hpp"
+#include <components/HivemindComponents.hpp>
 #include "engine/CollisionGrid.h"
 #include <anim/GuyAnim.hpp>
 #include <data/TextureStore.hpp>
 #include <state_machines/GuySM.h>
+#include <data/Attrs.hpp>
 
 #include <components/GuyComponents.hpp>
 
@@ -27,22 +29,36 @@ g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 }
 
 void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
-  Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
+	
 
-  vis->frame = GuyAnim.SQUISH1;
-  vis->anim_timer = 0;
-  vis->texture = guy_sm_texture_store.get("squish_sheet");
+	std::cout << "[" << guy_id << "] is dying" << std::endl;
+	Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
 
-  GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
-  brain->die_timer = 1;
-  // ecs->remove_component_from_entity<ScanningFor>(guy_id);
-  ecs->remove_component_from_entity<Transform>(guy_id);
-  ecs->remove_component_from_entity<g_Wandering>(guy_id);
-  // ecs->remove_component_from_entity<GuyBrain>(guy_id);
-  ecs->remove_component_from_entity<Collider>(guy_id);
-  grid->remove_entity(guy_id);
+	vis->frame = GuyAnim.SQUISH1;
+	vis->anim_timer = 0;
+	vis->texture = guy_sm_texture_store.get("squish_sheet");
 
-  ecs->remove_component_from_entity<Collided>(guy_id);
+	GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
+	brain->die_timer = 1;
+	// ecs->remove_component_from_entity<ScanningFor>(guy_id);
+	ecs->remove_component_from_entity<Transform>(guy_id);
+	ecs->remove_component_from_entity<g_Wandering>(guy_id);
+	ecs->remove_component_from_entity<GuyBrain>(guy_id);
+	ecs->remove_component_from_entity<Damageable>(guy_id);
+	ecs->remove_component_from_entity<hv_Participant>(guy_id);
+
+	// Stop carrying
+	if (ecs->entity_has_component<Carrying>(guy_id)) {
+		Entity carried_id = ecs->get_component_for_entity<Carrying>(guy_id)->carried_entity;
+		Carryable *carryable = ecs->get_component_for_entity<Carryable>(carried_id);
+		carryable->carriers_count -= 1;
+		carryable->carrier_effort -= GuyAttrs.carry_strength;
+	}
+
+	ecs->remove_component_from_entity<Collider>(guy_id);
+	grid->remove_entity(guy_id);
+
+	//ecs->remove_component_from_entity<Collided>(guy_id);
 }
 
 /** Strips all guy brain related components */

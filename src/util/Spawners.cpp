@@ -33,6 +33,10 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 	ecs->add_component_to_entity<GuyBrain>(g, {});
 	ecs->add_component_to_entity<HandsFree>(g, {});
 
+	DamageSignature guy_dmg_sig;
+	guy_dmg_sig[DamageTypes::DT_LIGHTSQUISH] = 1;
+	ecs->add_component_to_entity<Damageable>(g, {5, guy_dmg_sig});
+
 	// if (rand() % 100 < 10) {
 	ecs->add_component_to_entity<ScanningFor>( g, {
 		{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},

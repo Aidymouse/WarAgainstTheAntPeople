@@ -4,31 +4,55 @@
 #include <components/GuyComponents.hpp>
 #include <components/HivemindComponents.hpp>
 #include <systems/CarrySystem.h>
+#include <util/ComponentFns.h>
 
 void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs,
 										CollisionGrid *grid);
 void strip_invalid_carrieds(ECS *ecs);
+void process_drop(float dt, ECS *ecs);
 
 void CarrySystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 	strip_invalid_carrieds(ecs);
+	process_drop(dt, ecs);
+
 	process_pickup(dt, &registered_entities, ecs, grid);
+
 }
 
 /** It's possible that the thing a guy is carrying has been destroyed 
- * We only have a carrier-> carried relationship so we check here to strip them out */
+ * We only have a carrier->carried relationship so we check here to strip them out */
 void strip_invalid_carrieds(ECS *ecs) {
-	std::shared_ptr<ComponentArray<Carrier>> comp_carriers = ecs->get_component_array<Carrier>();
+	std::shared_ptr<ComponentArray<Carrying>> comp_carriers = ecs->get_component_array<Carrying>();
 	for (int c = 0; c < comp_carriers->get_num_components(); c++) {
 		// Entity c_ent = comp_carriers->get_entity_from_idx(c);
-		Carrier *ca = comp_carriers->get_editable_data_from_idx(c);
+		Carrying *ca = comp_carriers->get_editable_data_from_idx(c);
 
-		if (!ca->carried_entity.has_value()) { return; }
-
-		Entity carried_ent = ca->carried_entity.value();
+		Entity carried_ent = ca->carried_entity;
 		if (!ecs->entity_has_component<Carryable>(carried_ent)) {
-			ca->carried_entity.reset();
+			Entity carrying_ent = comp_carriers->get_entity_from_idx(c);
+			ecs->remove_component_from_entity<Carryable>(carrying_ent);
+			// TODO: handsfree?
 		}
 	}
+}
+
+
+/** If I have nothing left carrying me, stop being carried */
+void process_drop(float dt, ECS *ecs) {
+	std::shared_ptr<ComponentArray<Carryable>> comp_carryables = ecs->get_component_array<Carryable>();
+	for (int c = 0; c < comp_carryables->get_num_components(); c++) {
+		Carryable carryable = comp_carryables->get_data_from_idx(c);
+		
+		if (carryable.carriers_count == 0) {
+			Entity carryable_id = comp_carryables->get_entity_from_idx(c);
+			if (ecs->entity_has_component<hv_Brain>(carryable_id)) {
+				ComponentFns::remove_hivemind(carryable_id, ecs);
+				ecs->remove_component_from_entity<Transform>(carryable_id); // TODO: should this be in remove hivemind???
+			}
+		}
+		
+	}
+	
 }
 
 /** When an item is picked up, it transforms into a guy itself and becomes a hivemind for all participating guys 
@@ -36,7 +60,6 @@ void strip_invalid_carrieds(ECS *ecs) {
  * The carried resource has scan targets and pursues them in ScanningSystem
  * */
 void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, CollisionGrid *grid) {
-	std::shared_ptr<ComponentArray<Carrier>> comp_carrier = ecs->get_component_array<Carrier>();
 
 	std::shared_ptr<ComponentArray<Carryable>> comp_carryable = ecs->get_component_array<Carryable>();
 
@@ -47,9 +70,9 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 
 		std::set<Entity> collided = grid->get_collisions(*carryable_col, ecs);
 		for (auto collided_e = collided.begin(); collided_e != collided.end(); collided_e++) {
-			Entity collided_ent = (Entity)*collided_e;
+			Entity picking_up_ent = (Entity)*collided_e;
 
-			if (collided_ent == carryable_ent) continue;
+			if (picking_up_ent == carryable_ent) continue;
 
 			Signature s;
 			s[COMP_SIG::HANDSFREE] = 1;
@@ -57,11 +80,12 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 			// s[COMP_SIG::CARRIER] = 1;
 
 			// TODO we should do the already in check OUT HERE!!!
-			// If we;re relying on hands being free we might as well not check it at all! You need hands free to even be registered here
-			if (ecs->entity_has_components(collided_ent, s)) {
+			
+			// If we're relying on hands being free we might as well not check it at all! You need hands free to even be registered here
+			if (ecs->entity_has_components(picking_up_ent, s)) {
 
 				Entity pickup_id = carryable_ent;
-				Entity guy_id = collided_ent;
+				Entity guy_id = picking_up_ent;
 
 				// Set up the hivemind and carryable state
 				if (!ecs->entity_has_component<hv_Brain>(pickup_id)) {
@@ -124,15 +148,15 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 					Vec2 off = Vec2(guy_pos->x, guy_pos->y) - Vec2(pickup_pos->x, pickup_pos->y);
 					guy_hv.offset = off;
 
-					ecs->add_component_to_entity(guy_id, guy_hv);
+					ecs->add_component_to_entity<hv_Participant>(guy_id, guy_hv);
 
+					ecs->add_component_to_entity<Carrying>(guy_id, {pickup_id});
 					// .... we dont actually give the guy carrier. Oops */
 					// TODO: use a guys Carrier component
 					c->carriers_count += 1;
 					c->carrier_effort += GuyAttrs.carry_strength;
 					// std::cout << "Adding [" << guy_id << "] to carryable " << pickup_id << "(" << c->carriers_count << " / " << c->carrier_limit << ")" << std::endl;
 
-					// ecs->remove_component_from_entity<Transform>(guy_id);
 					Transform *trans = ecs->get_component_for_entity<Transform>(guy_id);
 					trans->vel_x = 0;
 					trans->vel_y = 0;

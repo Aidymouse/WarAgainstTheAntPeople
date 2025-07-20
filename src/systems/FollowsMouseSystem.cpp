@@ -21,10 +21,10 @@ void FollowsMouseSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
       pos->x = mX;
       pos->y = mY;
     } else {
-      // TODO
+      // TODO: move towards mouse
     }
 
-    if (ecs->get_signature_for_entity(ent)[COMP_SIG::COLLIDER] == 1) {
+    if (ecs->entity_has_component<Collider>(ent)) {
       Collider *c = component_manager->get_component_data<Collider>(ent);
       // std::cout << "Collider for " << ent << ", " << c << std::endl;
 

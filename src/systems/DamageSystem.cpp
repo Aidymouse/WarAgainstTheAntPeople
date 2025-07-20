@@ -5,6 +5,8 @@
 #include <util/Helper.h>
 
 
+/** Does general damage handling */
+// Individual damage resopnses can be handled in respective systems because the colliders which provide damage will still be present (hopefully) by the time their updates roll around
 void DamageSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 	for (std::set<Entity>::iterator e = registered_entities.begin(); e!=registered_entities.end(); e++) {
 		Entity damageable_ent = (Entity) *e;
