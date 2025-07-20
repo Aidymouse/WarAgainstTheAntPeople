@@ -60,7 +60,8 @@ void ShootSystem::update_shooters(float dt, ECS *ecs, CollisionGrid *grid) {
 			ecs->add_component_to_entity<Damager>(projectile_id, {
 				1,
 				DamageTypes::DT_LIGHTSQUISH,
-				false
+				false,
+				PostDamageBehaviours::PDB_DESTROY
 			});
 		}
 	}

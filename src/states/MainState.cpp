@@ -97,7 +97,7 @@ void MainState::handle_click( SDL_Event *event) { // We can be sure it's an SDL_
 
 	//Collider mouse = {CollisionShapeType::CIRCLE, {event->button.x, event->button.y, 16}, CollisionIdentifier::CI_HAND}; 
 
-	main_ecs.add_component_to_entity<Damager>(tool_hand, {10, DamageTypes::DT_LIGHTSQUISH, false}); // Will be stripped out this frame after use
+	main_ecs.add_component_to_entity<Damager>(tool_hand, {10, DamageTypes::DT_LIGHTSQUISH, false, PostDamageBehaviours::PDB_NOTHING}); // Will be stripped out this frame after use
 
 }
 

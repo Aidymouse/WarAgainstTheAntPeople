@@ -3,6 +3,7 @@
 #include <ecs/ECS.hpp>
 #include <components/Components.hpp>
 #include <util/Helper.h>
+#include <util/ComponentFns.h>
 
 
 /** Does general damage handling */
@@ -29,9 +30,15 @@ void DamageSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 			dmg->hp -= damage_data->damage;
 			damage_data->damaged_this_frame = true;
 			
-			grid->remove_entity(damager_ent);
-			ecs->remove_entity(damager_ent);
-			//Collider damager_collider = ecs->get_component_for_entity<Collider>(damager_ent);
+			// Follow post damage behaviour
+			switch (damage_data->post_damage_behaviour) {
+				case (PostDamageBehaviours::PDB_DESTROY): {
+					ComponentFns::clean_remove(damager_ent, ecs, grid);
+					break;
+				}
+				case (PostDamageBehaviours::PDB_NOTHING): { break; }
+			}
+
 		}
 	}
 }

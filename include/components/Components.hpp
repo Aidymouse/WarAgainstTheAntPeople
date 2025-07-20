@@ -240,9 +240,13 @@ enum DamageTypes {
 	DT_FIRE=2, 
 };
 
+enum PostDamageBehaviours {
+	PDB_DESTROY=0, // Removes entity entirely on damage
+	PDB_NOTHING=2, // As it says on the tin
+};
 struct Damager {
 	int damage;
 	DamageTypes damage_type;
 	bool damaged_this_frame; // True if we did that
-	// TODO: behaivour after damage. For now just get rid of it after damage
+	PostDamageBehaviours post_damage_behaviour;
 };
