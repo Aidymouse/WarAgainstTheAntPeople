@@ -23,7 +23,7 @@ enum COMP_SIG { // Component Signature Indexes
 
 	SCANNING_FOR = 7,
 	SCANNABLE = 8,
-	CARRIER = 9,
+	CARRYING = 9,
 	CARRYABLE = 10,
 	PERSUING = 11,
 
@@ -202,9 +202,9 @@ struct Projectile {
 	int damage;
 };
 
-struct Carrier {
-  std::optional<Entity> carried_entity;
-  int contributing_effort;
+struct Carrying {
+  Entity carried_entity;
+  //int contributing_effort;
 };
 
 struct Carryable {
@@ -216,7 +216,7 @@ struct Carryable {
 };
 
 // Guy States
-enum GuyState { SEEKING, WANDERING, CARRYING };
+enum GuyState { SEEKING, WANDERING };
 
 // Keeps the meta-information regarding a guys current state, for decision
 // making purposes
@@ -227,10 +227,12 @@ struct GuyBrain {
 
 
 #define NUM_DAMAGE_TYPES 3
+#define DamageSignature std::bitset<NUM_DAMAGE_TYPES>
 struct Damageable {
 	int hp;
-	std::bitset<NUM_DAMAGE_TYPES> valid_damage_types;
+	DamageSignature valid_damage_types;
 };
+
 
 enum DamageTypes {
 	DT_LIGHTSQUISH=0,
