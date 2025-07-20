@@ -30,7 +30,7 @@ void strip_invalid_carrieds(ECS *ecs) {
 		Entity carried_ent = ca->carried_entity;
 		if (!ecs->entity_has_component<Carryable>(carried_ent)) {
 			Entity carrying_ent = comp_carriers->get_entity_from_idx(c);
-			ecs->remove_component_from_entity<Carryable>(carrying_ent);
+			ecs->remove_component_from_entity<Carrying>(carrying_ent);
 			// TODO: handsfree?
 		}
 	}
@@ -49,6 +49,9 @@ void process_drop(float dt, ECS *ecs) {
 				ComponentFns::remove_hivemind(carryable_id, ecs);
 				ecs->remove_component_from_entity<Transform>(carryable_id); // TODO: should this be in remove hivemind???
 			}
+
+			Position *p = ecs->get_component_for_entity<Position>(carryable_id);
+			p->z = 0;
 		}
 		
 	}
