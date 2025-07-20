@@ -48,6 +48,7 @@ void DrawSystem::update(float dt, ECS *ecs) {
 
 	/** Update animation timers */
 	// Update Decorations
+	/*
 	std::shared_ptr<ComponentArray<Decoration>> decorations = component_manager->get_component_array<Decoration>();
   	for (int i = 0; i < decorations->get_num_components(); i++) {
 
@@ -55,12 +56,14 @@ void DrawSystem::update(float dt, ECS *ecs) {
 		Decoration *d_vis = decorations->get_editable_data_from_idx(i);
 		
 	}
+	*/
 
 	std::shared_ptr<ComponentArray<Visible>> comp_visible = component_manager->get_component_array<Visible>();
   	for (int i = 0; i < comp_visible->get_num_components(); i++) {
 
 		Entity ent = comp_visible->get_entity_from_idx(i);
 		Visible *vis = comp_visible->get_editable_data_from_idx(i);
+
 		
 		update_anim_timer(dt, vis->anim_timer, vis->frame);
 	}
@@ -126,16 +129,17 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 	render_component(renderer, ecs, vis.texture, vis.frame, pos, vis.offset);
   }
 
-  std::shared_ptr<ComponentArray<SortedVisible>> sorted_visibles = component_manager->get_component_array<SortedVisible>();
 
-  for (int i = 0; i < sorted_visibles->get_num_components(); i++) {
+	std::shared_ptr<ComponentArray<SortedVisible>> sorted_visibles = component_manager->get_component_array<SortedVisible>();
 
-    Entity ent = sorted_visibles->get_entity_from_idx(i);
-    SortedVisible s_vis = sorted_visibles->get_data_from_idx(i);
-    Position pos = *ecs->get_component_for_entity<Position>(ent);
+	for (int i = 0; i < sorted_visibles->get_num_components(); i++) {
 
-	render_component(renderer, ecs, s_vis.texture, s_vis.frame, pos, s_vis.offset);
-  }
+		Entity ent = sorted_visibles->get_entity_from_idx(i);
+		SortedVisible s_vis = sorted_visibles->get_data_from_idx(i);
+		Position pos = *ecs->get_component_for_entity<Position>(ent);
+
+		render_component(renderer, ecs, s_vis.texture, s_vis.frame, pos, s_vis.offset);
+	}
 
 }
 
