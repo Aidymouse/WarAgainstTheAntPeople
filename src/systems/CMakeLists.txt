@@ -10,4 +10,5 @@ target_sources(EvilPikmin PRIVATE
 	BuildSystem.cpp
 	ShootSystem.cpp
 	DamageSystem.cpp
+	StapledToSystem.cpp
 )

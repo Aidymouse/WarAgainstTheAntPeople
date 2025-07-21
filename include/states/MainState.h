@@ -13,10 +13,12 @@
 #include <engine/CollisionGrid.h>
 #include <engine/GameState.h>
 #include <memory>
+
 #include <systems/CarrySystem.h>
 #include <systems/DrawSystem.h>
 #include <systems/ShootSystem.h>
 #include <systems/DamageSystem.h>
+#include <systems/StapledToSystem.h>
 
 class MainState : public GameState {
 
@@ -30,6 +32,7 @@ class MainState : public GameState {
   std::shared_ptr<BuildSystem> sys_build;
   std::shared_ptr<ShootSystem> sys_shoot;
   std::shared_ptr<DamageSystem> sys_damage;
+  std::shared_ptr<StapledToSystem> sys_stapled_to;
 
   Entity main_base = -1;
   Entity tool_hand = -1;

@@ -50,12 +50,15 @@ enum COMP_SIG { // Component Signature Indexes
 	DAMAGEABLE = 23,
 	DAMAGER = 24,
 
+	STAPLEDTO = 25, // Move my position to match
+
 };
 
 struct FollowsMouse {
   short speed; // Speed at which item pursues mouse. If -1 it will snap to the
                // mouse, no travel time
 };
+
 
 struct Position {
   float x;
@@ -137,6 +140,11 @@ struct Smashable {};
 struct xy {
   int x;
   int y;
+};
+
+struct StapledTo {
+	Entity entity;
+	xy offset; // Offset from entities position
 };
 
 // Same as visible except drawn seperately

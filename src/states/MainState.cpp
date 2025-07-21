@@ -26,6 +26,7 @@
 #include <systems/ScanningSystem.h>
 #include <systems/ShootSystem.h>
 #include <systems/DamageSystem.h>
+#include <systems/StapledToSystem.h>
 
 #include <anim/GuyAnim.hpp>
 #include <anim/NotMovingAnim.hpp>
@@ -61,12 +62,17 @@ MainState::MainState() {
 	// Hand
 	tool_hand = main_ecs.add_entity();
 	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 50});
-	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {-16, -16}});
+	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {0, 0}});
 	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 	Collider mouse = {CollisionShapeType::CIRCLE, {0, 0, 16}, CollisionIdentifier::CI_HAND}; 
 	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
 	main_grid.update_entity(tool_hand, {0, 0, 50}, mouse);
 
+
+	Entity test_ent = main_ecs.add_entity();
+	main_ecs.add_component_to_entity<SortedVisible>( test_ent, {texture_store.get("guy_sheet"), ToolAnim.HAND_NORM, 0, {0, 0}});
+	main_ecs.add_component_to_entity<Position>( test_ent, {0, 0, 0});
+	main_ecs.add_component_to_entity<StapledTo>( test_ent, {tool_hand, {50, 50}});
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
@@ -107,6 +113,9 @@ void MainState::update(float dt) {
 	// if (mainstate_debug) std::cout << dt << std::endl;
 	if (mainstate_debug) std::cout << "\nNew Frame" << std::endl;
 
+	if (mainstate_debug) std::cout << "--- Stapled To System" << std::endl;
+	sys_stapled_to->update(dt, &main_ecs);
+
 	if (mainstate_debug) std::cout << "--- Damage System" << std::endl;
 	sys_damage->update(dt, &main_ecs, &main_grid);
 
@@ -136,6 +145,7 @@ void MainState::update(float dt) {
 
 	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
 	sys_shoot->update(dt, &main_ecs, &main_grid);
+
 
 	//main_ecs.remove_component_from_entity<Collider>(tool_hand);
 	main_ecs.remove_component_from_entity<Damager>(tool_hand);
@@ -193,7 +203,10 @@ void MainState::load_ecs() {
 	sys_shoot = main_ecs.register_system<ShootSystem>(shoot_sig, 1);
 
 	COMP_SIG damage_sig[2] = {COMP_SIG::DAMAGEABLE, COMP_SIG::COLLIDER};
-	sys_damage = main_ecs.register_system<DamageSystem>(damage_sig, 1);
+	sys_damage = main_ecs.register_system<DamageSystem>(damage_sig, 2);
+
+	COMP_SIG stapledto_sig[2] = {COMP_SIG::STAPLEDTO, COMP_SIG::POSITION};
+	sys_stapled_to = main_ecs.register_system<StapledToSystem>(stapledto_sig, 2);
 
 	/** Set up components */
 	main_ecs.register_component<Position>(COMP_SIG::POSITION);
@@ -236,4 +249,6 @@ void MainState::load_ecs() {
 
 	main_ecs.register_component<Damageable>(COMP_SIG::DAMAGEABLE);
 	main_ecs.register_component<Damager>(COMP_SIG::DAMAGER);
+
+	main_ecs.register_component<StapledTo>(COMP_SIG::STAPLEDTO);
 }
