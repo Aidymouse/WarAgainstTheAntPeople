@@ -58,10 +58,10 @@ MainState::MainState() {
 	// Hand
 	tool_hand = main_ecs.add_entity();
 	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 50});
-	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, { anim_store.get("tool_hand"), 0, {0, 0}});
+	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, { anim_store.get("tool_hand_norm"), 0, {0, 0}});
 	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 	Collider mouse = {CollisionShapeType::CIRCLE, {0, 0, 16}, CollisionIdentifier::CI_HAND}; 
-	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
+	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); 
 	main_grid.update_entity(tool_hand, {0, 0, 50}, mouse);
 
 

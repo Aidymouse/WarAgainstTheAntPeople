@@ -52,7 +52,7 @@ void load_animations() {
 	anim_store.load_animation("rock", "rock", {16, 0, 16, 16}, -1, {8, 8});
 
 	// Tools
-	anim_store.load_animation("hand_norm", "tool_hand", {0, 0, 32, 32}, -1, {16, 16});
+	anim_store.load_animation("tool_hand_norm", "tool_hand", {0, 0, 32, 32}, -1, {16, 16});
 
 	// Build sites
 	anim_store.load_animation("build_tower1", "tower", {0, 0, 32, 64}, -1, {16, 64});

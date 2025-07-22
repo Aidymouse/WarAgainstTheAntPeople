@@ -53,7 +53,14 @@ public:
 
 	}
 
-	AnimFrame get(std::string animation_name) { return animations[animation_name]; }
+	AnimFrame get(std::string animation_name) {
+		if (animations.find(animation_name) == animations.end()){
+			std::string error_text = "\033[0;31mAttempting to get animation '" + animation_name + "' but none have been loaded under that name\033[0m";
+			std::cerr << error_text << std::endl;
+			throw new std::runtime_error(error_text);
+		}
+		 return animations[animation_name]; 
+	}
 
 	void set_next_animation(std::string animation_id, std::string next_id) {
 		animations[animation_id].next_frame = &animations[next_id];
