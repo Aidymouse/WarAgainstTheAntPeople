@@ -1,4 +1,3 @@
-#include "anim/Anim.hpp"
 #include "ecs/ComponentArray.hpp"
 #include <SDL3/SDL.h>
 #include <cmath>
@@ -7,6 +6,7 @@
 #include <iostream>
 #include <systems/DrawSystem.h>
 #include <util/DrawFns.h>
+#include <data/AnimStore.hpp>
 
 static int compare_visibles_by_position(SortedVisible v1, SortedVisible v2,
                                         Entity e1, Entity e2, ECS *ecs) {

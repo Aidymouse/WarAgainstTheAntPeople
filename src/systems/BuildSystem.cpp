@@ -1,8 +1,6 @@
 #include <data/Attrs.hpp>
 #include <state_machines/GuySM.h>
-#include <anim/BuildsiteAnim.hpp>
 #include <components/Components.hpp>
-#include <anim/BuildsiteAnim.hpp>
 #include <systems/BuildSystem.h>
 #include <components/HivemindComponents.hpp>
 #include <data/TextureStore.hpp>

@@ -1,5 +1,4 @@
 #include "SDL3/SDL_events.h"
-#include "anim/ToolAnim.hpp"
 #include "components/Collisions.hpp"
 #include "ecs/Entity.hpp"
 #include "engine/Collisions.h"
@@ -28,8 +27,6 @@
 #include <systems/DamageSystem.h>
 #include <systems/StapledToSystem.h>
 
-#include <anim/GuyAnim.hpp>
-#include <anim/NotMovingAnim.hpp>
 
 #include <util/Spawners.h>
 

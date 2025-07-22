@@ -1,7 +1,6 @@
 #include <systems/ShootSystem.h>
 #include <data/TextureStore.hpp>
 #include <data/AnimStore.hpp>
-#include <anim/NotMovingAnim.hpp>
 
 void update_projectiles(float dt, ECS *ecs, CollisionGrid *grid);
 

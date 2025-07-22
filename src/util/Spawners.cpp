@@ -9,8 +9,6 @@
 #include <ecs/ECS.hpp>
 #include <engine/CollisionGrid.h>
 
-#include "anim/GuyAnim.hpp"
-#include "anim/NotMovingAnim.hpp"
 #include "components/Collisions.hpp"
 #include "components/Components.hpp"
 #include "engine/Collisions.h"

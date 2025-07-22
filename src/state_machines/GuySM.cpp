@@ -1,7 +1,6 @@
 #include "components/Components.hpp"
 #include <components/HivemindComponents.hpp>
 #include "engine/CollisionGrid.h"
-#include <anim/GuyAnim.hpp>
 #include <data/TextureStore.hpp>
 #include <data/AnimStore.hpp>
 #include <state_machines/GuySM.h>

@@ -13,7 +13,6 @@
 #include <systems/GuyBrainSystem.h>
 #include <cmath>
 
-#include <anim/GuyAnim.hpp>
 #include <data/TextureStore.hpp>
 #include <engine/CollisionGrid.h>
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-#include <anim/Anim.hpp>
 #include <bitset>
 #include <components/Collisions.hpp>
 #include <ecs/Entity.hpp>
@@ -9,6 +8,7 @@
 #include <memory>
 #include <optional>
 #include <util/UtilTypes.hpp>
+#include <data/AnimStore.hpp>
 
 
 enum COMP_SIG { // Component Signature Indexes
