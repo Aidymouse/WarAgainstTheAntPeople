@@ -8,6 +8,8 @@
 #include <engine/Collisions.h>
 #include <memory>
 #include <optional>
+#include <util/UtilTypes.hpp>
+
 
 enum COMP_SIG { // Component Signature Indexes
 	EXISTS = 0,
@@ -137,10 +139,6 @@ struct MultiCollider {
 // Can be smashed by big weights (like hammer)
 struct Smashable {};
 
-struct xy {
-  int x;
-  int y;
-};
 
 struct StapledTo {
 	Entity entity;
@@ -149,14 +147,12 @@ struct StapledTo {
 
 // Same as visible except drawn seperately
 struct SortedVisible {
-  SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
   xy offset; // For texture shifting, in addition to frames offset
 };
 
 struct Visible {
-  SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
   xy offset; // For texture shifting, in addition to frames offset
@@ -169,7 +165,6 @@ struct Visible {
 
 // Same as Visible except drawn before the guys
 struct Decoration {
-  SDL_Texture *texture;
   AnimFrame frame;
   float anim_timer;
   xy offset; // For texture shifting, in addition to frames offset

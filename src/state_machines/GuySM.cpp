@@ -3,6 +3,7 @@
 #include "engine/CollisionGrid.h"
 #include <anim/GuyAnim.hpp>
 #include <data/TextureStore.hpp>
+#include <data/AnimStore.hpp>
 #include <state_machines/GuySM.h>
 #include <data/Attrs.hpp>
 
@@ -30,13 +31,13 @@ g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 
 void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
 	
+	AnimStore &anim_store = AnimStore::getInstance();
 
 	std::cout << "[" << guy_id << "] is dying" << std::endl;
 	Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
 
-	vis->frame = GuyAnim.SQUISH1;
+	vis->frame = anim_store.get("guy_squish0");
 	vis->anim_timer = 0;
-	vis->texture = guy_sm_texture_store.get("squish_sheet");
 
 	GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
 	brain->die_timer = 1;

@@ -23,15 +23,12 @@ public:
   TextureStore(TextureStore const &) = delete;
   void operator=(TextureStore const &) = delete;
 
-  void load_texture(std::string filename, std::string texture_name,
-                    SDL_Renderer *r) {
-    std::cout << "...loading '" << filename << "' under '" << texture_name
-              << "'" << std::endl;
+  void load_texture(std::string filename, std::string texture_name, SDL_Renderer *r) {
+    std::cout << "...loading '" << filename << "' under '" << texture_name << "'" << std::endl;
 
     SDL_Surface *s = SDL_LoadBMP(filename.c_str());
     if (s == NULL) {
-      std::cout << "......Error loading surface: " << SDL_GetError()
-                << std::endl;
+      std::cout << "......Error loading surface: " << SDL_GetError() << std::endl;
       return;
     }
 

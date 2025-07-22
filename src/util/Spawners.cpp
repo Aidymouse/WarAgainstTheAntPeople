@@ -1,5 +1,6 @@
 #include <data/Attrs.hpp>
 #include <data/TextureStore.hpp>
+#include <data/AnimStore.hpp>
 
 #include <state_machines/GuySM.h>
 #include <util/Spawners.h>
@@ -16,10 +17,11 @@
 #include "util/Random.h"
 
 TextureStore &spawners_texture_store = TextureStore::getInstance();
+AnimStore &spawners_anim_store = AnimStore::getInstance();
 
 void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
-	Visible v = { spawners_texture_store.get("guy_sheet"), GuyAnim.NORM, 0, {0, 0} };
+	Visible v = { spawners_anim_store.get("guy_norm1"), 0, {0, 0} };
 	float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
 	float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
 	Position p = {x, y, 0};
@@ -53,7 +55,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 }
 
 void Spawners::add_scrap(ECS *ecs, CollisionGrid *grid) {
-	Visible v = {spawners_texture_store.get("scrap_sheet"), NotMovingAnim.SCRAP};
+	Visible v = {spawners_anim_store.get("scrap"), 0, {0, 0} };
 	float x = (float)(Random::rand_range(0, WINDOW_WIDTH));
 	float y = (float)(Random::rand_range(0, WINDOW_HEIGHT));
 	Position p = {x, y};

@@ -1,5 +1,6 @@
 #include <systems/ShootSystem.h>
 #include <data/TextureStore.hpp>
+#include <data/AnimStore.hpp>
 #include <anim/NotMovingAnim.hpp>
 
 void update_projectiles(float dt, ECS *ecs, CollisionGrid *grid);
@@ -14,7 +15,8 @@ void ShootSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 void ShootSystem::update_shooters(float dt, ECS *ecs, CollisionGrid *grid) {
 
 	//std::cout << "Shoot System Updating" << std::endl;
-  TextureStore &texture_store = TextureStore::getInstance();
+  	//TextureStore &texture_store = TextureStore::getInstance();
+	AnimStore &anim_store = AnimStore::getInstance();
 
 	for (auto e = registered_entities.begin(); e!=registered_entities.end(); e++) {
 		Entity shooter_id = (Entity)*e;
@@ -35,8 +37,7 @@ void ShootSystem::update_shooters(float dt, ECS *ecs, CollisionGrid *grid) {
 
 			Entity projectile_id = ecs->add_entity();
 			ecs->add_component_to_entity<Visible>(projectile_id, {
-				texture_store.get("rock"),
-				NotMovingAnim.ROCK,
+				anim_store.get("rock"),
 				-1,
 				{0, 0}
 			});

@@ -20,7 +20,7 @@
 #include <components/Components.hpp>
 #include <components/GuyComponents.hpp>
 #include <components/HivemindComponents.hpp>
-#include <data/TextureStore.hpp>
+#include <data/AnimStore.hpp>
 #include <systems/DrawSystem.h>
 #include <systems/FollowsMouseSystem.h>
 #include <systems/ScanningSystem.h>
@@ -37,11 +37,10 @@
 
 const bool mainstate_debug = false;
 
-TextureStore &texture_store = TextureStore::getInstance();
 
 MainState::MainState() {
 
-	TextureStore &texture_store = TextureStore::getInstance();
+	AnimStore &anim_store = AnimStore::getInstance();
 
 	load_ecs();
 
@@ -62,17 +61,13 @@ MainState::MainState() {
 	// Hand
 	tool_hand = main_ecs.add_entity();
 	main_ecs.add_component_to_entity<Position>(tool_hand, {0, 0, 50});
-	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, {texture_store.get("tool_hand"), ToolAnim.HAND_NORM, 0, {0, 0}});
+	main_ecs.add_component_to_entity<SortedVisible>( tool_hand, { anim_store.get("tool_hand"), 0, {0, 0}});
 	main_ecs.add_component_to_entity<FollowsMouse>(tool_hand, {-1});
 	Collider mouse = {CollisionShapeType::CIRCLE, {0, 0, 16}, CollisionIdentifier::CI_HAND}; 
 	main_ecs.add_component_to_entity<Collider>(tool_hand, mouse); // Will be stripped out this frame after use
 	main_grid.update_entity(tool_hand, {0, 0, 50}, mouse);
 
 
-	Entity test_ent = main_ecs.add_entity();
-	main_ecs.add_component_to_entity<SortedVisible>( test_ent, {texture_store.get("guy_sheet"), ToolAnim.HAND_NORM, 0, {0, 0}});
-	main_ecs.add_component_to_entity<Position>( test_ent, {0, 0, 0});
-	main_ecs.add_component_to_entity<StapledTo>( test_ent, {tool_hand, {50, 50}});
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think

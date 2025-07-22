@@ -7,6 +7,7 @@
 #include <components/HivemindComponents.hpp>
 #include <data/TextureStore.hpp>
 #include <util/ComponentFns.h>
+#include <data/AnimStore.hpp>
 
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid);
 void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid);
@@ -91,11 +92,14 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			ecs->remove_component_from_entity<Persuing>(resource_id);
 			ecs->remove_component_from_entity<Transform>(resource_id);
 
+			AnimStore &anim_store = AnimStore::getInstance();
+
+			// TODO:
 			Buildable b = {
 				0,
-				4,
-				{bs_TowerAnim.BUILD1, bs_TowerAnim.BUILD2, bs_TowerAnim.BUILD3, bs_TowerAnim.BUILD4},
-				{0, 1, 1, 0},
+				3,
+				{ anim_store.get("build_tower1"), anim_store.get("build_tower2"), anim_store.get("build_tower3") },
+				{ 1, 1, 1},
 				0,
 				ResourceTypes::RT_SCRAP_METAL,
 				StructureType::ST_TOWER,
@@ -105,11 +109,11 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			ecs->add_component_to_entity<Buildable>(resource_id, b);
 
 			Visible *v = ecs->get_component_for_entity<Visible>(resource_id);
-			v->texture = b_texture_store.get("tower");
-			v->frame = b.stage_frames[0];
+			//v->texture = b_texture_store.get("tower");
+			//v->frame = b.stage_frames[0];
 
 			SortedVisible sv;
-			sv.texture = v->texture;
+			//sv.texture = v->texture;
 			sv.frame = b.stage_frames[0];
 			sv.anim_timer = b.stage_frames[0].duration;
 			sv.offset.x = v->offset.x;

@@ -84,8 +84,8 @@ void render_component(SDL_Renderer *renderer, ECS *ecs, SDL_Texture* texture, An
 	}
 
     SDL_FRect source_rect = frame.rect;
-    SDL_FRect target_rect = {std::floor(pos.x + offset.x + frame.offset_x),
-                             std::floor(pos.y + offset.y + frame.offset_y - pos.z),
+    SDL_FRect target_rect = {std::floor(pos.x + offset.x - frame.anchor_point.x),
+                             std::floor(pos.y + offset.y - pos.z - frame.anchor_point.y),
                              frame.rect.w, frame.rect.h};
     // SDL_FRect target_rect = {pos->x, pos->y, 16, 16};
     SDL_RenderTexture(renderer, texture, &source_rect, &target_rect);
@@ -126,7 +126,7 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
     Visible vis = visibles->get_data_from_idx(i);
     Position pos = *ecs->get_component_for_entity<Position>(ent);
 
-	render_component(renderer, ecs, vis.texture, vis.frame, pos, vis.offset);
+	render_component(renderer, ecs, vis.frame.texture, vis.frame, pos, vis.offset);
   }
 
 
@@ -138,7 +138,7 @@ void DrawSystem::draw(SDL_Renderer *renderer, ECS *ecs) {
 		SortedVisible s_vis = sorted_visibles->get_data_from_idx(i);
 		Position pos = *ecs->get_component_for_entity<Position>(ent);
 
-		render_component(renderer, ecs, s_vis.texture, s_vis.frame, pos, s_vis.offset);
+		render_component(renderer, ecs, s_vis.frame.texture, s_vis.frame, pos, s_vis.offset);
 	}
 
 }
