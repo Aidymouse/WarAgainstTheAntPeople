@@ -118,6 +118,7 @@ enum CollisionIdentifier {
 	CI_BASE=0,
 	CI_RESOURCE=16,
 	CI_GUY=17,
+	CI_ROCK=18,
 };
 
 struct Collider {

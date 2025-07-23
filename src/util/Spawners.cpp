@@ -35,7 +35,7 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 
 	DamageSignature guy_dmg_sig;
 	guy_dmg_sig[DamageTypes::DT_LIGHTSQUISH] = 1;
-	ecs->add_component_to_entity<Damageable>(g, {5, guy_dmg_sig});
+	ecs->add_component_to_entity<Damageable>(g, {1, guy_dmg_sig});
 
 	// if (rand() % 100 < 10) {
 	ecs->add_component_to_entity<ScanningFor>( g, {
@@ -76,4 +76,38 @@ void Spawners::add_scrap(ECS *ecs, CollisionGrid *grid) {
 	ecs->add_component_to_entity<Collider>(s, c);
 
 	grid->update_entity(s, p, c);
+}
+
+void Spawners::shoot_rock(ECS *ecs, CollisionGrid *grid, Vec2 pos, Vec2 dir) {
+	AnimStore &anim_store = AnimStore::getInstance();
+	Entity projectile_id = ecs->add_entity();
+
+	ecs->add_component_to_entity<Visible>(projectile_id, {
+		anim_store.get("rock"),
+		-1,
+		{0, 0}
+	});
+	ecs->add_component_to_entity<Position>(projectile_id, {
+		pos.x,
+		pos.y,
+		0, // TODO this should probably be like 10 or something
+	});
+	ecs->add_component_to_entity<Transform>(projectile_id, {
+		dir.x * 200, // TODO
+		dir.y * 200,
+		0, 
+	});
+	CollisionShape rock_col_shape;
+	rock_col_shape.circle = { pos.x, pos.y, 3 };
+	ecs->add_component_to_entity<Collider>(projectile_id, {
+		CollisionShapeType::CIRCLE,
+		rock_col_shape,
+		CollisionIdentifier::CI_ROCK,
+	});
+	ecs->add_component_to_entity<Damager>(projectile_id, {
+		1,
+		DamageTypes::DT_LIGHTSQUISH,
+		false,
+		PostDamageBehaviours::PDB_DESTROY
+	});
 }
