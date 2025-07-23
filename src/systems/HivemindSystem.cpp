@@ -59,7 +59,7 @@ void hv_strip_nonexistant_participants(float dt, ECS *ecs) {
 
 			// ecs->debug_cout_entity_state(participant_ent);
 			// throw std::exception();
-			if (!ecs->entity_exists(participant_ent)) {
+			if (!ecs->entity_exists(participant_ent) || !ecs->entity_has_component<hv_Participant>(participant_ent) ) {
 				// std::cout << "[" << hv_Ent << "] participant [" << participant_ent << "] does not exist!" << std::endl;
 				Entity latest = brain->entities[brain->num_entities - 1];
 				brain->entities[e] = latest;
