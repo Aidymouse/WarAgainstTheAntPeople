@@ -7,5 +7,6 @@
 
 class DamageSystem : public System {
 public:
-  void update(float dt, ECS *ecs, CollisionGrid *grid);
+	void update(float dt, ECS *ecs, CollisionGrid *grid);
+	void process_post_damage_behaviours(ECS *ecs, CollisionGrid *grid);
 };

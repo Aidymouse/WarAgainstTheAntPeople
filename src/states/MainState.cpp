@@ -68,7 +68,7 @@ MainState::MainState() {
 	// Guys
 	// The benchmark is 3000
 	// If we want to hit 10,000 then I'll need to bust out Vulkan I think
-	for (int g = 0; g < 3; g++) {
+	for (int g = 0; g < 300; g++) {
 		Spawners::add_guy(&main_ecs, &main_grid);
 	}
 	for (int s = 0; s < 60; s++) {
@@ -138,6 +138,7 @@ void MainState::update(float dt) {
 	if (mainstate_debug) std::cout << "--- Shoot System" << std::endl;
 	sys_shoot->update(dt, &main_ecs, &main_grid);
 
+	sys_damage->process_post_damage_behaviours(&main_ecs, &main_grid);
 
 	//main_ecs.remove_component_from_entity<Collider>(tool_hand);
 	main_ecs.remove_component_from_entity<Damager>(tool_hand);
