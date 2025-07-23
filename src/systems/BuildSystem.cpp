@@ -67,9 +67,11 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			// I'm going to turn into a buildsite, whatever I collided with is going to be removed
 
 			handle_resource_collision(collided_id, ecs);
+			/*
 			if (ecs->entity_has_component<Carryable>(collided_id) && ecs->get_component_for_entity<Carryable>(collided_id)->carriers_count > 0) {
 				std::cout << "[" << resource_id << "] collided with also carried resource [" << collided_id << "]" << std::endl;
 			}
+			*/
 			ComponentFns::clean_remove(collided_id, ecs, grid);
 
 			// Turn me into buildsite 
@@ -95,9 +97,9 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			// TODO:
 			Buildable b = {
 				0,
-				3,
-				{ anim_store.get("build_tower1"), anim_store.get("build_tower2"), anim_store.get("build_tower3") },
-				{ 1, 1, 1},
+				4,
+				{ anim_store.get("build_tower1"), anim_store.get("build_tower2"), anim_store.get("build_tower3"), anim_store.get("tower")},
+				{ 1, 1, 1, 1 },
 				0,
 				ResourceTypes::RT_SCRAP_METAL,
 				StructureType::ST_TOWER,
@@ -162,6 +164,7 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 
 					// TODO turn fully built site into designated structure					
 					if (buildsite_buildable->full) {
+						std::cout << "Build FINISHED!" << std::endl;
 						ecs->remove_component_from_entity<Scannable>(buildsite_id);	
 						Shooter s = {
 							ProjectileType::PT_ROCK,
