@@ -49,10 +49,10 @@ void load_animations() {
 	// Single frames for stuff that dont move
 	anim_store.load_animation("scrap", "scrap_sheet", {16, 0, 16, 16}, -1, {8, 8});
 	anim_store.load_animation("tower", "tower", {3*32, 0, 32, 64}, -1, {16, 64});
-	anim_store.load_animation("rock", "rock", {16, 0, 16, 16}, -1, {8, 8});
+	anim_store.load_animation("rock", "rock", {0, 0, 8, 8}, -1, {8, 8});
 
 	// Tools
-	anim_store.load_animation("tool_hand_norm", "tool_hand", {0, 0, 32, 32}, -1, {16, 16});
+	anim_store.load_animation("tool_hand_norm", "tool_hand", {32, 0, 32, 32}, -1, {16, 16});
 
 	// Build sites
 	anim_store.load_animation("build_tower1", "tower", {0, 0, 32, 64}, -1, {16, 64});
