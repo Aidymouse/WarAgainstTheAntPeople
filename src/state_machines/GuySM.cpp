@@ -32,7 +32,7 @@ void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
 	
 	AnimStore &anim_store = AnimStore::getInstance();
 
-	std::cout << "[" << guy_id << "] is dying" << std::endl;
+	//std::cout << "[" << guy_id << "] is dying" << std::endl;
 	Visible *vis = ecs->get_component_for_entity<Visible>(guy_id);
 
 	vis->frame = anim_store.get("guy_squish0");
