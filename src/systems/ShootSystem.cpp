@@ -26,7 +26,7 @@ void ShootSystem::update_shooters(float dt, ECS *ecs, CollisionGrid *grid) {
 
 		s->shoot_timer -= dt;
 		if (s->shoot_timer <= 0) {
-			std::cout << "[" << shooter_id <<"] shooting projectile" << std::endl;
+			//std::cout << "[" << shooter_id <<"] shooting projectile" << std::endl;
 			s->shoot_timer = s->shoot_interval;
 			
 			// Make projectile
