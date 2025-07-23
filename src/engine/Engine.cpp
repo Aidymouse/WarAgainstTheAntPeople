@@ -26,8 +26,8 @@ void load_animations() {
   	AnimStore &anim_store = AnimStore::getInstance();
 
 	// Guy
-	anim_store.load_animation("guy_norm1", "guy_sheet", {0, 0, 16, 16}, 0.3, {7, 11});
-	anim_store.load_animation("guy_norm2", "guy_sheet", {16, 0, 16, 16}, 0.3, {7, 11});
+	anim_store.load_animation("guy_norm1", "guy_sheet", {0, 0, 16, 16}, 0.1, {7, 11});
+	anim_store.load_animation("guy_norm2", "guy_sheet", {16, 0, 16, 16}, 0.1, {7, 11});
 	anim_store.set_next_animation("guy_norm1", "guy_norm2");
 	anim_store.set_next_animation("guy_norm2", "guy_norm1");
 
