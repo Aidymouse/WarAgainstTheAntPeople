@@ -10,6 +10,7 @@
 void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid);
 void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid);
 
+
 /** Looks at build sites and resources and determines if a buildsite should be created or added to */
 void BuildSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   BuildSystem_check_resources(dt, ecs, grid);
@@ -29,10 +30,6 @@ void handle_resource_collision(Entity resource_id, ECS *ecs) {
 		hv_Brain *hv = ecs->get_component_for_entity<hv_Brain>(resource_id);
 
 		for (int e = 0; e<hv->num_entities; e++) {
-			ecs->add_component_to_entity<ScanningFor>(hv->entities[e], {
-				{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1}, 
-				{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
-			});
 
 			ecs->add_component_to_entity<HandsFree>(hv->entities[e], {});
 		}
@@ -98,12 +95,13 @@ void BuildSystem_check_resources(float dt, ECS *ecs, CollisionGrid *grid) {
 			Buildable b = {
 				0,
 				4,
-				{ anim_store.get("build_tower1"), anim_store.get("build_tower2"), anim_store.get("build_tower3"), anim_store.get("tower")},
-				{ 1, 1, 1, 1 },
+				{ anim_store.get("build_tower1"), anim_store.get("build_tower2"), anim_store.get("build_tower3"), anim_store.get("cannon")},
 				0,
+				{ 1, 1, 1, 1 },
 				ResourceTypes::RT_SCRAP_METAL,
-				StructureType::ST_TOWER,
-				false
+				false,
+				{ 5, 5, 5, 5 },
+				0
 			};
 
 			ecs->add_component_to_entity<Buildable>(resource_id, b);
@@ -138,49 +136,77 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 	std::shared_ptr<ComponentArray<Buildable>> comp_buildable = ecs->get_component_array<Buildable>();
 
 	for (int e = 0; e<comp_buildable->get_num_components(); e++) {
+
 		Entity buildsite_id = comp_buildable->get_entity_from_idx(e);
+		Buildable *buildable = comp_buildable->get_editable_data_from_idx(e);
+
+		/** Check for collisions with resources */
 		Collider buildsite_collider = *ecs->get_component_for_entity<Collider>(buildsite_id);
-		std::set<Entity> col_ents = grid->get_collisions(buildsite_collider, ecs);
-		Buildable *buildsite_buildable = ecs->get_component_for_entity<Buildable>(buildsite_id);
-		if (buildsite_buildable->full) continue;
+		std::set<Entity> col_resources = grid->test_entity_for_collisions(buildsite_id, ecs, CollisionIdentifier::CI_RESOURCE);
 
-		for (auto ce=col_ents.begin(); ce!=col_ents.end(); ce++) {
-			Entity collided_ent = (Entity) *ce;
+		for (auto cr=col_resources.begin(); cr!=col_resources.end(); cr++) {
+			Entity collided_resource_id = (Entity) *cr;
 		
-			if (ecs->entity_has_component<Resource>(collided_ent)) { 
-				Resource *collided_resource = ecs->get_component_for_entity<Resource>(collided_ent);
-				if (!collided_resource->type == buildsite_buildable->desired_resource) { return; } 
+
+			/** Check resource collisions */
+			if (!buildable->full) {
+				if (ecs->entity_has_component<Resource>(collided_resource_id)) { 
+					Resource *collided_resource = ecs->get_component_for_entity<Resource>(collided_resource_id);
+					if (!collided_resource->type == buildable->desired_resource) { return; } 
+						
+					// Add resource to buildsite
+					buildable->resource_points += collided_resource->value;
 					
-				// Add resource to buildsite
-				buildsite_buildable->cur_build_points += collided_resource->value;
-				
-				// Clean Resource
-				handle_resource_collision(collided_ent, ecs);
-				ComponentFns::clean_remove(collided_ent, ecs, grid);
+					// Clean Resource
+					handle_resource_collision(collided_resource_id, ecs);
+					ComponentFns::clean_remove(collided_resource_id, ecs, grid);
 
-				// Progress Buildsite
-				if (buildsite_buildable->cur_build_points >= buildsite_buildable->points_required[buildsite_buildable->cur_stage]) {
-					ComponentFns::advance_build_stage(ecs, buildsite_buildable, buildsite_id);
+					// Progress Buildsite
+					if (buildable->resource_points >= buildable->req_resource_points[buildable->cur_stage]) {
+						
+						buildable->full = true;
+						
+						Scannable *s = ecs->get_component_for_entity<Scannable>(buildsite_id);
 
-					// TODO turn fully built site into designated structure					
-					if (buildsite_buildable->full) {
-						std::cout << "Build FINISHED!" << std::endl;
-						ecs->remove_component_from_entity<Scannable>(buildsite_id);	
-						Shooter s = {
-							ProjectileType::PT_ROCK,
-							10,
-							2,
-							Vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
-						};
-						ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
+						s->scan_value = SCAN_VALUES::SV_BUILDSITE_WANT_BUILDERS;
+
 					}
+						
+						
+					
 				}
-					
-					
-				
+			}
+
+			/** Check builder collisions */
+			if (buildable->full && ecs->entity_has_component<Builder>(collided_resource_id)) {
+				buildable->build_points += dt;
+			}
+
+		}
+		
+
+		/** Move to next stage if building done */
+		if (buildable->build_points >= buildable->req_build_points[buildable->cur_stage]) {
+			ComponentFns::advance_build_stage(ecs, buildable, buildsite_id);
+
+			// TODO turn fully built site into designated structure					
+			if (buildable->full) {
+				//std::cout << "Build FINISHED!" << std::endl;
+				ecs->remove_component_from_entity<Scannable>(buildsite_id);	
+				ecs->remove_component_from_entity<Buildable>(buildsite_id);	
+				e--;
+				Shooter s = {
+					ProjectileType::PT_ROCK,
+					10,
+					2,
+					Vec2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+				};
+				ecs->add_component_to_entity<Shooter>(buildsite_id, s);	
 			}
 		}
 	}
+
+	
 
 }
 

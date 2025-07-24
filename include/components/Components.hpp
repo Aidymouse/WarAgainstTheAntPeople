@@ -33,26 +33,28 @@ enum COMP_SIG { // Component Signature Indexes
 	COLLIDED = 13,
 
 	BUILDABLE = 14,
-	RESOURCE = 15,
+	BUILDER = 15, 
+
+	RESOURCE = 16,
 
 	// GUY
-	GUY_BRAIN = 16,
-	GUY_WANDERING = 17,
+	GUY_BRAIN = 17,
+	GUY_WANDERING = 18,
 
 	// Hivemind
-	HV_BRAIN = 18,
-	HV_PARTICIPANT = 19,
+	HV_BRAIN = 19,
+	HV_PARTICIPANT = 20,
 
 	// Traits
-	HANDSFREE = 20,
+	HANDSFREE = 21,
 
-	SHOOTER = 21,
-	PROJECTILE = 22,
+	SHOOTER = 22,
+	PROJECTILE = 23,
 
-	DAMAGEABLE = 23,
-	DAMAGER = 24,
+	DAMAGEABLE = 24,
+	DAMAGER = 25,
 
-	STAPLEDTO = 25, // Move my position to match
+	STAPLEDTO = 26, // Move my position to match
 
 };
 
@@ -85,6 +87,7 @@ enum SCAN_VALUES {
   SV_BUILD_SITE = 1,
 
   SV_BUILDSITE_WANT_SCRAP = 3,
+  SV_BUILDSITE_WANT_BUILDERS = 4,
 
   SV_CARRIED_SCRAP = 16,
   SV_CARRIED_SCRAP_FULL = 17,
@@ -187,12 +190,17 @@ struct Buildable {
 	int cur_stage;
 	int num_stages;
 	AnimFrame stage_frames[MAX_BUILDABLE_STAGES];
-	unsigned short points_required[MAX_BUILDABLE_STAGES];
-	unsigned short cur_build_points;
+
+	short resource_points;
+	short req_resource_points[MAX_BUILDABLE_STAGES];
 	ResourceTypes desired_resource;
-	StructureType target_structure_type;
-	bool full;
+	bool full; // Can't have any more resource
+
+	short req_build_points[MAX_BUILDABLE_STAGES];
+	short build_points;
 };
+
+struct Builder { };
 
 enum ProjectileType { PT_ROCK };
 struct Shooter {
@@ -220,7 +228,10 @@ struct Carryable {
 };
 
 // Guy States
-enum GuyState { SEEKING, WANDERING };
+enum GuyState { 
+	GS_LOOK_FOR_RESOURCES,
+	GS_LOOK_TO_BUILD 
+};
 
 // Keeps the meta-information regarding a guys current state, for decision
 // making purposes

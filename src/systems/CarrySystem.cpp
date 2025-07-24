@@ -102,13 +102,10 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 					// b.num_entities = 1;
 					// b.entities[0] = guy_id;
 
-					ecs->add_component_to_entity<ScanningFor>(pickup_id, {
-						{SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP_FULL},
-						{GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range}
-					});
+					// ScanningFor will be set up in guy brain system
 
 					ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
-					ecs->add_component_to_entity<GuyBrain>(pickup_id, {GuyState::SEEKING, 0});
+					ecs->add_component_to_entity<GuyBrain>(pickup_id, {GuyState::GS_LOOK_TO_BUILD, 0});
 					// GuySM::enter_wandering(pickup_id, ecs);
 
 					if (ecs->entity_has_component<Scannable>(pickup_id)) {
@@ -138,7 +135,6 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 					ecs->remove_component_from_entity<Persuing>(guy_id);
 					ecs->remove_component_from_entity<HandsFree>(guy_id);
 
-					int n = b->num_entities;
 					b->entities[b->num_entities] = guy_id;
 					b->num_entities += 1;
 
