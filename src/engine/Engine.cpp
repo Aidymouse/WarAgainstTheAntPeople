@@ -17,9 +17,10 @@ void load_textures(SDL_Renderer *renderer) {
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("guy_sheet.bmp"), "guy_sheet", renderer);
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("scrap.bmp"), "scrap_sheet", renderer);
   texture_store.load_texture(std::string(GRAPHICS_PATH).append("squish.bmp"), "squish_sheet", renderer);
-  texture_store.load_texture( std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand", renderer);
-  texture_store.load_texture( std::string(GRAPHICS_PATH).append("tower.bmp"), "tower", renderer);
-  texture_store.load_texture( std::string(GRAPHICS_PATH).append("rock.bmp"), "rock", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("hand_sheet.bmp"), "tool_hand", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("tower.bmp"), "tower", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("rock.bmp"), "rock", renderer);
+  texture_store.load_texture(std::string(GRAPHICS_PATH).append("cannon.bmp"), "cannon", renderer);
 }
 
 void load_animations() {
@@ -50,6 +51,7 @@ void load_animations() {
 	anim_store.load_animation("scrap", "scrap_sheet", {16, 0, 16, 16}, -1, {8, 8});
 	anim_store.load_animation("tower", "tower", {3*32, 0, 32, 64}, -1, {16, 64});
 	anim_store.load_animation("rock", "rock", {0, 0, 8, 8}, -1, {8, 8});
+	anim_store.load_animation("cannon", "cannon", {0, 0, 32, 32}, -1, {16, 16});
 
 	// Tools
 	anim_store.load_animation("tool_hand_norm", "tool_hand", {32, 0, 32, 32}, -1, {16, 16});
