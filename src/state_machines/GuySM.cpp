@@ -10,7 +10,9 @@
 
 TextureStore &guy_sm_texture_store = TextureStore::getInstance();
 
-g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
+g_Wandering *GuySM::start_wandering(Entity guy_id, ECS *ecs) {
+
+	ecs->remove_component_from_entity<ScanningFor>(guy_id);
 
   int angle = rand() % 360;
   int speed = 20 + rand() % 30; // 20 - 50
@@ -20,12 +22,12 @@ g_Wandering *GuySM::enter_wandering(Entity guy_id, ECS *main_ecs) {
 
   g_Wandering w = {timer, speed, dir};
 
-  main_ecs->add_component_to_entity<g_Wandering>(guy_id, w);
+  ecs->add_component_to_entity<g_Wandering>(guy_id, w);
 
-  GuyBrain *g_Brain = main_ecs->get_component_for_entity<GuyBrain>(guy_id);
-  g_Brain->cur_state = GuyState::WANDERING;
+  GuyBrain *g_Brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
+  //g_Brain->cur_state = GuyState::WANDERING;
 
-  return main_ecs->get_component_for_entity<g_Wandering>(guy_id);
+  return ecs->get_component_for_entity<g_Wandering>(guy_id);
 }
 
 void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
@@ -65,4 +67,24 @@ void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
 void GuySM::stop_being_guy(Entity guy_id, ECS *ecs) {
 	ecs->remove_component_from_entity<GuyBrain>(guy_id);
 	ecs->remove_component_from_entity<g_Wandering>(guy_id);
+}
+
+// Guy has finished wandering, enter scanning (just for a frame)
+void GuySM::end_wander_step(Entity guy_id, ECS *ecs) {
+	ecs->remove_component_from_entity<g_Wandering>(guy_id);
+
+
+	if (ecs->entity_has_component<hv_Brain>(guy_id)) {
+		ecs->add_component_to_entity<ScanningFor>(guy_id, {
+			{SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP_FULL},
+			{GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range}
+		});
+	} else {
+		ecs->add_component_to_entity<ScanningFor>(guy_id, {
+			{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
+			{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
+		});
+	}
+
+
 }

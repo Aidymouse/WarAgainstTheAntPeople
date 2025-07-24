@@ -21,8 +21,6 @@ void g_handle_collisions(float dt, ECS *ecs);
 
 const bool guy_brain_debug = false;
 
-TextureStore &gbs_ts = TextureStore::getInstance();
-
 void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
   // /** Decision Making - aka switch between states */
 	for (auto e = registered_entities.begin(); e != registered_entities.end(); e++) {
@@ -58,7 +56,7 @@ void GuyBrainSystem::update(float dt, ECS *ecs, CollisionGrid *grid) {
 		//std::cout << "Processing guy up top decision making for [" << guy_id << "]" << std::endl;
 
 		// Decision making code goes here, one day
-		if (!ecs->entity_has_component<g_Wandering>(guy_id)) { GuySM::enter_wandering(guy_id, ecs); }
+		if (!ecs->entity_has_component<g_Wandering>(guy_id)) { GuySM::start_wandering(guy_id, ecs); }
 		
 
 		//if (!ecs->entity_has_any_components(guy_id, s)) {
@@ -89,28 +87,39 @@ void GuyBrainSystem::g_handle_collisions(float dt, ECS *ecs, CollisionGrid *grid
 			}
 		}
 
+		/** */
+
 	}
 }
 
 /** The guy wanders around aimlessly until they get in range of something cooler
+ * Guys walk in a random dir at a random speed for 2-4 seconds.
+ * When they change direction, they scan their surroundings for 1 frame
  * Thusly, they should probably be looking around as well...
  */
 void gs_wander(float dt, ECS *ecs) {
-	/** Wandering */
 	std::shared_ptr<ComponentArray<g_Wandering>> comp_wandering = ecs->get_component_array<g_Wandering>();
 
 	for (int i = 0; i < comp_wandering->get_num_components(); i++) {
-		Entity e = comp_wandering->get_entity_from_idx(i);
+		Entity guy_id = comp_wandering->get_entity_from_idx(i);
 
-		g_Wandering *wander_data = comp_wandering->get_editable_data(e);
-		Transform *t = ecs->get_component_for_entity<Transform>(e);
-		Position *p = ecs->get_component_for_entity<Position>(e);
+		g_Wandering *wander_data = comp_wandering->get_editable_data(guy_id);
+		Transform *t = ecs->get_component_for_entity<Transform>(guy_id);
+		Position *p = ecs->get_component_for_entity<Position>(guy_id);
 
 		wander_data->timer -= dt;
+
 		t->vel_x = wander_data->dir.x * wander_data->speed;
 		t->vel_y = wander_data->dir.y * wander_data->speed;
 
 		if (wander_data->timer < 0) {
+
+			/*
+			ecs->add_component_to_entity<Scannable>(guy_id, {
+				{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
+				{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
+			});
+
 			int angle = Random::rand_range(0, 360);
 			int speed = Random::rand_range(20, 50);
 			Vec2 dir = Vec2(1, 0);
@@ -120,6 +129,9 @@ void gs_wander(float dt, ECS *ecs) {
 			wander_data->dir = dir;
 			wander_data->speed = speed;
 			wander_data->timer = timer;
+			*/
+			
+			GuySM::end_wander_step(guy_id, ecs);
 		}
 
 		// Make guy decide to turn around if they're about to walk off the edge
