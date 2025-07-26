@@ -12,4 +12,5 @@ void enter_seeking(Entity guy_id, ECS *main_ecs);
 void die(Entity guy_id, ECS *main_ecs, CollisionGrid *grid);
 void stop_being_guy(Entity guy_id, ECS *main_ecs);
 void end_wander_step(Entity guy_id, ECS *main_ecs);
+void change_mood(Entity guy_id, ECS *main_ecs);
 } // namespace GuySM
