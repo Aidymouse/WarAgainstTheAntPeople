@@ -177,11 +177,18 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 				}
 			}
 
-			/** Check builder collisions */
-			if (buildable->full && ecs->entity_has_component<Builder>(collided_resource_id)) {
-				buildable->build_points += dt;
-			}
 
+		}
+
+		if (buildable->full) {
+			std::set<Entity> collided_builders = grid->test_entity_for_collisions(buildsite_id, ecs, CollisionIdentifier::CI_GUY);
+			for (auto cg=collided_builders.begin(); cg!=collided_builders.end(); cg++) {
+				Entity guy_id = (Entity)* cg;
+				if (ecs->entity_has_component<Builder>(guy_id)) {
+					buildable->build_points += dt;				
+					std::cout << "[" << buildsite_id << "] being built: " << buildable->build_points << " / " << buildable->req_build_points[buildable->cur_stage] << std::endl;
+				}
+			}
 		}
 		
 
@@ -190,7 +197,7 @@ void BuildSystem_check_buildsites(float dt, ECS *ecs, CollisionGrid *grid) {
 			ComponentFns::advance_build_stage(ecs, buildable, buildsite_id);
 
 			// TODO turn fully built site into designated structure					
-			if (buildable->full) {
+			if (buildable->cur_stage == buildable->num_stages-1) {
 				//std::cout << "Build FINISHED!" << std::endl;
 				ecs->remove_component_from_entity<Scannable>(buildsite_id);	
 				ecs->remove_component_from_entity<Buildable>(buildsite_id);	

@@ -197,7 +197,7 @@ struct Buildable {
 	bool full; // Can't have any more resource
 
 	short req_build_points[MAX_BUILDABLE_STAGES];
-	short build_points;
+	float build_points;
 };
 
 struct Builder { };
@@ -228,16 +228,17 @@ struct Carryable {
 };
 
 // Guy States
-enum GuyState { 
-	GS_LOOK_FOR_RESOURCES,
-	GS_LOOK_TO_BUILD 
+enum GuyMood { 
+	GM_COLLECTER=0, // Look for scrap and other useful items
+	GM_BUILDER=1, // Look for towers to build
 };
 
 // Keeps the meta-information regarding a guys current state, for decision
 // making purposes
 struct GuyBrain {
-  GuyState cur_state;
-  float die_timer;
+	// GuyAttitude attitude; // TODO governs various weights for decision making
+  GuyMood mood; // Determines guys path of behaviour
+  float mood_timer; // Go to new mood when this hits 0
 };
 
 

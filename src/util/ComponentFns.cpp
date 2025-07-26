@@ -55,6 +55,10 @@ void ComponentFns::advance_build_stage(ECS *ecs, Buildable *b, Entity ent){
 	}
 
 	b->full = false;
+
+	Scannable *s = ecs->get_component_for_entity<Scannable>(ent);
+	s->scan_value = SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP;
+
 }
 
 

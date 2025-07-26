@@ -105,7 +105,7 @@ void process_pickup(float dt, std::set<Entity> *registered_entities, ECS *ecs, C
 					// ScanningFor will be set up in guy brain system
 
 					ecs->add_component_to_entity<Transform>(pickup_id, {0, 0, 0});
-					ecs->add_component_to_entity<GuyBrain>(pickup_id, {GuyState::GS_LOOK_TO_BUILD, 0});
+					ecs->add_component_to_entity<GuyBrain>(pickup_id, {GuyMood::GM_BUILDER, 0});
 					// GuySM::enter_wandering(pickup_id, ecs);
 
 					if (ecs->entity_has_component<Scannable>(pickup_id)) {

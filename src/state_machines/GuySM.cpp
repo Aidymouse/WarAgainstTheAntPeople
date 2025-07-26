@@ -41,7 +41,6 @@ void GuySM::die(Entity guy_id, ECS *ecs, CollisionGrid *grid) {
 	vis->anim_timer = 0;
 
 	GuyBrain *brain = ecs->get_component_for_entity<GuyBrain>(guy_id);
-	brain->die_timer = 1;
 	// ecs->remove_component_from_entity<ScanningFor>(guy_id);
 	ecs->remove_component_from_entity<Transform>(guy_id);
 	ecs->remove_component_from_entity<g_Wandering>(guy_id);
@@ -73,16 +72,16 @@ void GuySM::stop_being_guy(Entity guy_id, ECS *ecs) {
 void GuySM::end_wander_step(Entity guy_id, ECS *ecs) {
 	ecs->remove_component_from_entity<g_Wandering>(guy_id);
 
-
 	if (ecs->entity_has_component<hv_Brain>(guy_id)) {
 		ecs->add_component_to_entity<ScanningFor>(guy_id, {
 			{SCAN_VALUES::SV_BUILDSITE_WANT_SCRAP, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, SCAN_VALUES::SV_CARRIED_SCRAP_FULL},
 			{GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range}
 		});
+
 	} else {
 		ecs->add_component_to_entity<ScanningFor>(guy_id, {
-			{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
-			{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
+			{SCAN_VALUES::SV_BUILDSITE_WANT_BUILDERS, SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1},
+			{GuyAttrs.scan_range, GuyAttrs.scan_range, GuyAttrs.scan_range, 0}
 		});
 	}
 

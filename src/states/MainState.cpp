@@ -225,6 +225,7 @@ void MainState::load_ecs() {
 
 	// Building
 	main_ecs.register_component<Buildable>(COMP_SIG::BUILDABLE);
+	main_ecs.register_component<Builder>(COMP_SIG::BUILDER);
 	main_ecs.register_component<Resource>(COMP_SIG::RESOURCE);
 
 	// Guy components

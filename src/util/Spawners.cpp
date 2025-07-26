@@ -32,16 +32,19 @@ void Spawners::add_guy(ECS *ecs, CollisionGrid *grid) {
 	ecs->add_component_to_entity<Collider>(g, c);
 	ecs->add_component_to_entity<GuyBrain>(g, {});
 	ecs->add_component_to_entity<HandsFree>(g, {});
+	ecs->add_component_to_entity<Builder>(g, {});
 
 	DamageSignature guy_dmg_sig;
 	guy_dmg_sig[DamageTypes::DT_LIGHTSQUISH] = 1;
 	ecs->add_component_to_entity<Damageable>(g, {1, guy_dmg_sig});
 
 	// if (rand() % 100 < 10) {
+	/*
 	ecs->add_component_to_entity<ScanningFor>( g, {
 		{SCAN_VALUES::SV_CARRIED_SCRAP, SCAN_VALUES::SV_SCRAP_METAL, -1, -1},
 		{GuyAttrs.scan_range, GuyAttrs.scan_range, 0, 0}
 	});
+	*/
 	// } else {
 	//	 g_Wandering *w = GuySM::enter_wandering(g, ecs);
 	// }
