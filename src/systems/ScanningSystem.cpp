@@ -124,6 +124,15 @@ void ScanningSystem::update(float dt, ECS *ecs) {
 
 		Vec2 vecPos = Vec2(pos->x, pos->y);
 		Vec2 desiredPos = Vec2(pur.desiredX, pur.desiredY);
+
+		// WARN: This is meant to make it so guys dont wiggle around once they're at what they're persuing but it might cancel out momentum when we want it
+		float dist_to_target_squared = (vecPos.x - desiredPos.x)*(vecPos.x-desiredPos.x) + (vecPos.y-desiredPos.y)*(vecPos.y-desiredPos.y);
+		if (dist_to_target_squared <= 25) { 
+			Transform *trans = component_manager->get_component_data<Transform>(persuing_ent);
+			trans->vel_x = 0;
+			trans->vel_y = 0;
+			continue;
+		 }
 		Vec2 diff = vecPos - desiredPos;
 		Vec2 dir = diff.normalized();
 
@@ -137,11 +146,6 @@ void ScanningSystem::update(float dt, ECS *ecs) {
 		Transform *trans = component_manager->get_component_data<Transform>(persuing_ent);
 		trans->vel_x = -dir.x * pursuit_speed;
 		trans->vel_y = -dir.y * pursuit_speed;
-
-		if (!ecs->entity_has_component<GuyBrain>(persuing_ent)) {
-			trans->vel_x = -dir.x * pursuit_speed;
-			trans->vel_y = -dir.y * pursuit_speed;
-		}
 
 		// std::cout << "Trans [" << ent << "]" << std::endl;
 	}
